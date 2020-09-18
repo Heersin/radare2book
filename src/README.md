@@ -1,5 +1,7 @@
 # Introduction
 
+本项目是radare2官方手册的中译版本，原始项目的readme如下：
+
 This book is an updated version (started by maijin) of the original
 radare1 book (written by pancake). Which is actively maintained and
 updated by many contributors over the Internet.
