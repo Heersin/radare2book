@@ -1,5 +1,11 @@
 # Introduction
 
+===========
+This is a branch of english version
+===========
+
+# Original Introduction
+
 This book is an updated version (started by maijin) of the original
 radare1 book (written by pancake). Which is actively maintained and
 updated by many contributors over the Internet.
