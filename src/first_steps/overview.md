@@ -39,7 +39,7 @@ $ echo 'push eax;nop;nop' | rasm2 -f -
 基于块的哈希工具，无论是一段短小的字符串，还是巨大的磁盘文件，rahash2都支持多种算法进行hash，包括MD4， MD5, CRC16, CRC32, SHA1， SHA256以及其他种种。
 rahash2可用于完整性检查，或是追踪大文件、内存转储或磁盘上的变化。
 
-### 示例
+#### 示例
 ```
 $ rahash2 file
 file: 0x00000000-0x00000007 sha256: 887cfbd0d44aaff69f7bdbedebd282ec96191cce9d7fa7336298a18efc3c7a5a
@@ -115,21 +115,21 @@ $ rarun2 program=/bin/ls connect=localhost:9999
 
 #### 启动调试程序， 并将stdio重定向至另一个终端
 
-1 - open a new terminal and type 'tty' to get a terminal name:
+1 - 打开新的终端，敲入'tty'获得该终端的名字:
 
 ```
 $ tty ; clear ; sleep 999999
 /dev/ttyS010
 ```
 
-2 - Create a new file containing the following rarun2 profile named foo.rr2:
+2 - 创建一个名为foo的rarun2配置文件，包含如下内容:
 ```
 #!/usr/bin/rarun2
 program=/bin/ls
 stdio=/dev/ttys010
 ```
 
-3 - Launch the following radare2 command:
+3 - 用如下rarun2命令启动它:
 ```
 r2 -r foo.rr2 -d /bin/ls
 ```
