@@ -1,14 +1,14 @@
 ## Writing Data
 
-Radare can manipulate a loaded binary file in many ways. You can resize the file, move and copy/paste bytes, insert new bytes (shifting data to the end of the block or file), or simply overwrite bytes. New data may be given as a wide-string, assembler instructions, or the data may be read in from another file.
+Radare可以通过多种方式处理已加载的二进制文件。您可以调整文件大小，移动和复制/粘贴字节，插入新字节（将数据移至块或文件的末尾），或覆盖字节。新数据可以是宽字符串、汇编程序指令， 也可以是从另一个文件中读取的数据。
 
-Resize the file using the `r` command. It accepts a numeric argument. A positive value sets a new size for the file. A negative one will truncate the file to the current seek position minus N bytes.
+使用`r`命令调整文件大小。它接受数字作为参数。若为正数则为文件设置新的大小， 为负数则将文件截断至当前位置往前N个字节的位置。
 
 ```
 r 1024      ; resize the file to 1024 bytes
 r -10 @ 33  ; strip 10 bytes at offset 33
 ```
-Write bytes using the `w` command. It accepts multiple input formats like inline assembly, endian-friendly dwords, files, hexpair files, wide strings:
+使用`w`命令写入字节，该命令接受多种输入格式， 例如内联汇编、字节序友好型dword， 文件， 十六进制文件， 宽字符串。
 
 ```
 [0x00404888]> w?
@@ -43,7 +43,7 @@ Usage: w[x] [str] [<file] [<<EOF] [@addr]
 | wz string            write zero terminated string (like w + \x00)
 ```
 
-Some examples:
+一些示例:
 
 ```
  [0x00000000]> wx 123456 @ 0x8048300
@@ -51,10 +51,9 @@ Some examples:
  [0x00000000]> wa jmp 0x8048320
 ```
 
-### Write Over
+### 改写
 
-The `wo` command (write over) has many subcommands, each combines the existing data with the new data using
-an operator. The command is applied to the current block. Supported operators include XOR, ADD, SUB...
+`wo`命令有多个子命令， 每个子命令都使用算符将现有数据与新数据结合起来，该命令将作用于当前块上。目前支持的算符有XOR，ADD，SUB...
 
 ```
 [0x4A13B8C0]> wo?
@@ -81,7 +80,7 @@ an operator. The command is applied to the current block. Supported operators in
 |  wo4  4=  4 byte endian swap
 ```
 
-It is possible to implement cipher-algorithms using radare core primitives and `wo`. A sample session performing xor(90) + add(01, 02):
+可以用radare2核心原语以及`wo`实现加密算法，下面这个例子展示了xor（90） + add（01,02）这种加密算法的操作。
 
 ```
 [0x7fcd6a891630]> px
