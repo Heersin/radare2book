@@ -1,5 +1,6 @@
 ## The Framework
 
+Radare2项目由一组小型命令行工具组成，这些工具可以被独立使用，也可以结合使用。
 The Radare2 project is a set of small command-line utilities that can be used together or independently.
 
 This chapter will give you a quick understanding of them, but you can check the dedicated sections for each tool at the end of this book. 

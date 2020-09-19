@@ -13,7 +13,7 @@
 
 从那时起，这个项目发展为提供一个用于分析二进制文件的完整框架，项目中借用了UNIX的一些基本概念，包括著名的“everything is a file”，“small programs that interact using stdin/stdout”和“keep it simple”范式。
 
-脚本化的需求暴露了初代设计上的不足：工具单一而庞大，造成其API很难使用，因此需要对项目进行深度重构。2009年，radare2（r2）作为radare1的一个分支诞生了。重构加入了灵活性以及动态特性，使得工具能够更好地进行集成，从而为r2在[不同编程语言]((https://github.com/radareorg/radare2-bindings)中的使用铺平了道路。不久后，[r2pipe API](https://github.com/radareorg/radare2-r2pipe) 使我们能通过pipe在不同语言中使用radare2
+脚本化的需求暴露了初代设计上的不足：工具单一而庞大，造成其API很难使用，因此需要对项目进行深度重构。2009年，radare2（r2）作为radare1的一个分支诞生了。重构加入了灵活性以及动态特性，使得工具能够更好地进行集成，从而为r2在[不同编程语言](https://github.com/radareorg/radare2-bindings)中的使用铺平了道路。不久后，[r2pipe API](https://github.com/radareorg/radare2-r2pipe) 使我们能通过pipe在不同语言中使用radare2
 
 从最初的个人项目开始，渐渐在2014年发展为基于社区的项目，用户在飞速地增加，原作者与主开发人员不得不将角色从程序员切换到项目经理， 以整合项目中的来自不同开发者的工作。
 
