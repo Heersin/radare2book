@@ -1,10 +1,6 @@
-## Expressions
+## 表达式
 
-Expressions are mathematical representations of 64-bit numerical values.
-They can be displayed in different formats, be compared or used with all commands
-accepting numeric arguments. Expressions can use traditional arithmetic operations,
-as well as binary and boolean ones.
-To evaluate mathematical expressions prepend them with command `?`:
+radare2中数学表达式的值位长为64位，可以以不同格式进行显示，可以用于所有接受数字参数的命令，或进行比较。表达式中可以使用传统的算术运算，以及二进制数和布尔值。
 ```
 [0xb7f9d810]> ?vi 0x8048000
 134512640
@@ -25,7 +21,7 @@ float:  nanf
 double: nan
 trits   0t11112220022122120101211020120210210211201
 ```
-Supported arithmetic operations are:
+支持的算术操作有：
 
  *  \+ : addition
  *  \- : subtraction
@@ -40,7 +36,7 @@ Supported arithmetic operations are:
 6
 ```
 
-To use of logical OR should quote the whole command to avoid executing the `|` pipe:
+使用逻辑OR时需要用用引号进行标记，避免执行`|`管道:
 ```
 [0x00000000]> "? 1 | 2"
 hex     0x3
@@ -56,7 +52,7 @@ double: 0.000000
 trits   0t10
 ```
 
-Numbers can be displayed in several formats:
+可以以不同格式显示结果:
 ```
 0x033   : hexadecimal can be displayed
 3334    : decimal
@@ -65,9 +61,9 @@ sym.fo  : resolve flag offset
 10M     : MBytes  10*1024*1024
 ```
 
-You can also use variables and seek positions to build complex expressions.
+可以结合变量和seek位置创建复杂的表达式。
 
-Use the `?$?` command to list all the available commands or read the refcard chapter of this book.
+使用`?$?`命令可以列出所有可用的命令，或者你也可以参考本书的refcard章节
 
 ```
 $$    here (the current virtual seek)
@@ -79,7 +75,7 @@ $m    opcode memory reference (e.g. mov eax,[0x10] => 0x10)
 $b    block size
 ```
 
-Some more examples:
+更多的一些例子:
 ```
 [0x4A13B8C0]> ? $m + $l
 140293837812900 0x7f98b45df4a4 03771426427372244 130658.0G 8b45d000:04a4 140293837812900 10100100 140293837812900.0 -0.000000
