@@ -1,8 +1,8 @@
-## Command-line Options
+## 命令行选项
 
-The radare core accepts many flags from the command line.
+radare核心程序接受多种命令行参数
 
-This is an excerpt from the usage help message:
+以下是radare帮助信息的摘录:
 ```
 $ radare2 -h
 Usage: r2 [-ACdfLMnNqStuvwzX] [-P patch] [-p prj] [-a arch] [-b bits] [-i file]
@@ -56,35 +56,35 @@ Usage: r2 [-ACdfLMnNqStuvwzX] [-P patch] [-p prj] [-a arch] [-b bits] [-i file]
 
 ### Common usage patterns
 
-Open a file in write mode without parsing the file format headers.
+在不解析文件格式头的情况下，以写入模式打开文件：
 ```
 $ r2 -nw file
 ```
-Quickly get into an r2 shell without opening any file.
+不打开任何文件，直接进入r2 shell：
 ```
 $ r2 -
 ```
-Specify which sub-binary you want to select when opening a fatbin file:
+打开fatbin文件时， 指定子文件：
 ```
 $ r2 -a ppc -b 32 ls.fat
 ```
-Run a script before showing interactive command-line prompt:
+在显示r2 shell命令提示符前运行一个脚本：
 ```
 $ r2 -i patch.r2 target.bin
 ```
-Execute a command and quit without entering the interactive mode:
+仅执行命令然后退出，不进入交互界面：
 ```
 $ r2 -qc ij hi.bin > imports.json
 ```
-Set the configuration variable:
+设置配置中的变量:
 ```
 $ r2 -e scr.color=0 blah.bin
 ```
-Debug a program:
+调试一个程序:
 ```
 $ r2 -d ls
 ```
-Use an existing project file:
+使用现有的项目文件:
 ```
 $ r2 -p test
 ```
