@@ -1,25 +1,22 @@
 ## The Framework
 
-Radare2项目由一组小型命令行工具组成，这些工具可以被独立使用，也可以结合使用。
-The Radare2 project is a set of small command-line utilities that can be used together or independently.
-
-This chapter will give you a quick understanding of them, but you can check the dedicated sections for each tool at the end of this book. 
+Radare2项目是一组小型命令行工具，这些工具可以被独立使用，也可以结合着使用。本章节会让您快速了解它们，您可以本书末尾查看每种工具的具体用法。
 
 ### radare2
 
-The main tool of the whole framework. It uses the core of the hexadecimal editor and debugger. radare2 allows you to open a number of input/output sources as if they were simple, plain files, including disks, network connections, kernel drivers, processes under debugging, and so on.
+这是整个框架的核心工具，它具有debugger和Hexeditor的核心功能，使您能够像打开普通的文件一样，打开许多输入/输出源，包括磁盘、网络连接、内核驱动和处于调试中的进程等。
 
-It implements an advanced command line interface for moving around a file, analyzing data, disassembling, binary patching, data comparison, searching, replacing, and visualizing. It can be scripted with a variety of languages, including Python, Ruby, JavaScript, Lua, and Perl.
+它实现了一个高级的命令行界面，可用于在文件内部活动和浏览，分析数据，反编译，打补丁，比较数据，搜索，替换和可视化。您可以用多种编程语言编写radare2的脚本，包括Python, Ruby, JavaScript, Lua, 和 Perl。
 
 ### rabin2
 
-A program to extract information from executable binaries, such as ELF, PE, Java CLASS, Mach-O, plus any format supported by r2 plugins. rabin2 is used by the core to get data like exported symbols, imports, file information, cross references (xrefs), library dependencies, and sections.
+该程序用于从可执行文件中提取信息，例如ELF, PE, Java CLASS, Mach-O, 以及各种r2引擎所支持的二进制文件格式。r2核心使用rabin2获取数据，例如导出的符号，导入的函数和DLL等，文件的元信息，交叉引用（xrefs），依赖库以及文件区段信息。
 
 ### rasm2
 
-A command line assembler and disassembler for multiple architectures (including Intel x86 and x86-64, MIPS, ARM, PowerPC, Java, and myriad of others).
+针对多种架构的命令行编译器和反编译器（支持Intel x86和x86-64, MIPS, ARM, PowerPC, Java等等）。
 
-#### Examples
+#### 示例
 ```
 $ rasm2 -a java 'nop'
 00
@@ -39,10 +36,10 @@ $ echo 'push eax;nop;nop' | rasm2 -f -
 
 ### rahash2
 
-An implementation of a block-based hash tool. From small text strings to large disks, rahash2 supports multiple algorithms, including MD4, MD5, CRC16, CRC32, SHA1, SHA256, and others.
-rahash2 can be used to check the integrity or track changes of big files, memory dumps, or disks.
+基于块的哈希工具，无论是一段短小的字符串，还是巨大的磁盘文件，rahash2都支持多种算法进行hash，包括MD4， MD5, CRC16, CRC32, SHA1， SHA256以及其他种种。
+rahash2可用于完整性检查，或是追踪大文件、内存转储或磁盘上的变化。
 
-### Examples
+### 示例
 ```
 $ rahash2 file
 file: 0x00000000-0x00000007 sha256: 887cfbd0d44aaff69f7bdbedebd282ec96191cce9d7fa7336298a18efc3c7a5a
@@ -53,17 +50,17 @@ file: 0x00000000-0x00000007 md5: d1833805515fc34b46c2b9de553f599d
 ```
 ### radiff2
 
-A binary diffing utility that implements multiple algorithms. It supports byte-level or delta diffing for binary files, and code-analysis diffing to find changes in basic code blocks obtained from the radare code analysis.
+一个二进制差异比较工具， 实现了多种算法。它支持二进制文件的字节级比较以及差分比较， 以及支持代码差异比较，用于发现在Radare2分析工作中代码块发生的更改。
 
 ### rafind2
 
-A program to find byte patterns in files.
+用于在文件中根据pattern找到对应的字节串。
 
 ### ragg2
 
-A frontend for r_egg. ragg2 compiles programs written in a simple high-level language into tiny binaries for x86, x86-64, and ARM.
+r_egg的前端程序，ragg2可以将高级语言编写的程序编译为微型二进制程序。支持x86,x86-64和ARM架构。
 
-#### Examples
+#### 示例
 
 ```
 $ cat hi.r
@@ -92,14 +89,13 @@ Hello
 
 ### rarun2
 
-A launcher for running programs within different environments, with different arguments,
-permissions, directories, and overridden default file descriptors. rarun2 is useful for:
+一个程序启动器，可使得程序以不同的环境变量和不同的参数启动，还支持以不同权限，在不同目录下启动，并可覆写程序默认的文件描述符。这些特性在以下场景中很有用：
 
 * Solving crackmes
 * Fuzzing
 * Test suites
 
-#### Sample rarun2 script
+#### rarun2 script的一个范例
 ```
 $ cat foo.rr2
 #!/usr/bin/rarun2
@@ -111,13 +107,13 @@ chdir=/tmp
 ./foo.rr2
 ```
 
-#### Connecting a Program with a Socket
+#### 将程序与socket绑定
 ```
 $ nc -l 9999
 $ rarun2 program=/bin/ls connect=localhost:9999
 ```
 
-#### Debugging a Program Redirecting the stdio into Another Terminal
+#### 启动调试程序， 并将stdio重定向至另一个终端
 
 1 - open a new terminal and type 'tty' to get a terminal name:
 
@@ -140,9 +136,9 @@ r2 -r foo.rr2 -d /bin/ls
 
 ### rax2
 
-A minimalistic mathematical expression evaluator for the shell that is useful for making base conversions between floating point values, hexadecimal representations, hexpair strings to ASCII, octal to integer, and more. It also supports endianness settings and can be used as an interactive shell if no arguments are given.
+一个小巧简约的数学表达式求解器，主要用于浮点数、十六进制的转换，十六进制串与ASCII的转换，八进制与整数之间的转换等，且支持设定字节序。在没有提供任何参数时可以用作一个交互式shell。
 
-#### Examples
+#### 示例
 
 ```
 $ rax2 1337
