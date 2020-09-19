@@ -1,32 +1,31 @@
-## Downloading radare2
+## 下载radare2
 
-You can get radare from the website, [http://radare.org](http://radare.org),
-or the GitHub repository: [https://github.com/radareorg/radare2](https://github.com/radareorg/radare2)
+从[http://radare.org](http://radare.org)获取Radare2,
+或者通过github repo: [https://github.com/radareorg/radare2](https://github.com/radareorg/radare2)
 
+二进制文件包可以适用于多种操作系统(Ubuntu, Maemo, Gentoo, Windows, iPhone, and so on），但是强烈建议您使用源码编译的方式获得它，这样对于radare2的依赖会有一个更好的理解，且能够比较方便地找到示例，当然，好处还在于能够用上最新版的radare2。
 
-Binary packages are available for a number of operating systems (Ubuntu, Maemo, Gentoo, Windows, iPhone, and so on). But you are highly encouraged to get the source and compile it yourself to better understand the dependencies, to make examples more accessible and, of course, to have the most recent version.
+通常每个月都会发布一个新的stable版本，有时候在[http://bin.rada.re/](http://bin.rada.re/)也会有Nightly tarballs释出。
 
-A new stable release is typically published every month. Nightly tarballs are sometimes available at [http://bin.rada.re/](http://bin.rada.re/).
-
-The radare development repository is often more stable than the 'stable' releases. To obtain the latest version:
+radare2的开发仓库版本通常来说比‘stable’版本更加稳定，可以用如下命令获得最新的版本：
 ```
 $ git clone https://github.com/radareorg/radare2.git
 ```
-This will probably take a while, so take a coffee break and continue reading this book.
+可能需要一些时间，趁这个时候喝杯咖啡，然后继续阅读本书吧。
 
-To update your local copy of the repository, use `git pull` anywhere in the radare2 source code tree:
+可以在本地的radare2仓库内任意位置使用 `git pull` 更新radare2仓库。
 ```
 $ git pull
 ```
-If you have local modifications of the source, you can revert them (and lose them!) with:
+如果你在本地对源码进行了修改，通过如下命令还原（会失去修改）：
 ```
 $ git reset --hard HEAD
 ```
-Or send us a patch:
+或者，给我们发一个patch：
 ```
 $ git diff > radare-foo.patch
 ```
-The most common way to get r2 updated and installed system wide is by using:
+更新radare2并在系统内进行安装最常用的方法还是下面这个：
 ```
 $ sys/install.sh
 ```
@@ -41,29 +40,28 @@ ninja -C release
 # ninja -C release install
 ```
 
-### Helper Scripts
+### 帮助脚本
 
-Take a look at the scripts in `sys/`, they are used to automate stuff related to syncing, building and installing r2 and its bindings.
+您可以看看 `sys/`中的脚本，他们用于一些自动化的工作，例如同步、构建以及安装r2，以及一些绑定工作。
 
-The most important one is `sys/install.sh`. It will pull, clean, build and symstall r2 system wide.
+最终要的当属 `sys/install.sh`， 这个脚本会完成pull，clean，build以及在系统上进行symstall安装r2.
 
-Symstalling is the process of installing all the programs, libraries, documentation and data files using symlinks instead of copying the files.
 
-By default it will be installed in `/usr/local`, but you can specify a different prefix using the argument `--prefix`.
+Symstall 即通过在系统内创建符号链接完成程序、库、文档和数据文件的安装， 而非通过复制项目文件进行安装。
 
-This is useful for developers, because it permits them to just run 'make' and try changes without having to run make install again.
+默认情况下它会被安装在 `/usr/local`, 不过你也可以通过指定 `--prefix` 选择其他目录进行安装。
 
-### Cleaning Up
+对于开发者来说这种sysmstall安装方式很有用，因为该方式使得开发者只需要运行'make'，然后就可以调试新增加的功能，而不需要运行make install。
 
-Cleaning up the source tree is important to avoid problems like linking to old objects files or not updating objects after an ABI change.
+### 清理
 
-The following commands may help you to get your git clone up to date:
+清理源码目录是很重要的，这有助于避免在某些ABI改变后，链接依旧指向未更新或者旧版的文件。下面的命令能帮助你保持git repo的处于最新版本：
 ```
 $ git clean -xdf
 $ git reset --hard @~10
 $ git pull
 ```
-If you want to remove previous installations from your system, you must run the following commands:
+可以通过如下命令，卸载系统上旧版本的radare2
 ```
 $ ./configure --prefix=/usr/local
 $ make purge
