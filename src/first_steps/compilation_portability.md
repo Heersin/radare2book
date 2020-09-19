@@ -28,7 +28,7 @@ $ sys/static.sh
 
 Radare2 仓库维护了一个 [Dockerfile](https://github.com/radareorg/radare2/blob/master/Dockerfile)。
 
-这个dockerfile同样被来自SANS的Remnux版本所使用，可以在[registryhub](https://registry.hub.docker.com/u/remnux/radare2/)找到它
+这个dockerfile同样被来自SANS的Remnux发行版所使用，可以在[registryhub](https://registry.hub.docker.com/u/remnux/radare2/)找到它
 
 ## 清理旧版本的Radare2
 ```
