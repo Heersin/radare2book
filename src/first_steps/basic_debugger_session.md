@@ -1,5 +1,6 @@
 # Basic Debugger Session
 
+指定`-d`选项可启动radare2对程序进行调试，
 To debug a program, start radare with the `-d` option. Note that you can attach to a running process by specifying its PID, or you can start a new program by specifying its name and parameters:
 
 ```
