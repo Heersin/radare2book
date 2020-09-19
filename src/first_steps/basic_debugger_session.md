@@ -1,7 +1,6 @@
 # Basic Debugger Session
 
-指定`-d`选项可启动radare2对程序进行调试，
-To debug a program, start radare with the `-d` option. Note that you can attach to a running process by specifying its PID, or you can start a new program by specifying its name and parameters:
+指定`-d`选项可启动radare2对程序进行调试。 记住，你可以attach到一个运行中的进程，只需要指定其PID即可。或者通过指定名字和参数启动一个程序。
 
 ```
 $ pidof mc
@@ -12,22 +11,19 @@ $ r2 -a arm -b 16 -d gdb://192.168.1.43:9090
 ...
 ```
 
-In the second case, the debugger will fork and load the debugee `ls` program in memory.
+在上面例子中的第二种情况下，debugger会fork一个用于调试的ls进程并加载到内存中。它将停在`ld.so`动态链接库前，因此在这一刻，您无法看到程序入口点以及任何的共享库。
 
-It will pause its execution early in `ld.so` dynamic linker. As a result, you will not yet see the entrypoint or any shared libraries at this point.
+可以通过如下方法，用其他名字替换默认的entry breakpoint， 改变这个默认行为：在radare2的启动脚本里加上`e dbg.bep=entry` 或 `e dbg.bep=main` 命令。radare2的启动脚本通常是`~/.config/radare2/radare2rc`。
 
-You can override this behavior by setting another name for an entry breakpoint. To do this, add a radare command
-`e dbg.bep=entry` or `e dbg.bep=main` to your startup script, usually it is `~/.config/radare2/radare2rc`.
-
-Another way to continue until a specific address is by using the `dcu` command. Which means: "debug continue until" taking the address of the place to stop at. For example:
+另一种运行到特定地址的方式是使用`dcu`命令， 这个缩写的意思是 “debug continue until”， 后接停止运行的地址。比如：
 
 ```
 dcu main
 ```
 
-Be warned that certain malware or other tricky programs can actually execute code before `main()` and thus you'll be unable to control them. (Like the program constructor or the tls initializers)
+请注意，实际上某些恶意软件或其他棘手的程序可以在main（）之前执行代码（例如程序构造函数或tls初始化程序），因此无法通过main处的断点控制它们。
 
-Below is a list of most common commands used with debugger:
+下面列出的是一些debugger常用的命令：
 ```
 > d?            ; get help on debugger commands
 > ds 3          ; step 3 times
@@ -41,33 +37,23 @@ Below is a list of most common commands used with debugger:
 > dr eax=33     ; set register value. eax = 33
 ```
 
-There is another option for debugging in radare, which may be easier: using visual mode.
+Radare内的debugger还提供可视化模式，可能更好上手。该模式下不需要去记忆那么多命令，也不需要时时刻刻在心里记住程序的状态信息。
 
-That way you will neither need to remember many commands nor to keep program state in your mind.
-
-To enter visual debugger mode use `Vpp`:
+使用`Vpp`命令进入可视化模式:
 
 ```
 [0xb7f0c8c0]> Vpp
 ```
 
-The initial view after entering visual mode is a hexdump view of the current target program counter (e.g., EIP for x86).
-Pressing `p` will allow you to cycle through the rest of visual mode views.
-You can press `p` and `P` to rotate through the most commonly used print modes.
-Use F7 or `s` to step into and F8 or `S` to step over current instruction.
-With the `c` key you can toggle the cursor mode to mark a byte range selection
-(for example, to later overwrite them with nop). You can set breakpoints with `F2` key.
+进入可视化模式后的初始视图为当前地址（PC，例如x86上的EIP）下的十六进制转储。
+按下`p`可以在多种可视化模式中循环切换，通过`P`和`p`选择不同的可视化视图。使用F7或`s`单步步入当前指令，使用F8单步执行当前指令。可以用`c`键切换到光标模式， 标选字节范围（比如，在之后的工作要用nop填充这一范围内的字节）。 `F2`则是用于在当前位置设置断点。
 
-In visual mode you can enter regular radare commands by prepending them with `:`.
-For example, to dump a one block of memory contents at ESI:
+在可视化模式下， 可以以`:`开头调用radare内的命令。比如，转储一块从ESI开始的内存：
 ```
 <Press ':'>
 x @ esi
 ```
-To get help on visual mode, press `?`. To scroll the help screen, use arrows. To
-exit the help view, press `q`.
+在可视化模式中按下`?`即可获取帮助， 使用方向键可以翻阅帮助手册， 按下`q`可以退出帮助手册。
 
-A frequently used command is `dr`, which is used to read or write values of the target's general purpose registers.
-For a more compact register value representation you might use `dr=` command.
-You can also manipulate the hardware and the extended/floating point registers.
+`dr`也是一个常用的命令， 可以用它对目标的通用寄存器进行读写， 也可以操作硬件和扩展/浮点寄存器。使用`dr=`命令可以以更紧凑的格式显示寄存器内容。
 
