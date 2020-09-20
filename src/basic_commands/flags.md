@@ -1,20 +1,20 @@
 ## Flags
 
-Flags are conceptually similar to bookmarks. They associate a name with a given offset in a file. Flags can be grouped into 'flag spaces'. A flag space is a namespace for flags, grouping together flags of similar characteristics or type. Examples for flag spaces: sections, registers, symbols.
+Radare中的flag类似书签， 将一个名称与文件中的偏移量进行绑定。Flags可以划分为多个标志空间（flags space）， 每个标志空间都是一组flags的命名空间， 将具有相似特征或相似类型的flags集中于组内。常见的标志空间有：sections， registers， symbols。
 
-To create a flag:
+创建一个flag:
 
 ```
 [0x4A13B8C0]> f flag_name @ offset
 ```
 
-You can remove a flag by appending the `-` character to command. Most commands accept `-` as argument-prefix as an indication to delete something.
+可以通过后接`-`移除一个flag，大多数命令中的`-`前缀都起到删除的作用。 
 
 ```
 [0x4A13B8C0]> f-flag_name
 ```
 
-To switch between or create new flagspaces use the `fs` command:
+在标志空间直接切换或创建标志空间使用`fs`命令：
 
 ```
 [0x00005310]> fs?
@@ -44,8 +44,7 @@ To switch between or create new flagspaces use the `fs` command:
 5  109 * imports
 [0x00005310]>
 ```
-
-Here there are some command examples:
+下面是一些例子：
 
 ```
 [0x4A13B8C0]> fs symbols ; select only flags in symbols flagspace
@@ -55,12 +54,11 @@ Here there are some command examples:
 [0x4A13B8C0]> f-myflag  ; delete the flag called 'myflag'
 ```
 
-You can rename flags with `fr`.
+通过`fr`可以重命名flag。
 
-### Local flags
+### 局部flag
 
-Every flag name should be unique for addressing reasons. But it is quite a common need
-to have the flags, for example inside the functions, with simple and ubiquitous names like `loop` or `return`. For this purpose you can use so called "local" flags, which are tied to the function where they reside. It is possible to add them using `f.` command:
+出于寻址的考虑，每个flag都应该是独一无二的。但是我们也常常需要一些简单而普遍的flag名字，比如在函数内部，类似`loop`或`return`这样的标记。为此我们可以使用局部flag，它们仅与它们所在处的函数相关联，可以用`f.`添加局部flag：
 
 ```
 [0x00003a04]> pd 10
@@ -99,12 +97,10 @@ to have the flags, for example inside the functions, with simple and ubiquitous 
 
 ### Flag Zones
 
-radare2 offers flag zones, which lets you label different offsets on the scrollbar, for making it easier to navigate through large binaries. You can set a flag zone on the current seek using:
+radare2提供了flag zone的功能，使您可以在滚动条上标记不同的偏移量，从而更方便地浏览大型二进制文件。可以用如下命令在当前偏移量下设置flag zone。
 
 ```
 [0x00003a04]> fz flag-zone-name
 ```
 
-Set `scr.scrollbar=1` and go to the Visual mode, to see your flag zone appear on the scrollbar on the right end of the window.
-
-See `fz?` for more information.
+设置`scr.scrollbar=1`然后进入可视化模式， 可以在窗口右端的滚动条上看到flag zone。参阅 `fz?` 获取更多相关信息。
