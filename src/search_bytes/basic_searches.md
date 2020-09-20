@@ -1,6 +1,6 @@
 ## Basic Search 
 
-A basic search for a plain text string in a file would be something like:
+在文件中搜索一段文本的基本方法如下：
 
     $ r2 -q -c "/ lib" /bin/ls
     Searching 3 bytes from 0x00400000 to 0x0041ae08: 6c 69 62 
@@ -15,33 +15,33 @@ A basic search for a plain text string in a file would be something like:
     0x00417160 hit0_7 "lib/xstrtol.c"
     0x00417578 hit0_8 "lib"
 
-As can be seen from the output above, radare2 generates a "hit" flag for every entry found. You can then use the `ps` command to see the strings stored at the offsets marked by the flags in this group, and they will have names of the form `hit0_<index>`:
+从上面的输出信息可以看出，radare2会为找到的每个条目生成一个"hit"标志， 可以使用`ps`命令查看这组条目对应地址上的字符串，条目的名称格式为`hit0_ <index>`：
 
     [0x00404888]> / ls
     ...
     [0x00404888]> ps @ hit0_0
     lseek
 
-You can search for wide-char strings (e.g., unicode letters) using the `/w` command:
+可以用`/w`命令搜索宽字符串（例如unicode字符）：
 
     [0x00000000]> /w Hello
     0 results found.
 
-To perform a case-insensitive search for strings use `/i`:
+若在搜索中需要区分大小写， 使用`/i`：
 
     [0x0040488f]> /i Stallman
     Searching 8 bytes from 0x00400238 to 0x0040488f: 53 74 61 6c 6c 6d 61 6e
     [# ]hits: 004138 < 0x0040488f  hits = 0
 
-It is possible to specify hexadecimal escape sequences in the search string by prepending them with "\x":
+在搜索字符串时也可以结合十六进制字节， 以"\x"作为转义符：
 
     [0x00000000]> / \x7FELF
 
-if, instead, you are searching for a string of hexadecimal values, you're probably better of using the `/x` command:
+不过如果您想要搜索十六进制串的话， 更好的做法使用`/x`命令：
 
     [0x00000000]> /x 7F454C46
 
-Once the search is done, the results are stored in the `searches` flag space.
+搜索完成后，结果将存储在`searches`标志空间内。
 
     [0x00000000]> fs
     0    0 . strings
@@ -56,8 +56,8 @@ Once the search is done, the results are stored in the `searches` flag space.
     0x00000bfb 512 hit0_4
     0x00000f2a 512 hit0_5
 
-To remove "hit" flags after you do not need them anymore, use the `f- hit*` command.
+如果不需要搜索结果， 使用`f-hit*`可以移除所有的"hit"标记。
 
-Often, during long search sessions, you will need to launch the latest search more than once. You can use the `//` command to repeat the last search.
+在漫长的搜索会话中，可能需要频繁执行最新一次的搜索，在radare2中可以用`//`重复上一次的搜索。
 
     [0x00000f2a]> //     ; repeat last search
