@@ -1,4 +1,6 @@
 # Introduction
+Gitbook: https://heersin.gitbook.io/radare2/
+
 本项目是radare2官方手册的个人中译版本，
 - Branch master : the master branch (Chinese Translation)
 - Branch eng_version : the original version of this book
