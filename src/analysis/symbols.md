@@ -1,19 +1,10 @@
 # Symbols
 
-Radare2 automatically parses available imports and exports sections in the binary,
-moreover, it can load additional debugging information if present.
-Two main formats are supported: DWARF and PDB (for Windows binaries).
-Note that, unlike many tools radare2 doesn't rely on Windows API to parse
-PDB files, thus they can be loaded on any other supported platform - e.g.
-Linux or OS X.
+Radare2会自动解析二进制文件中的导入和导出部分，此外，radare2也支持加载调试信息文件，主要是两种格式：DWARF和PDB（针对windows二进制文件）。与许多工具不同，radare2不依赖于Windows API对PDB文件进行解析，因此在支持radare2的平台上都可以加载PDB文件，例如Linux和OS X。
 
-DWARF debug info loads automatically by default because usually it's stored
-right in the executable file. PDB is a bit of a different beast - it is always
-stored as a separate binary, thus the different logic of handling it.
+默认情况下会自动加载DWARF调试信息，因为DWARF调试信息会存储在可执行文件中。只有PDB与众不同，它始终以独立的二进制文件存在，因此需要用不同的程序逻辑去处理它。
 
-At first, one of the common scenarios is to analyze the file from Windows distribution.
-In this case, all PDB files are available on the Microsoft server, which is by default
-is in options. See all pdb options in radare2:
+常见的一种场景是对来自windows发行版的文件进行分析，在此情况下所有的PDB文件都可以从Microsoft server上获得， 这也是radare2分析pdb文件时默认采用的选项。 下面展示的是radare2 所有pdb配置选项：
 
 ```
 pdb.autoload = 0
@@ -22,36 +13,26 @@ pdb.server = https://msdl.microsoft.com/download/symbols
 pdb.useragent = Microsoft-Symbol-Server/6.11.0001.402
 ```
 
-Using the variable `pdb.server` you can change the address where radare2 will try to
-download the PDB file by the GUID stored in the executable header.
-You can make use of multiple symbol servers by separating each URL with a semi-colon:
+使用`pdb.server`变量可以设置radare2获取PDB文件的地址， radare2可以通过存储在可执行文件头部的GUID尝试获取对应的PDB文件。可以通过分号分隔多个服务器的地址:
 ```
 e pdb.server = https://msdl.microsoft.com/download/symbols;https://symbols.mozilla.org/
 ```
-On Windows,  you can also use local network share paths (UNC paths) as symbol servers.
+在Windows上， 也可以用本地网络共享的路径（UNC paths）作为symbol服务器。
 
-Usually, there is no reason to change default `pdb.useragent`, but who knows where
-could it be handy?
+通常情况下不需要改变默认的`pdb.useragent`变量，不过谁知道会不会有用上它的一天呢。
 
-Because those PDB files are stored as "cab" archives on the server, `pdb.extract=1`
-says to automatically extract them.
+由于服务器上的PDB文件通常以"cab"格式储存，指定`pdb.extract=1`代表自动解压这些文件。要注意，这些需要系统上存在"cabextract"工具，以及wget或curl。
 
-Note that for the automatic downloading to work you need "cabextract" tool, and wget/curl installed.
-
-Sometimes you don't need to do that from the radare2 itself, thus - two handy
-rabin2 options:
+你也可以不在radare2完成这些工作， rabin2中有两个很方便的选项：
 
 ```
  -P              show debug/pdb information
  -PP             download pdb file for binary
 ```
 
-where `-PP` automatically downloads the pdb for the selected binary, using those
-`pdb.*` config options. `-P` will dump the contents of the PDB file, which is useful
-sometimes for a quick understanding of the symbols stored in it.
+`-PP`根据上面那些`pdb.*`选项，自动下载二进制文件对应的pdb文件。`-P`将会转储PDB文件内的内容，在快速了解PDB中存储的符号时还是很有用的。
 
-Apart from the basic scenario of just opening a file, PDB information can be additionally
-manipulated by the `id` commands:
+除了基本的文件打开等操作之外， 还可以通过`id`命令对PDB文件进行操作：
 
 ```
 [0x000051c0]> id?
@@ -64,18 +45,11 @@ manipulated by the `id` commands:
 | idpd             Download pdb file on remote server
 ```
 
-Where `idpi` is basically the same as `rabin2 -P`.
-Note that `idp` can be also used not only in the static analysis mode, but also
-in the debugging mode, even if connected via WinDbg.
+`idpi`与`rabin2 -P`是等价的。`idp`除了可以在静态分析中使用，也可以在debug模式下使用，即使是通过WinDbg调试进程时也可以。
 
-For simplifying the loading PDBs, especially for the processes with many linked DLLs,
-radare2 can autoload all required PDBs automatically - you need just set the
-`e pdb.autoload=true` option. Then if you load some file in debugging mode
-in Windows, using `r2 -d file.exe` or `r2 -d 2345` (attach to pid 2345), all
-related PDB files will be loaded automatically.
+为了简化加载PDB文件的工作，尤其对于那些具有许多DLL的进程，radare2可以自动加载需要的PDB，可以用`e pdb.autoload=true`选项启用这个特性。接着如果需要在Windows对一些文件进行调试，可以用`r2 -d file.exe`或`r2 -d 2345`（attach到pid 2345）， 所有相关的PDB文件就会被自动加载了。
 
-DWARF information loading, on the other hand, is completely automated. You don't
-need to run any commands/change any options:
+另一方面， DWARF信息完全采用自动加载的方式，不需要运行任何命令或设置任何选项：
 
 ```
 r2 `which rabin2`
@@ -130,5 +104,5 @@ r2 `which rabin2`
 0x000024dd  push rbp                    ; .//rabin2.c:27
 ```
 
-As you can see, it loads function names and source line information.
+正如所见的那样， 它将函数名和源码行标信息都加载进来了。
 
