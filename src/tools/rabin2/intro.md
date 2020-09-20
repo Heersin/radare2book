@@ -1,8 +1,5 @@
-# Rabin2 — Show Properties of a Binary
-
-Under this bunny-arabic-like name, radare hides a powerful tool to handle binary files, to get information on imports, sections, headers and other data. Rabin2 can present it in several formats accepted by other tools, including radare2 itself.
-Rabin2 understands many file formats: Java CLASS, ELF, PE, Mach-O or any format supported by plugins, and it is able to obtain symbol import/exports, library dependencies, strings of data sections, xrefs,  entrypoint address, sections, architecture type.
-
+# Rabin2 — 提取二进制文件的信息
+Rabin类似于阿拉伯语中的兔子，radare用这个可爱的名字掩盖了rabin是一个强大的二进制处理工具的事实。它可以获取有关导入，节，标头和其他数据的信息。 Rabin2可以用其他工具接受的格式来显示这些信息，包括radare2本身。Rabin2可以解析许多文件格式：Java CLASS，ELF，PE，Mach-O或插件支持的任何文件格式，并且能够获取符号导入/导出，库依赖，数据段字符串，外部参照，入口点地址，段，架构等。
 ```
 $ rabin2 -h
 Usage: rabin2 [-AcdeEghHiIjlLMqrRsSvVxzZ] [-@ at] [-a arch] [-b bits] [-B addr]
