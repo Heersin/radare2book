@@ -1,4 +1,4 @@
-# Basic Debugger Session
+# 基本的debug操作
 
 指定`-d`选项可启动radare2对程序进行调试。 记住，你可以attach到一个运行中的进程，只需要指定其PID即可。或者通过指定名字和参数启动一个程序。
 
