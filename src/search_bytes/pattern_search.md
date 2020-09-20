@@ -1,8 +1,8 @@
-## Pattern Matching Search
+## 搜索重复的字节序列
 
-The `/p` command allows you to apply repeated pattern searches on IO backend storage. It is possible to identify repeated byte sequences without explicitly specifying them. The only command's parameter sets minimum detectable pattern length.
-Here is an example:
+`/p`命令允许在IO后端存储上使用pattern进行匹配，识别文件中重复出现的字节序列。该命令唯一的参数是可检测到的最小字节序列长度。下面是该命令的一个例子：
 ```
 [0x00000000]> /p 10
 ```
-This command output will show different patterns found and how many times each of them is encountered.
+
+此命令的输出将显示找到的不同字节序列，以及每种字节序列命中多少次。
