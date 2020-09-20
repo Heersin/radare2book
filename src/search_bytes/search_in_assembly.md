@@ -1,8 +1,7 @@
-## Assembler Search
+## 汇编指令搜索
 
-If you want to search for a certain assembler opcodes, you can use `/a` commands.
+如果要搜索一个汇编操作码， 可以使用`/a`命令， 下面的`/ad/ jmp [esp]`命令搜索了对应的汇编助记符：
 
-The command `/ad/ jmp [esp]` searches for the specified category of assembly mnemonic:
 ```
 [0x00404888]> /ad/ jmp qword [rdx]
 f hit_0 @ 0x0040e50d   # 2: jmp qword [rdx]
@@ -14,7 +13,7 @@ f hit_5 @ 0x00419c1b   # 3: jmp qword [rdx]
 f hit_6 @ 0x00419c43   # 3: jmp qword [rdx]
 ```
 
-The command `/a jmp eax` assembles a string to machine code, and then searches for the resulting bytes:
+`/a jmp eax`命令将该字符串对应的汇编代码转为机器码，然后搜索该机器码：
 ```
 [0x00404888]> /a jmp eax
 hits: 1
