@@ -1,6 +1,6 @@
-## Exports
+## 导出（Exports）
 
-Rabin2 is able to find exports. For example:
+Rabin2也可以获取程序的导出信息， 例如:
 ```
 $ rabin2 -E /usr/lib/libr_bin.so | head
 [Exports]
