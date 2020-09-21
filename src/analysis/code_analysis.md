@@ -1,16 +1,14 @@
-# Code Analysis
+# 代码分析
 
-Code analysis is a common technique used to extract information from assembly code.
+代码分析是在提取汇编码内信息的一种普遍技术，radare2核心实现多种代码分析技术，可以通过不同的命令调用。
 
-Radare2 has different code analysis techniques implemented in the core and available in different commands.
+由于r2的全部功能都可以通过API或命令来实现，因此你可以使用任何编程语言来实现自己的代码分析方法， 甚至可以用r2 oneliners/shellscripts/原生插件等进行实现。
 
-As long as the whole functionalities of r2 are available with the API as well as using commands. This gives you the ability to implement your own analysis loops using any programming language, even with r2 oneliners, shellscripts, or analysis or core native plugins.
+r2的分析将显示内部数据结构，以识别基本块和函数树，并提取操作码级别的信息。
 
-The analysis will show up the internal data structures to identify basic blocks, function trees and to extract opcode-level information.
+radare2最常用的分析命令就是`aa`，代表“analyze all”，其中的“all”代指所有的symbols和EP（入口点）。如果是一个stripped的二进制文件，那可能还需要使用其他命令，比如`aaa`，`aab`，`aar`，`aac`等。
 
-The most common radare2 analysis command sequence is `aa`, which stands for "analyze all". That all is referring to all symbols and entry-points. If your binary is stripped you will need to use other commands like `aaa`, `aab`, `aar`, `aac` or so.
-
-Take some time to understand what each command does and the results after running them to find the best one for your needs.
+花些时间了解各个命令都完成了哪些工作，以及他们会返回哪些信息，再从中选择最适合你的。
 
 ```
 [0x08048440]> aa
@@ -64,23 +62,13 @@ Take some time to understand what each command does and the results after runnin
 \     0x080486d4    c3           ret
 ```
 
-In this example, we analyze the whole file (`aa`) and then print disassembly of the `main()` function (`pdf`).
-The `aa` command belongs to the family of auto analysis commands and performs only the most basic
-auto analysis steps. In radare2 there are many different types of the auto analysis commands with a
-different analysis depth, including partial emulation: `aa`, `aaa`, `aab`, `aaaa`, ...
-There is also a mapping of those commands to the r2 CLI options: `r2 -A`, `r2 -AA`, and so on.
+在这个例子中，我们分析了整个文件（aa），然后打印了main（）函数的反汇编（pdf）。`aa`命令属于自动分析命令族，仅执行最基本的命令自动分析步骤。在radare2中，有许多不同类型的自动分析命令，其中包含不同程度的分析，包括进行部分仿真：`aa`，`aaa`，`aab`，`aaaa`，...这些命令也映射到r2的命令行选项：`r2 -A`，`r2 -AA`等。
 
-It is a common sense that completely automated analysis can produce non sequitur results, thus
-radare2 provides separate commands for the particular stages of the analysis allowing fine-grained
-control of the analysis process. Moreover, there is a treasure trove of configuration variables
-for controlling the analysis outcomes. You can find them in `anal.*` and `emu.*`
-cfg variables' namespaces.
+我们都知道，完全自动化的分析产生的结果不一定正确，因此Radar2为分析的特定阶段提供了单独的命令，可在细粒度上控制分析过程。此外，radare2还提供了一些配置变量来控制分析结果。可以在配置变量中的`anal.*`和`emu.*`命名空间中找到它们。
 
-## Analyze functions
+## 分析函数
 
-One of the most important "basic" analysis commands is the set of `af` subcommands. `af` means
-"analyze function". Using this command you can either allow automatic analysis of the particular
-function or perform completely manual one.
+最终要的分析命令之一就是`af`命令族，`af`的意思是”analyze function“。使用该命令可以进行全自动分析，或手动对其分析。
 
 ```
 [0x00000000]> af?
@@ -114,22 +102,18 @@ function or perform completely manual one.
 | afv[absrx]?               manipulate args, registers and variables in function
 | afx                      list function references
 ```
-You can use `afl` to list the functions found by the analysis.
+使用`afl`可以列出分析中发现的函数。
 
-There are a lot of useful commands under `afl` such as `aflj`, which lists the function in JSON format and `aflm`, which lists the functions in the syntax found in makefiles.
+`afl`有许多有用的下属子命令，比如`aflj`可以以JSON格式将发现的函数列出来，`aflm`以makefile的格式列出这些函数。
 
-There's also `afl=`, which displays ASCII-art bars with function ranges.
+这里还有一个`afl=`命令，可以以ASCII字符画的风格用条柱显示函数的范围。
 
-You can find the rest of them under `afl?`.
+其余的命令可以通过`afl?`查看。
 
-Some of the most challenging tasks while performing a function analysis are merge, crop and resize.
-As with other analysis commands you have two modes: semi-automatic and manual.
-For the semi-automatic, you can use `afm <function name>` to merge the current function with
-the one specified by name as an argument, `aff` to readjust the function after analysis changes or function edits,
-`afu <address>` to do the resize and analysis of the current function until the specified address.
-
-Apart from those semi-automatic ways to edit/analyze the function, you can hand craft it in the manual mode with `af+` command and edit basic blocks of it using `afb` commands.
-Before changing the basic blocks of the function it is recommended to check the already presented ones:
+执行函数分析时，最难的一些任务是函数名绑定，微调和调整大小。与其他分析命令一样，有两种模式可以选择：半自动和手动。
+半自动模式下，可以使用`afm <function name>`将当前的函数和参数中给出的名字进行绑定。`aff`用于在函数修改后对函数进行调整，`afu <address>`用于将当前函数的范围调整到指定地址，并重新分析。
+与半自动模式不同，可以通过`af+`进入手动模式，然后通过`afb`命令对基础块进行编辑。
+在修改函数的基本块之前，建议先看看现有的基本块：
 
 ```
 [0x00003ac0]> afb
@@ -141,13 +125,11 @@ Before changing the basic blocks of the function it is recommended to check the 
 0x00003ba8 0x00003bf9 00:0000 81
 ```
 
-There are two very important commands for this: `afc` and `afB`. The latter is a must-know command for some platforms like ARM. It provides a way to change the "bitness" of the particular function. Basically, allowing to select between ARM and Thumb modes.
+有两个非常重要的命令：“ afc”和“ afB”，对于某些平台（例如ARM），后者是必不可少的命令。因为它提供了一种修改特定函数的“bitness”的方法，主要来说就是其允许选择在ARM和Thumb模式之间进行。`afc` 则是允许手动指定调用约定，可以在[calling_conventions](calling_conventions.md)这一节了解更多信息。
 
-`afc` on the other side, allows to manually specify function calling convention. You can find more information on its usage in [calling_conventions](calling_conventions.md).
+## 递归分析
 
-## Recursive analysis
-
-There are 5 important program wide half-automated analysis commands:
+有5个重要的半自动分析命令用于程序内分析:
 
  - `aab` - perform basic-block analysis ("Nucleus" algorithm)
  - `aac` - analyze function calls from one (selected or current function)
@@ -155,9 +137,7 @@ There are 5 important program wide half-automated analysis commands:
  - `aar` - analyze data references
  - `aad` - analyze pointers to pointers references
 
-Those are only generic semi-automated reference searching algorithms. Radare2 provides a
-wide choice of manual references' creation of any kind. For this fine-grained control
-you can use `ax` commands.
+这些只是通用的半自动化引用搜索方法，Radare2提供了各式各样的引用创建方法，如要进行细粒度的控制，可以使用`ax`命令。
 
 ```
 Usage: ax[?d-l*]   # see also 'afx?'
@@ -184,10 +164,7 @@ Usage: ax[?d-l*]   # see also 'afx?'
 | axs addr [at]   add string ref
 ```
 
-The most commonly used `ax` commands are `axt` and `axf`, especially as a part of various r2pipe
-scripts. Lets say we see the string in the data or a code section and want to find all places
-it was referenced from, we should use `axt`:
-
+最常用的`ax`族命令是`axt`和`axf`，尤其是作为r2pipe脚本的一部分时。假设在数据中发现了字符串，我们想找到所有引用它的位置，需要使用`axt`：
 ```
 [0x0001783a]> pd 2
 ;-- str.02x:
@@ -206,7 +183,7 @@ sub.strlen_d50 0x5de0 [STRING] lea rcx, str.02x
 (nofunc) 0x17838 [CODE] jae str.02x
 ```
 
-There are also some useful commands under `axt`. Use `axtg` to generate radare2 commands which will help you to create graphs according to the XREFs.
+在`axt`下还有些其他有用的命令，`axtg`可以输出radare2的命令，这些命令可以可以帮助你根据XREFs生成交叉引用图。
 
 ```
 [0x08048320]> s main
@@ -216,9 +193,9 @@ agn 0x80483e0 "main"
 age 0x8048337 0x80483e0
 ```
 
-Use `axt*` to split the radare2 commands and set flags on those corresponding XREFs.
+使用`axt*`可以将这些命令分割开，然后在特定的XREFs位置上设置标记。
 
-Also under `ax` is `axg`, which finds the path between two points in the file by showing an XREFs graph to reach the location or function. For example:
+`axg`也在`ax`命令下，可以以XREFs图的形式显示该地址到当前函数/位置之间的路径，比如：
 
 ```
 :> axg sym.imp.printf
@@ -228,23 +205,22 @@ Also under `ax` is `axg`, which finds the path between two points in the file by
     - 0x08048337 fcn 0x08048320 entry0
   - 0x08048425 fcn 0x080483e0 main
 ```
-Use `axg*` to generate radare2 commands which will help you to create graphs using `agn` and `age` commands, according to the XREFs.
+使用`axg*`生成的radare2命令可以帮助你根据XREFs，借助`agn`和`age`命令绘制XREF图。
 
-Apart from predefined algorithms to identify functions there is a way to specify
-a function prelude with a configuration option `anal.prelude`. For example, like
-`e anal.prelude = 0x554889e5` which means
+除了用预定义算法识别函数之外，还可以指定一个带有配置选项“anal.prelude”的函数前导码。例如，像
+`e anal.prelude = 0x554889e5`，其在x86\_64平台代表如下含义：
 
 ```
 push rbp
 mov rbp, rsp
 ```
 
-on x86\_64 platform. It should be specified _before_ any analysis commands.
+在x86\_64平台上，任何分析命令 _之前_ 都应有该前导码存在。 
 
-## Configuration
+## 配置
 
-Radare2 allows to change the behavior of almost any analysis stages or commands.
-There are different kinds of the configuration options:
+Radare2几乎允许对任何分析阶段或命令的行为进行修改。
+底下是不同种类的配置选项：
 
  - Flow control
  - Basic blocks control
@@ -253,31 +229,20 @@ There are different kinds of the configuration options:
  - Jump tables analysis control
  - Platform/target specific options
 
-### Control flow configuration
+### 控制流配置
 
-Two most commonly used options for changing the behavior of control flow analysis in radare2 are
-`anal.hasnext` and `anal.afterjump`. The first one allows forcing radare2 to continue the analysis
-after the end of the function, even if the next chunk of the code wasn't called anywhere, thus
-analyzing all of the available functions. The latter one allows forcing radare2 to continue
-the analysis even after unconditional jumps.
+改变radare2中控制流分析行为的两个最常用的选项是`anal.hasnext`和`anal.afterjump`。第一个允许radare2在函数结束后强制进行分析，即使接下来的代码块不曾被调用，因此能分析所有潜在的函数。后一个选项允许radare2强制对无条件跳转之后的代码部分继续分析。
 
-In addition to those we can also set `anal.ijmp` to follow the indirect jumps, continuing analysis;
-`anal.pushret` to analyze `push ...; ret` sequence as a jump; `anal.nopskip` to skip the NOP
-sequences at a function beginning.
+除了这些，我们还可以设置`anal.ijmp`来跟随间接跳转，继续进行分析；设置`anal.pushret`将`push ...;ret；`序列也作为跳转进行分析;设置`anal.nopskip`跳过函数开头的NOP序列。
 
-For now, radare2 also allows you to change the maximum basic block size with `anal.bb.maxsize` option
-. The default value just works in most use cases, but it's useful to increase that for example when
-dealing with obfuscated code. Beware that some of basic blocks
-control options may disappear in the future in favor of more automated ways to set those.
+现在，radare2还允许您使用`anal.bb.maxsize`选项更改最大基本块大小。默认块值在大多数情况下都适用，但是在分析混淆代码时增加该值会比较有用。要注意的是，块控制相关的选项在未来可能会取消，我们
+将来更倾向于采用自动化的方式对该值进行设置。
 
-For some unusual binaries or targets, there is an option `anal.noncode`. Radare2 doesn't try
-to analyze data sections as a code by default. But in some cases - malware, packed binaries,
-binaries for embedded systems, it is often a case. Thus - this option.
+对于一些不寻常的二进制文件或目标，有一个选项`anal.noncode`可用。Radare2默认情况下不会将数据段作为代码进行分析，但是在某些情况下比如恶意软件，加壳的二进制文件，或者是嵌入式系统上的文件通常需要这么分析，因此我们便提供了这个选项。
 
-### Reference control
+### 引用控制
 
-The most crucial options that change the analysis results drastically. Sometimes some can be
-disabled to save the time and memory when analyzing big binaries.
+这个关键选项可以彻底改变分析结果。有时候可以禁用此选项以节省分析大文件的时间，以及节省内存。
 
 - `anal.jmpref` - to allow references creation for unconditional jumps
 - `anal.cjmpref` - same, but for conditional jumps
@@ -285,11 +250,11 @@ disabled to save the time and memory when analyzing big binaries.
 - `anal.refstr` - search for strings in data references
 - `anal.strings` - search for strings and creating references
 
-Note that strings references control is disabled by default because it increases the analysis time.
+注意默认情况下string reference是禁用的，因为它会增加分析消耗的时间。
 
-### Analysis ranges
+### 分析范围
 
-There are a few options for this:
+这里是一些用于控制分析范围的选项:
 
 - `anal.limits` - enables the range limits for analysis operations
 - `anal.from` - starting address of the limit range
@@ -302,55 +267,37 @@ There are a few options for this:
   - To analyze in the stack or heap, you can set `anal.in=dbg.stack` or `anal.in=dbg.heap`.
   - To analyze in the current function or basic block, you can specify `anal.in=anal.fcn` or `anal.in=anal.bb`.
 
-Please see `e anal.in=??` for the complete list.
+请参阅 `e anal.in=??` 获取完整的选项列表。
 
-### Jump tables
+### 跳转表
 
-Jump tables are one of the trickiest targets in binary reverse engineering. There are hundreds
-of different types, the end result depending on the compiler/linker and LTO stages of optimization.
-Thus radare2 allows enabling some experimental jump tables detection algorithms using `anal.jmptbl`
-option. Eventually, algorithms moved into the default analysis loops once they start to work on
-every supported platform/target/testcase.
-Two more options can affect the jump tables analysis results too:
+跳转表是二进制逆向工程中最棘手的目标之一，有几百个不同的类型，其最终的结果取决于编译器/链接器和LTO优化阶段。因此，radare2允许使用`anal.jmptbl`选项启用一些实验性质的跳转表检测算法。最终，算法一旦开始在每个受支持的平台/目标/测试用例上工作，便进入默认的分析循环。
+下面的两个选项也能影响跳转表分析的工作:
 
 - `anal.ijmp` - follow the indirect jumps, some jump tables rely on them
 - `anal.datarefs` - follow the data references, some jump tables use those
 
-### Platform specific controls
+### 特定于平台的一些控制
 
-There are two common problems when analyzing embedded targets: ARM/Thumb detection and MIPS GP
-value. In case of ARM binaries radare2 supports some auto-detection of ARM/Thumb mode switches, but
-beware that it uses partial ESIL emulation, thus slowing the analysis process. If you will not
-like the results, particular functions' mode can be overridden with `afB` command.
+分析嵌入式目标时，有两个常见问题：ARM/Thumb检测和MIPS GP值。如果是ARM二进制文件，radare2支持对ARM/Thumb模式切换的某些自动检测，但是要注意它使用部分ESIL仿真技术，从而减慢了分析过程。如果你不愿意接受，可以使用`afB`命令覆盖特定函数的ARM/Thumb模式。
 
-The MIPS GP problem is even trickier. It is a basic knowledge that GP value can be different not only
-for the whole program, but also for some functions. To partially solve that there are options
-`anal.gp` and `anal.gp2`. The first one sets the GP value for the whole program or particular
-function. The latter allows to "constantify" the GP value if some code is willing to change its
-value, always resetting it if the case. Those are heavily experimental and might be changed in the
-future in favor of more automated analysis.
+MIPS GP问题更加棘手。基本上来说，GP值不仅在整个程序可以是不同的，而且在函数内也可以不同。`anal.gp`和`anal.gp2`可以部分解决这些问题。第一个选项设置整个程序或特定函数的GP值，后一个选项则是在某些函数想要修改GP值时，去”固定“GP值，即在GP值被修改之后恢复到原来状态。这些都是实验性质的选项，在未来倾向于以更自动化的方式代替。
 
-## Visuals
+## 可视化
 
-One of the easiest way to see and check the changes of the analysis commands and variables
-is to perform a scrolling in a `Vv` special visual mode, allowing functions preview:
+查看分析命令与变量更改的最简单方法之一是在“ Vv”视觉模式下滚动屏幕，并且可以预览函数：
 
 ![vv](code_analysis_vv.png)
 
-When we want to check how analysis changes affect the result in the case of big functions, we can
-use minimap instead, allowing to see a bigger flow graph on the same screen size. To get into
-the minimap mode type `VV` then press `p` twice:
+当我们在面对大函数时， 若想看看分析对结果有何影响，可以使用minimap，以便在相同的屏幕尺寸下查看更大的流程图。通过`VV`然后按下2次`p`可以进入minimap模式。
 
 ![vv2](code_analysis_vv2.png)
 
-This mode allows you to see the disassembly of each node separately, just navigate between them using `Tab` key.
+这种模式可以分别查看每个节点的反汇编，只需使用“ Tab”键在它们之间切换即可。
 
-## Analysis hints
+## 分析推断（analysis hints）
 
-It is not an uncommon case that analysis results are not perfect even after you tried every single
-configuration option. This is where the "analysis hints" radare2 mechanism comes in. It allows
-to override some basic opcode or meta-information properties, or even to rewrite the whole opcode
-string. These commands are located under `ah` namespace:
+即使您尝试了每一个配置选项，分析结果也仍不完美的情况并不少见。这时候Radare2的“analysis hints”技术就该登场啦。它允许重写一些基本的操作码或元信息属性，甚至重写整个操作码串。这些命令位于“ah”命名空间下：
 
 ```
 Usage: ah[lba-]  Analysis Hints
@@ -382,7 +329,7 @@ Usage: ah[lba-]  Analysis Hints
 | ahv val            change opcode's val field (useful to set jmptbl sizes in jmp rax)
 ```
 
-One of the most common cases is to set a particular numeric base for immediates:
+最常见的情况之一是为立即数设置特定的数字基数：
 
 ```
 [0x00003d54]> ahi?
@@ -411,8 +358,7 @@ Usage: ahi [2|8|10|10u|16|bodhipSs] [@ offset]   Define numeric base
 0x00003d59      3d13010000     cmp eax, 0x113
 ```
 
-It is notable that some analysis stages or commands add the internal analysis hints,
-which can be checked with `ah` command:
+值得注意的是，某些分析阶段中或某些命令会添加radare2内部的分析推断，可以用ah命令检查：
 
 ```
 [0x00003d54]> ah
@@ -421,10 +367,8 @@ which can be checked with `ah` command:
  ahi 2 @ 0x3d54
 ```
 
-Sometimes we need to override jump or call address, for example in case of tricky
-relocation, which is unknown for radare2, thus we can change the value manually.
-The current analysis information about a particular opcode can be checked with `ao` command.
-We can use `ahc` command for performing such a change:
+有时我们需要覆盖跳转或调用地址，例如，在棘手的情况下进行重定位，这对于radare2是未知的，因此我们得手动更改该值。
+可以使用ao命令检查有关特定操作码的当前分析信息，我们可以使用`ahc`命令执行这样的更改：
 
 ```
 [0x00003cee]> pd 2
@@ -476,12 +420,9 @@ stackop: null
  0x00003cee - 0x00003cee => jump: 0x5382
 ```
 
-As you can see, despite the unchanged disassembly view the jump address in opcode was changed
-(`jump` option).
+正如你所见到的那样，尽管反汇编视图不变，但操作码中的跳转地址已更改（`jump`选项）。
 
-If anything of the previously described didn't help, you can simply override shown disassembly with anything you
-like:
-
+如果先前描述的任何方法都不起效，则可以用任何你喜欢的东西简单地覆盖显示的反汇编：
 ```
 [0x00003d54]> pd 2
 0x00003d54      0583000000     add eax, 10000011b
