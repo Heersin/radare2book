@@ -1,7 +1,6 @@
-## Strings
+## 字符串
 
-The `-z` option is used to list readable strings found in the .rodata section of ELF binaries, or the .text section of PE files. Example:
-
+`-z`选项用于列出ELF文件中.rodata段或PE文件中.text段找到的可读字符串，例如：
 ```
 $ rabin2 -z /bin/ls | head
 000 0x000160f8 0x000160f8  11  12 (.rodata) ascii dev_ino_pop
@@ -16,8 +15,7 @@ $ rabin2 -z /bin/ls | head
 009 0x0001636b 0x0001636b  76  77 (.rodata) ascii # are permitted provided the copyright notice and this notice are preserved.
 ```
 
-With the `-zr` option, this information is represented as a radare2 commands list. It can be used in a radare2 session to automatically create a flag space called "strings" pre-populated with flags for all strings found by rabin2.
-Furthermore, this script will mark corresponding byte ranges as strings instead of code.
+使用`-zr`选项，这些信息将会以radare2命令的格式列出，这些命令可以在radare2会话内使用，自动创建一个名为“strings”的标志空间，里面包括了rabin2发现的所有字符串。此外，这些命令会将相应的字节范围标记为字符串，而非作为代码。
 ```
 $ rabin2 -zr /bin/ls | head
 fs stringsf str.dev_ino_pop 12 @ 0x000160f8
