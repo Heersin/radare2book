@@ -1,6 +1,6 @@
 ## Symbols (Exports)
 
-With rabin2, the generated symbols list format is similar to the imports list. Use the `-s` option to get it:
+在rabin2中生成的符号表与导入表具有相似的格式，使用`-s`选项可以查看符号表：
 
 ```
 rabin2 -s /bin/ls | head
@@ -16,7 +16,7 @@ rabin2 -s /bin/ls | head
 118 0x0001f5e0 0x0021f5e0 GLOBAL  OBJ  8 program_short_name
 ```
 
-With the `-sr` option rabin2 produces a radare2 script instead. It can later be passed to the core to automatically flag all symbols and to define corresponding byte ranges as functions and data blocks.
+使用`-sr`选项，rabin2则会生成一个radare2脚本，可以在之后将其传递给radare2核心程序以自动标记所有符号，并将二进制文件内相应的字节范围定义为函数块和数据块。
 
 ```
 $ rabin2 -sr /bin/ls | head
