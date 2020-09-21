@@ -1,6 +1,6 @@
-## File Properties Identification
+## 文件属性识别
 
-File type identification is done using `-I`. With this option, rabin2 prints information on a binary type, like its encoding, endianness, class, operating system:
+文件类型信息的识别是通过`-I`参数完成的。使用此选项，rabin2将信息输出该文件的二进制信息，例如其编码，使用的字节序，文件内的类，操作系统类型等：
 ```
 $ rabin2 -I /bin/ls
 arch     x86
@@ -32,7 +32,7 @@ subsys   linux
 va       true
 ```
 
-To make rabin2 output information in format that the main program, radare2, can understand, pass `-Ir` option to it:
+若要使rabin2输出radare2核心程序可理解的信息，可以使用`-Ir`选项：
 ```
 $ rabin2 -Ir /bin/ls
 e cfg.bigendian=false
