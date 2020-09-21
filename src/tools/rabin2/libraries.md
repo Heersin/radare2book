@@ -1,6 +1,6 @@
-## List Libraries
+## 列出库文件
 
-Rabin2 can list libraries used by a binary with the `-l` option:
+Rabin2可以用`-l`选项列出二进制文件中使用的库文件：
 ```
 $ rabin2 -l `which r2`
 [Linked libraries]
@@ -29,7 +29,7 @@ libc.so.6
 
 22 libraries
 ```
-Lets check the output with `ldd` command:
+我们来看看`ldd`命令会输出什么内容:
 ```
 $ ldd `which r2`
 linux-vdso.so.1 (0x00007fffba38e000)
@@ -66,4 +66,4 @@ libutil.so.1 => /lib64/libutil.so.1 (0x00007f94af4ff000)
 libz.so.1 => /lib64/libz.so.1 (0x00007f94af2e8000)
 ```
 
-If you compare the outputs of `rabin2 -l` and `ldd`, you will notice that rabin2 lists fewer libraries than `ldd`. The reason is that rabin2 does not follow and does not show dependencies of libraries. Only direct binary dependencies are shown.
+将`rabin2 -l`和`ldd`的输出结果相比较， 你能发现rabin2列出的库文件比`ldd`要少。原因在于rabin2不会跟进库文件中并将其依赖项一起列出，只会列出那些直接引用的依赖库。
