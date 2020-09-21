@@ -1,6 +1,6 @@
-## Program Sections
+## 程序段（Section）
 
-Rabin2 called with the `-S` option gives complete information about the sections of an executable. For each section the index, offset, size, alignment, type and permissions, are shown. The next example demonstrates this:
+使用`-S`选项调用Rabin2可以获得一个可执行文件的所有段信息，包含每个段的Index，offset，size，alignment，type和permission信息，下面这个例子就展示了这个功能：
 ```
 $ rabin2 -S /bin/ls
 [Sections]
@@ -33,7 +33,7 @@ $ rabin2 -S /bin/ls
 26 0x0001f5c8   232 0x00000000   232 ---- .shstrtab
 ```
 
-With the `-Sr` option, rabin2 will flag the start/end of every section, and will pass the rest of information as a comment.
+通过`-Sr`选项，rabin2会标记每个段的开头和结尾，然后将剩下的信息作为注释输出：
 ```
 $ rabin2 -Sr /bin/ls | head
 fs sections
