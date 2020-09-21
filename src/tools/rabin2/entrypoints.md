@@ -1,6 +1,6 @@
-## Code Entrypoints
+## 入口点（EP）
 
-The `-e` option passed to rabin2 will show entrypoints for given binary. Two examples:
+使用rabin2的`-e`选项可以输出程序的入口点，底下是两个例子:
 ```
 $ rabin2 -e /bin/ls
 [Entrypoints]
