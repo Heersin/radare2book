@@ -1,6 +1,6 @@
-## Imports
+## 导入（Imports）
 
-Rabin2 is able to find imported objects by an executable, as well as their offsets in its PLT. This information is useful, for example, to understand what external function is invoked by `call` instruction. Pass `-i` flag to rabin2 to get a list of imports. An example:
+Rabin2可以查找二进制文件导入的各个对象， 以及他们在PLT中对应的偏移量。这些信息是很有用的，比如说有时我们需要找到`call`指令究竟调用了哪个外部函数。使用rabin2的`-i`可以获取导入表，就像下面这样：
 
 ```
 $ rabin2 -i /bin/ls
