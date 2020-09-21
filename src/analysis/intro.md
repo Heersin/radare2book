@@ -1,9 +1,7 @@
-# Data and Code Analysis
+# 数据与代码分析
 
-Radare2 has a very rich set of commands and configuration options to perform data and code analysis,
-to extract useful information from a binary, like pointers, string references,
-basic blocks, opcode data, jump targets, cross references and much more.
-These operations are handled by the `a` (analyze) command family:
+Radare2具有一组非常丰富的命令和配置选项，可以用于执行代码和数据的分析，以及从二进制文件中提取有用的信息，例如指针，字符串引用，基本块，操作码数据，跳转目标，交叉引用等等。
+这些操作由`a`（analyze）命令族处理：
 
 ```
 |Usage: a[abdefFghoprxstc] [...]
@@ -31,16 +29,15 @@ These operations are handled by the `a` (analyze) command family:
 | ax[?]              manage refs/xrefs (see also afx?)
 ```
 
-In fact, `a` namespace is one of the biggest in radare2 tool and allows to control
-very different parts of the analysis:
+事实上，`a`命名空间是radare2最大的命名空间之一，可以控制分析过程中不同的部分：
 
- - Code flow analysis
- - Data references analysis
- - Using loaded symbols
- - Managing different type of graphs, like CFG and call graph
- - Manage variables
- - Manage types
- - Emulation using ESIL VM
+ - 程序流分析
+ - 数据引用
+ - 加载符号
+ - 管理各种视图，例如CFG和call graph
+ - 管理变量
+ - 管理类型
+ - 使用ESIL VM模拟执行
  - Opcode introspection
- - Objects information, like virtual tables
+ - 其他的一些对象信息，例如Virtual Table
 
