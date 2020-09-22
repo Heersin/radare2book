@@ -1,7 +1,6 @@
-# Calling Conventions
+# 调用约定
 
-Radare2 uses calling conventions to help in identifying function formal arguments and return types. 
-It is used also as a guide for basic function prototype and type propagation.
+Radare2使用调用约定的信息帮助对函数的形参和返回值进行识别，调用约定的信息同样用于指导函数原型和类型传递的推断。
 
 ```
 [0x00000000]> afc?
@@ -19,14 +18,14 @@ It is used also as a guide for basic function prototype and type propagation.
 [0x00000000]>
 ```
 
-* To list all available calling conventions for current architecture using `afcl` command
+* 使用`afcl`命令可以列出当前架构可用的调用约定。
 
 ```
 [0x00000000]> afcl
 amd64
 ms
 ```
-* To display function prototype of standard library functions you have `afcf` command 
+* 使用`afcf`命令可以显示标准库函数的函数原型。
 
 ```
 [0x00000000]> afcf printf
@@ -35,7 +34,7 @@ int printf(const char *format)
 char *fgets(char *s, int size, FILE *stream)
 ```
 
-All this information is loaded via sdb under `/libr/anal/d/cc-[arch]-[bits].sdb`
+这些信息是从名为`/libr/anal/d/cc-[arch]-[bits].sdb`的sdb中加载的。
 
 ```
 default.cc=amd64
@@ -50,8 +49,8 @@ cc.ms.argn=stack
 cc.ms.ret=rax
 ```
 
-`cc.x.argi=rax` is used to set the ith argument of this calling convention to register name `rax`
+`cc.x.argi=rax` 用于将该调用约定的第i个参数设置为`rax`寄存器。
 
-`cc.x.argn=stack` means that all the arguments (or the rest of them in case there was argi for any i as counting number) will be stored in stack from left to right
+`cc.x.argn=stack` 代表所有参数（如果是在指定了argi调用约定的情况下，则代表除argi之外的所有参数）从左到右存在栈上。
 
-`cc.x.argn=stack_rev` same as `cc.x.argn=stack` except for it means argument are passed right to left
+`cc.x.argn=stack_rev` 与 `cc.x.argn=stack` 相同，除了前者代表参数是从右到左储存之外。
