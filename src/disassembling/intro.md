@@ -1,28 +1,28 @@
-# Disassembling
+# 反汇编
 
-Disassembling in radare is just a way to represent an array of bytes. It is handled as a special print mode within `p` command.
+反汇编在radare2中只是一组字节的不同表示形式，其作为`p`命令下一种特殊的输出格式存在。
 
-In the old times, when the radare core was smaller, the disassembler was handled by an external rsc file. That is, radare first dumped current block into a file, and then simply called `objdump` configured to disassemble for Intel, ARM or other supported architectures.
+在过去radare的核心程序还比较小巧的时候，反汇编器是由外部rsc文件进行管理的，即radare首先将当前的代码块转储到一个文件中，然后简单地调用配置好的`objdump`对Intel，ARM或其他支持的架构进行反汇编。
 
-It was a working and unix friendly solution, but it was inefficient as it repeated the same expensive actions over and over, because there were no caches. As a result, scrolling was terribly slow.
+该方案是可行的，且对Unix很友好，但是它的效率低下，因为在该方案中没有cache缓存，只会一边又一边地执行这些高代价的操作，导致滚动浏览汇编代码时非常缓慢。
 
-So there was a need to create a generic disassembler library to support multiple plugins for different architectures. We can list the current loaded plugins with
+因而我们需要创造一个通用的反汇编库，以支持针对不同架构的反汇编插件，可以使用下面的命令列出当前加载的插件：
 
 ```
 $ rasm2 -L
 ```
 
-Or from inside radare2:
+或者在radare2里使用：
 
 ```
 > e asm.arch=??
 ```
 
-This was many years before capstone appeared. So r2 was using udis86 and olly disassemblers, many gnu (from binutils).
+在突破出现之前的很多年里，r2使用的都是udis86和olly disassemblers，以及GNU binutils中的工具。
 
-Nowadays, the disassembler support is one of the basic features of radare. It now has many options, endianness, including target architecture flavor and disassembler variants, among other things.
+现在，反汇编器的支持已经变成了radare2的一个基本功能，现在的它具有许多选项，支持许多字节序，以及不同的目标架构风格，还拥有多种反汇编器。
 
-To see the disassembly, use the `pd` command. It accepts a numeric argument to specify how many opcodes of current block you want to see. Most of the commands in radare consider the current block size as the default limit for data input. If you want to disassemble more bytes, set a new block size using the `b` command.
+使用`pd`可以看到对应的汇编代码，`pd`接受一个数字型参数，用于指定显示当前代码块中多少条操作码。Radare2中的多数命令对于代码块的大小有一个默认的限制，如果你想对更多的字节进行反汇编，需使用`b`重设代码块的大小。
 
 ```
 [0x00000000]> b 100    ; set block size to 100
@@ -31,9 +31,9 @@ To see the disassembly, use the `pd` command. It accepts a numeric argument to s
 [0x00000000]> pD 30    ; disassemble 30 bytes
 ```
 
-The `pD` command works like `pd` but accepts the number of input bytes as its argument, instead of the number of opcodes.
+`pD`命令与`pd`命令是类似的，差别在于其接受的参数代表字节数而非`pd`中的操作码数。
 
-The "pseudo" syntax may be somewhat easier for a human to understand than the default assembler notations. But it can become annoying if you read lots of code. To play with it:
+对于人类来说，“pesudo”伪语法可能比默认的汇编代码更容易理解。不过在面对大量代码时可能会对此感到厌烦。若要尝试体验这个功能，就像下面这样进行设置：
 
 ```
 [0x00405e1c]> e asm.pseudo = true
