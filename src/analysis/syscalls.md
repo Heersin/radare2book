@@ -1,8 +1,6 @@
 # Syscalls
 
-Radare2 allows manual search for assembly code looking like a syscall operation.
-For example on ARM platform usually they are represented by the `svc` instruction,
-on the others can be a different instructions, e.g. `syscall` on x86 PC.
+Radare2允许使用者手动搜索诸如syscall操作这样的汇编码。例如在ARM平台上，`svc`就代表系统调用，而在其他平台上可能是另一条指令，例如X86平台上的`syscall`。
 ```
 [0x0001ece0]> /ad/ svc
 ...
@@ -11,10 +9,7 @@ on the others can be a different instructions, e.g. `syscall` on x86 PC.
 0x00018a0e   # 2: svc 0x82
 ...
 ```
-Syscalls detection is driven by `asm.os`, `asm.bits`, and `asm.arch`. Be sure
-to setup those configuration options accordingly. You can use `asl` command
-to check if syscalls' support is set up properly and as you expect.
-The command lists syscalls supported for your platform.
+系统调用检测由`asm.os`, `asm.bits`和`asm.arch`驱动，确保这些配置选项被相应地设置了。可以使用`asl`命令来检查系统调用的支持是否正确设置以及是否符合期望，该命令也列出了平台支持的系统调用。
 ```
 [0x0001ece0]> asl
 ...
@@ -24,8 +19,7 @@ sd_softdevice_is_enabled = 0x80.18
 ...
 ```
 
-If you setup ESIL stack with `aei` or `aeim`, you can use `/as` command to search
-the addresses where particular syscalls were found and list them.
+如果你使用`aei`或`aeim`设置了ESIL栈，则可以使用`/as`命令进行搜索，找到特定系统调用的地址并列出它们。
 ```
 [0x0001ece0]> aei
 [0x0001ece0]> /as
@@ -34,13 +28,9 @@ the addresses where particular syscalls were found and list them.
 0x00018a0e sd_ble_gap_sec_info_reply
 ...
 ```
-To reduce searching time it is possible to [restrict the
-searching](../search_bytes/configurating_the_search.md) range for
-only executable segments or sections with `/as @e:search.in=io.maps.x`
+若要减小搜索时间，可以[限制搜索范围](../search_bytes/configurating_the_search.md)，通过`/as @e:search.in=io.maps.x`设置为将其限制在可执行的节区或段上。
 
-Using the [ESIL emulation](emulation.md) radare2 can print syscall arguments
-in the disassembly output. To enable the linear (but very rough) emulation use
-`asm.emu` configuration variable:
+使用[ESIL仿真]（emulation.md）radare2可以以反汇编的格式输出syscall的参数，要启用线性（这个功能还非常粗糙）仿真，请配置`asm.emu`变量：
 ```
 [0x0001ece0]> e asm.emu=true
 [0x0001ece0]> s 0x000187c2
@@ -49,9 +39,7 @@ in the disassembly output. To enable the linear (but very rough) emulation use
 [0x000187c2]>
 ```
 
-In case of executing `aae` (or `aaaa` which calls `aae`) command
-radare2 will push found syscalls to a special `syscall.` flagspace,
-which can be useful for automation purpose:
+在执行`aae`（或者会调用`aae`的`aaaa`命令）时，radare2会将找到的所有`syscall`放入`syscall.`标志空间中，在实现流程自动化时这个特性比较有用。
 ```
 [0x000187c2]> fs
 0    0 * imports
@@ -67,7 +55,8 @@ which can be useful for automation purpose:
 ...
 ```
 
-It also can be interactively navigated through within HUD mode (`V_`)
+
+也可以在HUD模式（`V_`）中进行交互式导航。
 ```
 0> syscall.sd_ble_gap_disconnect
  - 0x000187b2  syscall.sd_ble_gap_disconnect
@@ -77,7 +66,7 @@ It also can be interactively navigated through within HUD mode (`V_`)
    0x0002ac36  syscall.sd_ble_gap_disconnect.3
 ```
 
-When debugging in radare2, you can use `dcs` to continue execution until the next syscall. You can also run `dcs*` to trace all syscalls.
+在radare2进行调试时，可以用`dcs`继续执行直至遇到下一个系统调用，可以用`dcs*`追踪所有系统调用。
 ```
 [0xf7fb9120]> dcs*
 Running child until syscalls:-1 
@@ -90,7 +79,7 @@ child stopped with signal 133
 child stopped with signal 133
 ```
 
-radare2 also has a syscall name to syscall number utility. You can return the syscall name of a given syscall number or vice versa, without leaving the shell.
+Radare2还有将syscall名字转为syscall代号的小工具，可以通过syscall名字获取对应的syscall代号，反之亦然，这一切都可在r2 shell中完成。
 
 ```
 [0x08048436]> asl 1
@@ -101,4 +90,4 @@ exit
 0x80,4,3,iZi
 ```
 
-See `as?` for more information about the utility.
+参阅`as?`获取更多关于该工具的信息。
