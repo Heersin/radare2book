@@ -86,7 +86,7 @@
       * [Symbols (exports)](tools/rabin2/symbols.md)
       * [库文件](tools/rabin2/libraries.md)
       * [字符串（String）](tools/rabin2/strings.md)
-      * [程序段（Sections）](tools/rabin2/program_sections.md)
+      * [节区（Sections）](tools/rabin2/program_sections.md)
    * [Radiff2](tools/radiff2/intro.md)
       * [Binary Diffing](tools/radiff2/binary_diffing.md)
    * [Rasm2](tools/rasm2/intro.md)
