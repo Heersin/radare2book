@@ -1,20 +1,18 @@
 # User Interfaces
 
-Radare2 has seen many different user interfaces being developed over the years.
+Radare2多年来见证了许多不同的用户界面的开发。
 
-Maintaining a GUI is far from the scope of developing the core machinery of a reverse engineering toolkit: it is preferred to have a separate project and community, allowing both projects to collaborate and to improve together - rather than forcing cli developers to think in gui problems and having to jump back and forth between the graphic aspect and the low level logic of the implementations.
+维护GUI不属于开发逆向工程工具包的核心功能的范围：最好有一个单独的项目和社区，允许两个项目进行协作并共同改进-而不是强迫cli开发人员考虑gui问题 并让他们在图形和底层逻辑之间来回跳转。
 
-In the past, there have been at least 5 different native user interfaces (ragui, r2gui, gradare, r2net, bokken) but none of them got enough maintenance power to take off and they all died.
+过去，r2至少有5种不同的原生用户界面（ragui，r2gui，gradare，r2net，bokken），但是都没有足够的维护能力来支撑它们发展，因而这些项目全部都消亡了。
 
-In addition, r2 has an embedded webserver and ships some basic user interfaces written in html/js. You can start them like this:
-
+此外r2具有嵌入式Web服务器，并附带了一些用html/js编写的基本用户界面。可以像这样启动它们：
 ```
 $ r2 -c=H /bin/ls
 ```
+经过3年的私人开发，Hugo Teso; Bokken（r2的python-gtk gui）的作者向公众发布了r2的另一个前端，这次是用c ++和qt编写的，受到了社区的欢迎。
 
-After 3 years of private development, Hugo Teso; the author of Bokken (python-gtk gui of r2) released to the public another frontend of r2, this time written in c++ and qt, which has been very welcomed by the community.
-
-This GUI was named Iaito, but as long as he prefered not to keep maintaining it, Xarkes decided to fork it under the name of Cutter (name voted by the community), and lead the project. This is how it looks:
+这个GUI被命名为Iaito，但当他不想在维护该项目时，Xarkes便决定以Cutter（社区投票的名称）的名义fork它，并领导该项目。目前看起来是这样的：
 
 * [https://github.com/radareorg/cutter](https://github.com/radareorg/cutter).
 
