@@ -1,10 +1,8 @@
-# Managing variables
+# 变量管理
 
-Radare2 allows managing local variables, no matter their location, stack or registers.
-The variables' auto analysis is enabled by default but can be disabled with `anal.vars`
-configuration option.
+Radare2允许对本地变量进行管理，无论他们位于何处，是在栈上或寄存器中。对于变量的自动分析是默认开启的，不过你也可以通过`anal.vars`配置选项禁用自动分析。
 
-The main variables commands are located in `afv` namespace:
+与变量相关的命令主要在`afv`命名空间下：
 
 ```
 Usage: afv  [rbs]
@@ -24,10 +22,7 @@ Usage: afv  [rbs]
 | afvx                          show function variable xrefs (same as afvR+afvW)
 ```
 
-`afvr`, `afvb` and `afvs` commands are uniform but allow manipulation of
-register-based arguments and variables, BP/FP-based arguments and variables,
-and SP-based arguments and variables respectively.
-If we check the help for `afvr` we will get the way two others commands works too:
+`afvr`，`afvb`和`afvs`命令是相同的命令，他们分别允许对基于寄存器的参数和变量，基于BP/FP的参数和变量，以及基于SP的参数和变量进行修改。`afvr`的帮助信息中显示的用法同样适用于另外两个命令:
 
 ```
 |Usage: afvr [reg] [type] [name]
@@ -40,21 +35,11 @@ If we check the help for `afvr` we will get the way two others commands works to
 | afvrs [reg] [addr]          define argument set reference
 ```
 
-Like many other things variables detection is performed by radare2 automatically, but results
-can be changed with those arguments/variables control commands. This kind of analysis
-relies heavily on preloaded function prototypes and the calling-convention, thus loading symbols
-can improve it. Moreover, after changing something we can rerun variables analysis with
-`afva` command. Quite often variables analysis is accompanied with
-[types analysis](types.md), see `afta` command.
+与其他许多功能一样，radare2会自动完成变量分析，但可以用这些控制参数/变量的命令改变这些结果。变量的分析严重依赖于加载的函数原型以及其调用约定，因此加载程序中的符号可以改善分析结果。此外，在对一些东西进行修改后，我们可以用`afva`重新执行变量分析，变量分析常借助[类型分析](types.md)的信息进行，详情参见`afta`命令。
 
-The most important aspect of reverse engineering - naming things. Of course, you can rename
-variable too, affecting all places it was referenced. This can be achieved with `afvn` for
-_any_ type of argument or variable. Or you can simply remove the variable or argument with
-`afv-` command.
+逆向工程中最终要的莫过于赋名，你同样可以对这些变量进行重命名，变量在所有引用处都会被重命名。可以使用`afvn`对 _任何_ 类型的参数和变量完成这个操作。你也可以用`afv-`移除指定的变量和参数。
 
-As mentioned before the analysis loop relies heavily on types information while performing
-variables analysis stages. Thus comes next very important command - `afvt`, which
-allows you to change the type of variable:
+如前面所提到的那样，变量分析阶段高度依赖于类型信息，因此下一个介绍的重要命令是-`afvt`，使用它可以改变变量的类型。
 
 ```
 [0x00003b92]> afvs
@@ -82,10 +67,7 @@ var int local_47h @ rsp+0x47
 var int local_48h @ rsp+0x48
 ```
 
-Less commonly used feature, which is still under heavy development - distinction between
-variables being read and written. You can list those being read with `afvR` command and those
-being written with `afvW` command. Both commands provide a list of the places those operations
-are performed:
+接下来是不太常用的功能，其也仍处于开发阶段 - 区分读取与写入的变量。可以通过`afvR`列出变量在哪些位置被读取，`afvR`在哪些位置被写入。这两个命令都列出了读写操作发生的地址。
 
 ```
 [0x00003b92]> afvR
@@ -113,11 +95,9 @@ local_32h
 [0x00003b92]>
 ```
 
-## Type inference
+## 类型推断
 
-The type inference for local variables and arguments is well integrated with the command `afta`.
-
-Let's see an example of this with a simple [hello_world](https://github.com/radareorg/radare2book/tree/master/examples/hello_world) binary
+局部变量和参数的类型推断很好地整合在`afta`命令中。让我们以[hello_world](https://github.com/radareorg/radare2book/tree/master/examples/hello_world) 这个二进制文件作为例子进行讲解。
 
 ```
 [0x000007aa]> pdf
@@ -142,7 +122,7 @@ Let's see an example of this with a simple [hello_world](https://github.com/rada
 | 0x000007cf  call sym.imp.strlen         ; size_t strlen(const char *s)
 ```
 
-* After applying `afta`
+* 使用 `afta` 后
 
 ```
 [0x000007aa]> afta
@@ -169,9 +149,9 @@ Let's see an example of this with a simple [hello_world](https://github.com/rada
 | 0x000007cf  call sym.imp.strlen         ; size_t strlen(const char *s)
 ```
 
-It also extracts type information from format strings like `printf ("fmt : %s , %u , %d", ...)`, the format specifications are extracted from `anal/d/spec.sdb`
+它同时也从类似`printf ("fmt : %s , %u , %d", ...)`的格式化字符串中提取类型信息，格式的规范是从`anal/d/spec.sdb`中获得的。
 
-You could create a new profile for specifying a set of format chars depending on different libraries/operating systems/programming languages like this :
+您也可以根据不同的库/操作系统/编程语言，创建一个用于指定一组格式字符的新配置文件，如下所示：
 
 ```
 win=spec
