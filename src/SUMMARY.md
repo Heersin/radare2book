@@ -22,7 +22,7 @@
    * [定位](basic_commands/seeking.md)
    * [Block Size](basic_commands/block_size.md)
    * [节区](basic_commands/sections.md)
-   * [Mapping Files](basic_commands/mapping_files.md)
+   * [映射文件](basic_commands/mapping_files.md)
    * [Print Modes](basic_commands/print_modes.md)
    * [标记符（Flags）](basic_commands/flags.md)
    * [写入数据](basic_commands/write.md)
