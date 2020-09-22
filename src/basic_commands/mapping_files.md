@@ -1,16 +1,14 @@
-## Mapping Files
+## 映射文件
 
-Radare's I/O subsystem allows you to map the contents of files into the same I/O space used to contain a loaded binary. New contents can be placed at random offsets.
+Radare的I/O子系统允许您将文件内容映射到一个已加载二进制文件的I/O空间中。新映射的内容可以被放置在任意地址上。
 
-The `o` command permits the user to open a file, this is mapped at offset 0 unless it has a known binary header and then the maps are created in virtual addresses.
+`o`命令允许用户打开一个文件，该文件映射至偏移量0处。若其具有已知的二进制文件头，则radare2将其映射至虚拟地址。
 
-Sometimes, we want to rebase a binary, or maybe we want to load or map the file in a different address.
+有时，我们想重设一个二进制文件，或是将其加载/映射到一个不同的地址上，当我们启动r2时就可以用`-B`选项改变基址。但要注意的是，当我们打开一个含有未知文件头的文件时（比如bootloader），需要使用`-m`选项对其进行映射（或是将其作为`o`命令的参数传递）。
 
-When launching r2, the base address can be changed with the `-B` flag. But you must notice the difference when opening files with unknown headers, like bootloaders, so we need to map them using the `-m` flag (or specifying it as argument to the `o` command).
+radare2可以打开文件，然后在任意位置映射文件的一部分，并设置一些属性，例如权限和名字。其通过加载和映射二进制文件所有的依赖库复现环境（如core文件，debug session），在针对这些场景时其是一个理想的工具。
 
-radare2 is able to open files and map portions of them at random places in memory specifying attributes like permissions and name. It is the perfect basic tooling to reproduce an environment like a core file, a debug session, by also loading and mapping all the libraries the binary depends on.
-
-Opening files (and mapping them) is done using the `o` (open) command. Let's read the help:
+打开文件（以及映射文件）是通过`o`命令完成的，我们可以看看帮助信息：
 
 ```
 [0x00000000]> o?
@@ -43,7 +41,7 @@ Opening files (and mapping them) is done using the `o` (open) command. Let's rea
 | ox fd fdx                 exchange the descs of fd and fdx and keep the mapping
 ```
 
-Prepare a simple layout:
+prepare a simple layout:
 
 ```sh
 $ rabin2 -l /bin/ls
@@ -56,13 +54,13 @@ libc.so.6
 4 libraries
 ```
 
-Map a file:
+打开一个文件:
 
 ```
 [0x00001190]> o /bin/zsh 0x499999
 ```
 
-List mapped files:
+列出已映射的文件:
 
 ```
 [0x00000000]> o
@@ -71,19 +69,19 @@ List mapped files:
 - 14 /bin/zsh @ 0x499999 ; r
 ```
 
-Print hexadecimal values from /bin/zsh:
+打印/bin/zsh中的十六进制字节:
 
 ```
 [0x00000000]> px @ 0x499999
 ```
 
-Unmap files using the `o-` command. Pass the required file descriptor to it as an argument:
+使用`o-`命令可以取消文件映射，将对应的文件描述符作为参数传递即可。
 
 ```
 [0x00000000]> o-14
 ```
 
-You can also view the ascii table showing the list of the opened files:
+类似的，可以用如下命令查看以ascii风格的表格查看已打开的文件：
 
 ```
 [0x00000000]> ob=
