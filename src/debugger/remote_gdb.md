@@ -1,4 +1,4 @@
-# Debugging with gdbserver
+# 使用gdbserver远程调试
 
 radare2 allows remote debugging over the gdb remote protocol. So you can run a
 gdbserver and connect to it with radare2 for remote debugging. The syntax for

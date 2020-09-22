@@ -1,9 +1,8 @@
-# Remote Access Capabilities
+# 远程访问的支持
 
-Radare can be run locally, or it can be started as a server process which is controlled by a local
-radare2 process. This is possible because everything uses radare's IO subsystem which abstracts access to system(), cmd() and all basic IO operations so to work over a network.
+Radare可以在本地运行，也可以作为服务器进程启动，由本地的radare2控制。这个方案之所以可行，是因为它们都使用了Radar的IO子系统，该子系统抽象了对system（），cmd（）和所有基本IO操作的访问，从而使radare2可以通过网络工作。
 
-Help for commands useful for remote access to radare:
+一些与radare远程访问相关的帮助信息：
 
 ```
 [0x00405a04]> =?
@@ -38,29 +37,27 @@ examples:
 | o rap://:9090/                start the rap server on tcp port 9090
 ```
 
-You can learn radare2 remote capabilities by displaying the list of supported IO plugins: `radare2 -L`.
+可以通过`radare2 -L`列出的IO插件了解radare2的远程访问能力。通过例子来说明可能会更好理解一些，一个典型的remote session看起来就像这样：
 
-A little example should make this clearer. A typical remote session might look like this:
-
-At the remote host1:
+远程主机1（host1）:
 
 ```
 $ radare2 rap://:1234
 ```
 
-At the remote host2:
+远程主机2（host2）:
 
 ```
 $ radare2 rap://:1234
 ```
 
-At localhost:
+本地主机:
 
 ```
 $ radare2 -
 ```
 
-Add hosts
+在本地添加远程主机：
 
 ```
 [0x004048c5]> =+ rap://<host1>:1234//bin/ls
@@ -71,7 +68,7 @@ waiting... ok
 0 - rap://<host1>:1234//bin/ls
 ```
 
-You can open remote files in debug mode (or using any IO plugin) specifying URI when adding hosts:
+可以通过在添加主机时指定URI以debug模式（或者使用其他IO插件）打开远程主机上的文件：
 
 ```
 [0x004048c5]> =+ =+ rap://<host2>:1234/dbg:///bin/ls
@@ -81,14 +78,14 @@ waiting... ok
 1 - rap://<host2>:1234/dbg:///bin/ls
 ```
 
-To execute commands on host1:
+在host1上执行命令:
 
 ```
 [0x004048c5]> =0 px
 [0x004048c5]> = s 0x666
 ```
 
-To open a session with host2:
+打开与host2的session:
 
 ```
 [0x004048c5]> ==1
@@ -97,13 +94,13 @@ fd:6> pi 1
 fd:6> q
 ```
 
-To remove hosts (and close connections):
+移除主机 (关闭连接):
 
 ```
 [0x004048c5]> =-
 ```
 
-You can also redirect radare output to a TCP or UDP server (such as `nc -l`). First, Add the server with '=+ tcp://' or '=+ udp://', then you can redirect the output of a command to be sent to the server:
+还可以将radare的输出重定向至TCP/UDP服务器（就如使用`nc -l`）。首先使用`=+ tcp://` 或 `=+ udp://`添加服务器，接着就可以用如下命令将输出重定向至该服务器：
 
 ```
 [0x004048c5]> =+ tcp://<host>:<port>/
@@ -112,5 +109,4 @@ Connected to: <host> at port <port>
 [0x004048c5]> =<5 cmd...
 ```
 
-The `=<` command will send the output from the execution of `cmd` to the remote connection number N (or the last one used if no id specified).
-
+`=<`命令会将`cmd`的执行结果输出到远程连接N上（如果没有指定N，就会输出到最后一次使用的连接上）。
