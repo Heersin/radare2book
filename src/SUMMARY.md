@@ -21,7 +21,7 @@
 * [基本命令](basic_commands/intro.md)
    * [定位](basic_commands/seeking.md)
    * [Block Size](basic_commands/block_size.md)
-   * [Sections](basic_commands/sections.md)
+   * [节区](basic_commands/sections.md)
    * [Mapping Files](basic_commands/mapping_files.md)
    * [Print Modes](basic_commands/print_modes.md)
    * [标记符（Flags）](basic_commands/flags.md)

@@ -1,8 +1,7 @@
-## Sections
+## 节区
 
-The concept of sections is tied to the information extracted from the binary. We can display this information by using the `i` command.
-
-Displaying information about sections:
+节的概念与从二进制文件中提取的信息有关。我们可以使用`i`命令显示此信息。
+显示有关节区的信息：
 
 ```
 [0x00005310]> iS
@@ -21,23 +20,23 @@ Displaying information about sections:
 ...
 ```
 
-As you may know, binaries have sections and maps. The sections define the contents of a portion of the file that can be mapped in memory (or not). What is mapped is defined by the segments.
+如您所知，二进制文件具有节区和映射，这些节区定义了文件的部分内容，可以在内存中映射（或不映射）这些节区。具体映射什么由段定义。
 
-Before the IO refactoring done by condret, the `S` command was used to manage what we now call maps. Currently the `S` command is deprecated because `iS` and `om` should be enough.
+在condret完成IO的重构前，`S`命令管理的是我们现在成为映射的部分，而现在`S`已被废弃，因为r2中的`iS`和`om`命令已足够处理这些东西。
 
-Firmware images, bootloaders and binary files usually place various sections of a binary at different addresses in memory. To represent this behavior, radare offers the `iS`. Use `iS?` to get the help message. To list all created sections use `iS` (or `iSj` to get the json format). The `iS=` will show the region bars in ascii-art.
+固件、bootloader和二进制文件常将文件内不同的节区放在不同的内存地址上，radare2提供`iS`命令展示了这种行为。使用`iS?`可以获得帮助信息，可以通过`iS`列出其创建的所有节区（或者用`iSj`获取json格式的信息）。`iS=`将会以ascii字符画条柱的形式展示该结果。
 
-You can create a new mapping using the `om` subcommand as follows:
+可以像下面用`om`子命令创建新的映射：
 ```
 om fd vaddr [size] [paddr] [rwx] [name]
 ```
 
-For Example:
+例如:
 ```
 [0x0040100]> om 4 0x00000100 0x00400000 0x0001ae08 rwx test
 ```
 
-You can also use `om` command to view information about mapped sections:
+可以用`om`命令查看已映射的节区信息：
 
 ```
 [0x00401000]> om
@@ -48,11 +47,12 @@ You can also use `om` command to view information about mapped sections:
  2 fd: 3 +0x00002de8 0x00003de8 - 0x0000402f r-- fmap.LOAD3
  1 fd: 4 +0x00000000 0x00004030 - 0x00004037 rw- mmap.LOAD3
  ```
-Use `om?` to get all the possible subcommands. To list all the defined maps use `om` (or `omj` to get the json format or `om*` to get the r2 commands format). To get the ascii art view use `om=`. 
+ 
+使用`om?`获取所有可用的子命令，若要列出定义的所有映射，请使用`om`命令（或`omj`获取json格式， 以及`om*`获取r2命令格式），ascii风格的条柱输出依旧使用`om=`。
 
-It is also possible to delete the mapped section using the `om-mapid` command.
+用`om-mapid`可以删除已映射的节区：
 
-For Example:
+例如:
 ```
 [0x00401000]> om-6
 ```
