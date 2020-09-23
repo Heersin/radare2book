@@ -1,10 +1,10 @@
-## Print Modes
+## 输出模式
 
-One of the key features of radare2 is displaying information in many formats. The goal is to offer a selection of display choices to interpret binary data in the best possible way.
+radare2的一个核心功能就是以不同的格式显示分析的信息，目的在于以最好的方式展示二进制数据。
 
-Binary data can be represented as integers, shorts, longs, floats, timestamps, hexpair strings, or more complex formats like C structures, disassembly listings, decompilation listing, be a result of an external processing...
+二进制数据可以以integer，short，long，float，timestamp，hexpair string， 或借助外部处理， 以更复杂的形式如C struct，反汇编，反编译表示...
 
-Below is a list of available print modes listed by `p?`:
+下面是 `p?` 列出的所有输出模式:
 
 ```
 [0x00005310]> p?
@@ -45,7 +45,7 @@ Below is a list of available print modes listed by `p?`:
 [0x00005310]>
 ```
 
-Tip: when using json output, you can append the `~{}` to the command to get a pretty-printed version of the output:
+Tips：当使用json格式作为输出格式时，可以在命令后面加上`~{}`将结果以更易读的形式输出：
 
 ```
 [0x00000000]> oj
@@ -64,7 +64,7 @@ Tip: when using json output, you can append the `~{}` to the command to get a pr
 ]
 ```
 
-For more on the magical powers of `~` see the help in `?@?`, and the [Command Format](../first_steps/command_format.md) chapter earlier in the book.
+有关`~`的神奇之处参见`?@?`输出的帮助信息，以及前面[命令格式](../first_steps/command_format.md)章节的内容。
 
 ### Hexadecimal View
 
@@ -226,9 +226,9 @@ Some examples are below:
 0x00404888 = 837634432.000000
 ```
 
-### High-level Languages Views
+### 高级语言视图
 
-Valid print code formats for human-readable languages are:
+支持的语言及其对应的输出模式:
 
 * `pc`     C
 * `pc*`    print 'wx' r2 commands
