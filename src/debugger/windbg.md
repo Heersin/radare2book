@@ -1,27 +1,24 @@
 # WinDBG Kernel-mode Debugging (KD)
 
-The WinDBG KD interface support for r2 allows you to attach to VM running
-Windows and debug its kernel over a serial port or network.
+WinDBG KD接口支持r2 attach到运行windows的VM上，通过一个串口/网络对内核进行调试。
 
-It is also possible to use the remote GDB interface to connect and
-debug Windows kernels without depending on Windows capabilities.
+同样也可以使用远程GDB调试接口连接到windows上，从而在不依赖于windows功能的情况下对windows进行内核调试。
 
-Bear in mind that WinDBG KD support is still work-in-progress, and this is
-just an initial implementation which will get better in time.
+要注意的是，对WinDBG KD的支持仍在开发中，目前仅仅是一个初期的实现版本，它将随着时间的推移慢慢变好的。
 
-## Setting Up KD on Windows
+## Windows上配置KD
 
-> For a complete walkthrough, refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/setting-up-kernel-mode-debugging-in-windbg--cdb--or-ntsd).
+> 完整步骤请参考 Microsoft的[文档](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/setting-up-kernel-mode-debugging-in-windbg--cdb--or-ntsd).
 
-### Serial Port
-Enable KD over a serial port on Windows Vista and higher like this:
+### 串口
+在Windows Vista或更高版本中启动串口KD：
 
 ```
 bcdedit /debug on
 bcdedit /dbgsettings serial debugport:1 baudrate:115200
 ```
 
-Or like this for Windows XP:
+或者在Windows XP中可以这样：
 	Open boot.ini and add /debug /debugport=COM1 /baudrate=115200:
 ```
 [boot loader]
@@ -30,7 +27,7 @@ default=multi(0)disk(0)rdisk(0)partition(1)\WINDOWS
 [operating systems]
 multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Debugging with Cable" /fastdetect /debug /debugport=COM1 /baudrate=57600
 ```
-In case of VMWare
+使用VMware的场景下:
 ```
 	Virtual Machine Settings -> Add -> Serial Port
 	Device Status:
@@ -40,7 +37,7 @@ In case of VMWare
 	[_/tmp/winkd.pipe________]
 	From: Server To: Virtual Machine
 ```
-Configure the VirtualBox Machine like this:
+若使用VirtualBox需要进行的配置：
 ```
     Preferences -> Serial Ports -> Port 1
 
@@ -50,49 +47,44 @@ Configure the VirtualBox Machine like this:
                  [v] Create Pipe
     Port/File Path: [_/tmp/winkd.pipe____]
 ```
-Or just spawn the VM with qemu like this:
+或者用QEMU启动虚拟机:
 ```
 $ qemu-system-x86_64 -chardev socket,id=serial0,\
      path=/tmp/winkd.pipe,nowait,server \
      -serial chardev:serial0 -hda Windows7-VM.vdi
 ```
 
-### Network
-Enable KD over network (KDNet) on Windows 7 or later likes this:
+### 网络
+在Windows 7或更高版本启动网络KD（KDNet）如下：
 ```
 bcdedit /debug on
 bcdedit /dbgsettings net hostip:w.x.y.z port:n
 ```
-Starting from Windows 8 there is no way to enforce debugging
-for every boot, but it is possible to always show the advanced boot options,
-which allows to enable kernel debugging:
+从Windows 8开始，无法在每次启动都强制进入debug了，但是可以通过配置boot option中的高级选项，允许使用内核调试：
 ```
 bcedit /set {globalsettings} advancedoptions true
 ```
 
-## Connecting to KD interface on r2
+## r2连接到KD上
 
-### Serial Port
-Radare2 will use the `winkd` io plugin to connect to a socket file
-created by virtualbox or qemu. Also, the `winkd` debugger plugin and
-we should specify the x86-32 too. (32 and 64 bit debugging is supported)
+### 串口
+Radare2可以用`winkd` IO插件连接到vbox/qemu创建的socket文件上。另外，`winkd`调试器插件也要指定x86-32才行（支持32和64位调试）。
 ```
 $ r2 -a x86 -b 32 -D winkd winkd:///tmp/winkd.pipe
 ```
 
-On Windows you should run the following line:
+在windows上需要运行如下r2命令：
 ```
 $ radare2 -D winkd winkd://\\.\pipe\com_1
 ```
 
-### Network
+### 网络
 ```
 $ r2 -a x86 -b 32 -d winkd://<hostip>:<port>:w.x.y.z
 ```
 
 ## Using KD
-When connecting to a KD interface, r2 will send a breakin packet to interrupt
-the target and we will get stuck here:
+当连接到KD时，r2会发送一个中断包，用于中断目标的运行，程序将停在如下地方：
 ```
 [0x828997b8]> pd 20
 	;-- eip:
@@ -104,35 +96,31 @@ the target and we will get stuck here:
     0x828997bf    90           nop
 ```
 
-In order to skip that trap we will need to change eip and run 'dc' twice:
+若要跳过trap，得修改eip并运行两次`dc`命令：
 ```
 dr eip=eip+1
 dc
 dr eip=eip+1
 dc
 ```
-Now the Windows VM will be interactive again. We will need to kill r2 and
-attach again to get back to control the kernel.
 
-In addition, the `dp` command can be used to list all processes, and
-`dpa` or `dp=` to attach to the process. This will display the base
-address of the process in the physical memory layout.
+现在可以重新与Windows VM进行交互了。需要杀掉r2进程然后重新attach到Windows上控制内核。
+
+另外，`dp`命令可以列出所有进程，`dpa`或`dp=`可以attach到进程上，并显示进程在物理内存中的基址。
 
 # WinDBG Backend for Windows (DbgEng)
 
-On Windows, radare2 can use `DbgEng.dll` as a debugging backend,
-allowing it to make use of WinDBG's capabilities, supporting dump files,
-local and remote user and kernel mode debugging.
+在Windows上，radare2可以用`DbgEng.dll`作为调试后端，使其可以使用WinDBG的功能，比如支持dump文件，本地/远程用户和内核模式调试。
 
-You can use the debugging DLLs included on Windows or get the latest version from Microsoft's [download page](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools) (recommended).
+可以用Windows内包含的debugging DLL，也可以从[download page](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools)下载最新版本（推荐）
 
-> You cannot use DLLs from the Microsoft Store's `WinDbg Preview` app folder directly as they are not marked as executable for normal users.
+> 不能用windows商店里的`WinDbg Preview`应用文件夹里的DLL，因为对于普通用户来说，这些DLL未被标记为可执行文件。
 
-> radare2 will try to load `dbgeng.dll` from the `_NT_DEBUGGER_EXTENSION_PATH` environment variable before using Windows' default library search path.
+> 在搜索windows默认的DLL库路径前， radare2会尝试从`_NT_DEBUGGER_EXTENSION_PATH`环境变量指出的路径加载`dbgeng.dll`。
 
-## Using the plugin
+## 使用插件
 
-To use the `windbg` plugin, pass the same command-line options as you would for `WinDBG` or `kd` (see Microsoft's [documentation](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/windbg-command-line-options)), quoting/escaping when necessary:
+若要使用`windbg`插件，只需传递运行`WinDBG`/`kd`时同样的参数（参见Microsoft的[文档](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/windbg-command-line-options)）即可，有时候需要用引号将其括起，或者使用转义符：
 
 ```
 > r2 -d "windbg://-remote tcp:server=Server,port=Socket"
@@ -147,7 +135,7 @@ To use the `windbg` plugin, pass the same command-line options as you would for 
 > r2 -d "windbg://-z MyDumpFile.dmp"
 ```
 
-You can then debug normally (see `d?` command) or interact with the backend shell directly with the `=!` command:
+可以像往常一样进行debug（参见`d?`命令）或用`=!`命令在后端shell中直接进行交互。
 
 ```
 [0x7ffcac9fcea0]> dcu 0x0007ffc98f42190
