@@ -1,6 +1,6 @@
-## Block Size
+## 块大小
 
-The block size determines how many bytes radare2 commands will process when not given an explicit size argument. You can temporarily change the block size by specifying a numeric argument to the print commands. For example `px 20`.
+块大小决定了在未显式指定参数时radare2进行分析的字节数，可以通过指定一个数字参数临时改变该数值，例如：`px 20`：
 
 ```
 [0xB7F9D810]> b?
@@ -17,7 +17,7 @@ The block size determines how many bytes radare2 commands will process when not 
 | bm 1M    set max block size
 ```
 
-The `b` command is used to change the block size:
+`b`命令用于修改块大小：
 
 ```
 [0x00000000]> b 0x100   ; block size = 0x100
@@ -25,14 +25,14 @@ The `b` command is used to change the block size:
 [0x00000000]> b-32      ;  ... = 0xf0
 ```
 
-The `bf` command is used to change the block size to value specified by a flag. For example, in symbols, the block size of the flag represents the size of the function.
+`bf`命令用于修改一个flag所对应的块大小，比如对于符号（symbols）来说，其块大小代表函数的大小。
 ```
 [0x00000000]> bf sym.main    ; block size = sizeof(sym.main)
 [0x00000000]> pd @ sym.main  ; disassemble sym.main
 ...
 ```
 
-You can combine two operations in a single one (`pdf`):
+用`pdf`这条命令即可以将两个操作结合：
 
 ```
 [0x00000000]> pdf @ sym.main
