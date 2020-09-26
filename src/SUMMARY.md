@@ -73,7 +73,7 @@
    * [Windows Messages](debugger/windows_messages.md)
 * [远程访问](debugger/remoting_capabilities.md)
    * [远程GDB调试](debugger/remote_gdb.md)
-   * [Remote WinDbg](debugger/windbg.md)
+   * [远程WinDbg](debugger/windbg.md)
 * [命令行工具](tools/intro.md)
    * [Rax2](tools/rax2/intro.md)
    * [Rafind2](tools/rafind2/intro.md)
