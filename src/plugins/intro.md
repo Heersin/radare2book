@@ -1,12 +1,10 @@
 # Plugins
 
-radare2 is implemented on top of a bunch of libraries, almost every of those
-libraries support plugins to extend the capabilities of the library or add
-support for different targets.
+Radare2是基于大量的函数库实现的，这些库几乎都支持用插件对其功能进行扩展，或是实现对不同目标的支持。
 
-This section aims to explain what are the plugins, how to write them and use them
+本章节着重于解释什么是插件，如何编写插件以及如何使用插件
 
-## Types of plugins
+## plugins类型
 ```
 $ ls libr/*/p | grep : | awk -F / '{ print $2 }'
 anal      # analysis plugins
@@ -24,20 +22,19 @@ parse     # disassembler parsing plugins
 reg       # arch register logic
 ```
 
-## Listing plugins
+## 插件列表
 
-Some r2 tools have the `-L` flag to list all the plugins associated to the
-functionality.
+r2工具包中的一些工具支持用`-L`列出相关的插件：
 ```
 rasm2 -L    # list asm plugins
 r2 -L       # list io plugins
 rabin2 -L   # list bin plugins
 rahash2 -L  # list hash/crypto/encoding plugins
 ```
-There are more plugins in r2land, we can list them from inside r2, and this is
-done by using the `L` suffix.
 
-Those are some of the commands:
+在r2land中还有更多的插件，可以在r2中使用后缀`L`列出它们。
+
+底下是一些命令:
 ```
 L          # list core plugins
 iL         # list bin plugins
@@ -46,7 +43,7 @@ mL         # list fs plugins
 ph         # print support hash algoriths
 ```
 
-You can use the `?` as value to get the possible values in the associated eval vars.
+可以用`?`作为参数，获取相关变量的所有可能值。
 
 ```
 e asm.arch=?   # list assembler/disassembler plugins
@@ -54,5 +51,4 @@ e anal.arch=?  # list analysis plugins
 ```
 ## Notes
 
-Note there are some inconsistencies that most likely will be fixed in the future radare2 versions.
-
+未来radare2版本中很可能会解决现有的一些不兼容问题。
