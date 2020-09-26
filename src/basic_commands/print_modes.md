@@ -142,9 +142,9 @@ The default date format can be configured using the `cfg.datefmt` variable. Form
 %Z  The timezone name or abbreviation.
 ```
 
-### Basic Types
+### 基本类型
 
-There are print modes available for all basic types. If you are interested in a more complex structure, type `pf??` for format characters and `pf???` for examples:
+这里有对应各种基本类型的输出模式，如果想使用更复杂的结构，查看`pf??`中关于格式化字符的帮助信息，以及`pf???`获取示例：
 
 ```
 [0x00499999]> pf??
@@ -186,7 +186,7 @@ There are print modes available for all basic types. If you are interested in a 
 |  ,       rewind 1 byte
 ```
 
-Use triple-question-mark `pf???` to get some examples using print format strings.
+`pf???`可以获得使用格式化字符串的示例。
 
 ```
 [0x00499999]> pf???
@@ -216,7 +216,7 @@ Use triple-question-mark `pf???` to get some examples using print format strings
 | pf.foo rr (eax)reg1 (eip)reg2                Create object referencing to register values 
 | pf tt troll plop                             print time stamps with labels troll and plop
 ```
-Some examples are below:
+底下是一些例子:
 ```
 [0x4A13B8C0]> pf i
 0x00404888 = 837634441
@@ -251,9 +251,9 @@ Some examples are below:
 * `pcy`    yara
 * `pcz`    Swift
 
-If we need to create a .c file containing a binary blob, use the `pc` command, that creates this output. The default size is like in many other commands: the block size, which can be changed with the `b` command.
+如果要创建一个包含二进制Blob的.c文件, 可以用`pc`命令。其默认大小与许多其他命令一样，同块大小保持一致，可以使用`b`命令更改。
 
-We can also just temporarily override this block size by expressing it as an argument.
+还可以通过传递一个参数临时修改块的大小：
 
 ```
 [0xB7F8E810]> pc 32
@@ -262,7 +262,7 @@ unsigned char buffer[_BUFFER_SIZE] = {
 0x89, 0xe0, 0xe8, 0x49, 0x02, 0x00, 0x00, 0x89, 0xc7, 0xe8, 0xe2, 0xff, 0xff, 0xff, 0x81, 0xc3, 0xd6, 0xa7, 0x01, 0x00, 0x8b, 0x83, 0x00, 0xff, 0xff, 0xff, 0x5a, 0x8d, 0x24, 0x84, 0x29, 0xc2 };
 ```
 
-That cstring can be used in many programming languages, not just C.
+c风格字符串可以用于各种语言中，不局限于C。
 
 ```
 [0x7fcd6a891630]> pcs
@@ -271,7 +271,7 @@ That cstring can be used in many programming languages, not just C.
 
 ### Strings
 
-Strings are probably one of the most important entry points when starting to reverse engineer a program because they usually reference information about functions' actions (asserts, debug or info messages...). Therefore, radare supports various string formats:
+字符串可能是逆向程序时最重要的突破口之一，因其通常会引用与函数执行操作相关的信息（例如assert，debug或者info messages...)。因此radare支持多种字符串格式：
 
 ```
 [0x00000000]> ps?
@@ -291,7 +291,7 @@ Strings are probably one of the most important entry points when starting to rev
 | psz[j]   print zero-terminated string
 ```
 
-Most strings are zero-terminated. Below there is an example using the debugger to continue the execution of a program until it executes the 'open' syscall. When we recover the control over the process, we get the arguments passed to the syscall, pointed by %ebx. In the case of the 'open' call, it is a zero terminated string which we can inspect using `psz`.
+大多数字符串是以NUL结尾的（zero-terminated），下面是一个用debugger执行至'open'系统调用的例子。当我们复现该过程时，我们可以获得传给系统调用的参数，%ebx中存储着指向该参数的指针。在此'open'调用的例子中，由于该参数字符串以NUL结尾，我们能够用`psz`检查它。
 
 ```
 [0x4A13B8C0]> dcs open
@@ -306,9 +306,9 @@ Most strings are zero-terminated. Below there is an example using the debugger t
 /etc/ld.so.cache
 ```
 
-### Print Memory Contents
+### 输出内存中的内容
 
-It is also possible to print various packed data types using the `pf` command:
+使用`pf`命令能输出多种经压缩的数据类型：
 
 ```
 [0xB7F08810]> pf xxS @ rsp
@@ -317,7 +317,7 @@ It is also possible to print various packed data types using the `pf` command:
 0x7fff0d29da38 = 0x7fff0d29da38 -> 0x0d29f7ee /bin/ls
 ```
 
-This can be used to look at the arguments passed to a function. To achieve this, simply pass a 'format memory string' as an argument to `pf`, and temporally change the current seek position/offset using `@`. It is also possible to define arrays of structures with `pf`. To do this, prefix the format string with a numeric value. You can also define a name for each field of the structure by appending them as a space-separated arguments list.
+这可以用来查看传递给函数的参数。为此，只需将“格式存储字符串”作为参数传递给`pf`，然后使用`@`临时更改当前搜索位置/偏移。也可以用`pf`命令，在格式字符串前面加上一个数字定义结构体数组。还可以通过附加空格分隔的参数列表来为结构的每个字段定义名称。
 
 ```
 [0x4A13B8C0]> pf 2*xw pointer type @ esp
@@ -332,7 +332,7 @@ This can be used to look at the arguments passed to a function. To achieve this,
 }
 ```
 
-A practical example for using `pf` on a binary of a GStreamer plugin:
+对二进制文件上使用GStreamer插件的`pf`一个实际示例：
 
 ```
 $ radare ~/.gstreamer-0.10/plugins/libgstflumms.so
@@ -353,7 +353,7 @@ $ radare ~/.gstreamer-0.10/plugins/libgstflumms.so
 
 ### Disassembly
 
-The `pd` command is used to disassemble code. It accepts a numeric value to specify how many instructions should be disassembled. The `pD` command is similar but instead of a number of instructions, it decompiles a given number of bytes.
+`pd`用于反汇编代码，可以接受一个数字参数，指定反汇编多少条指令。`pD`命令相似但有一点不同，其参数代表解码多少字节。
 
 * `d` : disassembly N opcodes   count of opcodes
 * `D` : asm.arch disassembler   bsize bytes
@@ -364,9 +364,9 @@ The `pd` command is used to disassemble code. It accepts a numeric value to spec
 			0x00404888    31ed         xor ebp, ebp
 ```
 
-### Selecting Target Architecture
+### 目标架构
 
-The architecture flavor for the disassembler is defined by the `asm.arch` eval variable. You can use `e asm.arch=??` to list all available architectures.
+反汇编程序的体系结构风格由`asm.arch`eval变量定义，可以用`e asm.arch = ??`列出所有可用的体系结构。
 
 ```
 [0x00005310]> e asm.arch=??
@@ -396,9 +396,9 @@ _d__  _32        lanai       GPL3    LANAI
 ...
 ```
 
-### Configuring the Disassembler
+### 配置反汇编器
 
-There are multiple options which can be used to configure the output of the disassembler. All these options are described in `e? asm.`
+有多个选项可用于配置反汇编程序的输出，所有这些选项都在`e？ asm.`中。
 
 ```
 [0x00005310]> e? asm.
@@ -417,16 +417,17 @@ asm.cmt.fold: Fold comments, toggle with Vz
 ...
 ```
 
-Currently there are 136 `asm.` configuration variables so we do not list them all.
+注意`asm.`有136个配置变量，所以没有全部列出。
 
-### Disassembly Syntax
+### 反汇编语法
 
-The `asm.syntax` variable is used to change the flavor of the assembly syntax used by a disassembler engine. To switch between Intel and AT&T representations:
+`asm.syntax`变量用于更改反汇编程序引擎使用的汇编语法的样式，若要在Intel和AT＆T表示法之间切换：
 
 ```
 e asm.syntax = intel
 e asm.syntax = att
 ```
 
-You can also check `asm.pseudo`, which is an experimental pseudocode view,
-and `asm.esil` which outputs [ESIL](../disassembling/esil.md) ('Evaluable Strings Intermediate Language'). ESIL's goal is to have a human-readable representation of every opcode semantics. Such representations can be evaluated (interpreted) to emulate effects of individual instructions.
+可以看看`asm.pseudo`，其是一个实验性质的伪代码视图。
+
+`asm.esil` 可以输出 [ESIL](../disassembling/esil.md) ('Evaluable Strings Intermediate Language'). ESIL的设计目的使每个操作码语义都具有人类可读的表示形式，然后可用此类表示形式模仿单个指令的效果。
