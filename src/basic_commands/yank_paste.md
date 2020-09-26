@@ -1,17 +1,17 @@
-## Yank/Paste
+## 复制/粘贴
 
-Radare2 has an internal clipboard to save and write portions of memory loaded from the current io layer.
+Radare2有一个内置的剪贴板，用于保存和写入从当前io层加载的部分内存。
 
-This clipboard can be manipulated with the `y` command.
+可以用`y`命令对该剪贴板进行操作
 
-The two basic operations are
+两个基本的操作为：
 
 * copy (yank)
 * paste
 
-The yank operation will read N bytes (specified by the argument) into the clipboard. We can later use the `yy` command to paste what we read before into a file.
+复制操作会将N个字节（由参数给出）读取至剪贴板中，可以用`yy`命令将之前读取的内容粘贴至文件中。
 
-You can yank/paste bytes in visual mode selecting them with the cursor mode (`Vc`) and then using the `y` and `Y` key bindings which are aliases for `y` and `yy` commands of the command-line interface.
+可以在光标模式（`Vc`）中用`y`和`Y`进行复制和粘贴，其分别对应命令行界面中的`y`和`yy`。
 
 ```
 [0x00000000]> y?
@@ -38,7 +38,7 @@ Usage: y[ptxy] [len] [[@]addr]   # See wd? for memcpy, same as 'yf'.
 | yz [len]        copy nul-terminated string (up to blocksize) into clipboard
 ```
 
-Sample session:
+示例:
 
 ```
 [0x00000000]> s 0x100    ; seek at 0x100
@@ -47,7 +47,7 @@ Sample session:
 [0x00000200]> yy         ; pastes 100 bytes
 ```
 
-You can perform a yank and paste in a single line by just using the `yt` command (yank-to). The syntax is as follows:
+可以用`yt`命令在单行内进行复制和粘贴操作。语法如下：
 
 ```
 [0x4A13B8C0]> x
