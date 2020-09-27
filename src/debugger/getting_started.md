@@ -2,30 +2,30 @@
 
 ## Small session in radare2 debugger
 
-* `r2 -d /bin/ls`: Opens radare2 with file `/bin/ls` in debugger mode using the radare2 native debugger, but does not run the program. You’ll see a prompt (radare2) - all examples are from this prompt.
+* `r2 -d /bin/ls`: 在radare2原生debugger中以debug模式打开 `/bin/ls`,但并不会运行该程序。你将会看到 (radare2) 这样一个提示符 - 所有的示例都将从该提示符开始。
 
-* `db flag`: place a breakpoint at flag, where flag can be either an address or a function name
+* `db flag`: 在一个flag处打上断点，flag可以是一个地址也可以是函数名。
 
-* `db - flag`: remove the breakpoint at flag, where flag can be either an address or a function name
+* `db - flag`: 移除flag位置上的断点，flag可以是一个地址也可以是函数名。
 
-* `db`: show list of breakpoint
+* `db`: 列出现有的断点
 
-* `dc`: run the program
+* `dc`: 运行程序
 
-* `dr`: Show registers state
+* `dr`: 显示寄存器的状态
 
-* `drr`: Show registers references (telescoping) (like peda)
+* `drr`: 显示寄存器的引用 (telescoping) (类似 peda 中那样)
 
-* `ds`: Step into instruction
+* `ds`: 步入指令
 
-* `dso`: Step over instruction
+* `dso`: 步过指令
 
-* `dbt`: Display backtrace
+* `dbt`: 显示回溯信息（backtrace）
 
-* `dm`: Show memory maps
+* `dm`: 显示内存映射
 
-* `dk <signal>`: Send KILL signal to child
+* `dk <signal>`: 向child进程发送KILL信号
 
-* `ood`: reopen in debug mode
+* `ood`: 以debug模式重新打开
 
-* `ood arg1 arg2`: reopen in debug mode with arg1 and arg2
+* `ood arg1 arg2`: 以debug模式重新打开，但带上arg1,arg2参数
