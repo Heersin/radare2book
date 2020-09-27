@@ -1,17 +1,17 @@
 # Debugger
 
-Debuggers are implemented as IO plugins. Therefore, radare can handle different URI types for spawning, attaching and controlling processes. The complete list of IO plugins can be viewed with `r2 -L`. Those that have "d" in the first column ("rwd") support debugging. For example:
+Debugger是作为IO插件实现的，因此radare可根据不同的URI类型派生程序或attach到进程上。完整的IO插件列表可以通过`r2 -L`命令显示出来。插件列表的第一列若含有"d"代表该插件支持debugging，例如：
 
 ```
 r_d  debug       Debug a program or pid. dbg:///bin/ls, dbg://1388 (LGPL3)
 rwd  gdb         Attach to gdbserver, 'qemu -s', gdb://localhost:1234 (LGPL3)
 ```
 
-There are different backends for many target architectures and operating systems, e.g., GNU/Linux, Windows, MacOS X, (Net,Free,Open)BSD and Solaris.
+针对不同的架构和操作系统如GNU/Linux， Windows， MacOS X， （Net，Free，Open）BSD和Solaris，都提供了不同的后端调试程序
 
-Process memory is treated as a plain file. All mapped memory pages of a debugged program and its libraries can be read and interpreted as code or data structures.
+进程的内存空间被视为一个平坦式文件，被调试程序中所有已映射到内存页数据以及所链接的库，既可以视为代码，也可以视为数据。
 
-Communication between radare and the debugger IO layer is wrapped into `system()` calls, which accept a string as an argument, and executes it as a command. An answer is then buffered in the output console, its contents can be additionally processed by a script. Access to the IO system is achieved with `=!`. Most IO plugins provide help with `=!?` or `=!help`. For example:
+radare与debugger IO层之间的通信被打包在`system()`调用中，`system()`接受一个字符串作为参数，会将该字符串作为命令进行执行。执行的结果将会在output console中进行缓存，可以用脚本进一步处理其内容。对IO系统的访问是通过`=!`命令完成的，大多数的IO插件都提供了`=!?`或`=!help`用于获取帮助信息，例如：
 
 ```
 $ r2 -d /bin/ls
@@ -24,9 +24,9 @@ Usage: =!cmd args
  =!pid <#>  - select new pid
 ```
 
-In general, debugger commands are portable between architectures and operating systems. Still, as radare tries to support the same functionality for all target architectures and operating systems, certain things have to be handled separately. They include injecting shellcodes and handling exceptions. For example, in MIPS targets there is no hardware-supported single-stepping feature. In this case, radare2 provides its own implementation for single-step by using a mix of code analysis and software breakpoints.
+总之，debugger的命令是适用于多种操作系统和架构的。尽管radare想在不同架构和不同操作系统上构筑相同的功能，有些事情还是需要单独进行处理。这些事情包括shellcode注入和异常处理，例如在MIPS架构上，其硬件层面并不支持单步调试这一功能，因此在这种情况下，radare2通过使用综合的代码分析以及软件断点，提供了一个MIPS上单步调试的实现。
 
-To get basic help for the debugger, type 'd?':
+使用`d?`获取debugger的基本帮助：
 
 ```
 Usage: d   # Debug commands
@@ -53,7 +53,7 @@ Usage: d   # Debug commands
 | dx[?]                    Inject and run code on target process (See gs)
 ```
 
-To restart your debugging session, you can type `oo` or `oo+`, depending on desired behavior.
+输入`oo`或`oo+`重启debugging session，至于使用哪个则取决于你想要如何打开该文件：
 
 ```
 oo                 reopen current file (kill+fork in debugger)
