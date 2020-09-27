@@ -1,9 +1,9 @@
-# Files
+# 文件
 
-The radare2 debugger allows the user to list and manipulate the file descriptors from the target process.
+Radar2调试器允许用户列出和处理目标进程中的文件描述符。这是一个未在其他debugger中找到过的有用功能。
 
-This is a useful feature, which is not found in other debuggers, the functionality is similar to the lsof command line tool, but have extra subcommands to change the seek, close or duplicate them.
+该功能与lsof相似，但是其具有额外的子命令用于seek，close以及duplicate文件描述符。
 
-So, at any time in the debugging session you can replace the stdio file descriptors to use network sockets created by r2, or replace a network socket connection to hijack it.
+因此，debug session中的任何时刻都可以用r2创建的socket替换stdio这一描述符，或是通过替换socket劫持网络连接。
 
-This functionality is also available in r2frida by using the dd command prefixed with a backslash. In r2 you may want to see the output of dd? for proper details.
+该功能在r2frida中同样可用，命令是`\dd`。在r2中可以用`dd?`获取更多的信息。
