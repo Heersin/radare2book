@@ -1,8 +1,8 @@
-# Registers
+# 寄存器
 
-The registers are part of a user area stored in the context structure used by the scheduler. This structure can be manipulated to get and set the values of those registers, and, for example, on Intel hosts, it is possible to directly manipulate DR0-DR7 hardware registers to set hardware breakpoints.
+寄存器是用户区域的一部分，存储于上下文（context）结构中，被调度器所使用。可以通过操纵该结构对寄存器数值进行获取和修改，例如，在Intel主机上，可以通过直接操作DR0-DR7硬件寄存器设置硬件断点。
 
-There are different commands to get values of registers. For the General Purpose ones use:
+radare2提供了用于获取寄存器信息的不同命令，一个通用的命令如下：
 
 ```
 [0x4A13B8C0]> dr
@@ -31,7 +31,7 @@ rsp = 0x7fff515923c0
 [0x4A13B8C0]> dr rip = esp   ; set 'rip' as esp
 ```
 
-Interaction between a plugin and the core is done by commands returning radare instructions. This is used, for example, to set flags in the core to set  values of registers.
+插件和r2内核之间的交互是通过返回radare指令的命令完成的。例如，下面的命令用于设置r2内核中的标志以设置寄存器的值：
 
 ```
 [0x7f0f2dbae630]> dr*      ; Appending '*' will show radare commands
@@ -58,7 +58,7 @@ f rsp 1 0x7fff73557940
 [0x4A13B8C0]> .dr*  ; include common register values in flags
 ```
 
-An old copy of registers is stored all the time to keep track of the changes done during execution of a program being analyzed. This old copy can be accessed with `oregs`.
+寄存器的历史信息始终存储着，以跟踪分析程序在执行中的变化，可以哟你`oregs`访问历史信息。
 
 ```
 [0x7f1fab84c630]> dro
@@ -107,23 +107,23 @@ rflags = 0x00000202
 rsp = 0x7fff386b5080
 ```
 
-Values stored in eax, oeax and eip have changed.
+eax，oeax和eip中存储的值都已改变。
 
-To store and restore register values you can just dump the output of 'dr*' command to disk and then re-interpret it again:
+要存储和恢复寄存器值，只需将`dr*`命令的输出转储到磁盘，然后再次重新载入它：
 
 ```
 [0x4A13B8C0]> dr* > regs.saved ; save registers
 [0x4A13B8C0]> drp regs.saved ; restore
 ```
 
-EFLAGS can be similarly altered. E.g., setting selected flags:
+可以很容易地修改EFLAGS寄存器，例如，设置寄存器里的flag：
 
 ```
 [0x4A13B8C0]> dr eflags = pst
 [0x4A13B8C0]> dr eflags = azsti
 ```
 
-You can get a string which represents latest changes of registers using `drd` command (diff registers):
+若使用`drd`命令（diff registers）可以以字符串形式获取寄存器最近一次的变化：
 
 ```
 [0x4A13B8C0]> drd
