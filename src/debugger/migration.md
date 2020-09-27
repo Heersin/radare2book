@@ -1,10 +1,10 @@
-# Migration from ida, GDB or WinDBG
+# 从ida, GDB or WinDBG迁移到radare2
 
-## How to run the program using the debugger ##
+## 如何使用radare2以debug模式运行程序？ ##
 
 `r2 -d /bin/ls` - start in debugger mode => [[video](http://asciinema.org/a/12022)]
 
-## How do I attach/detach to running process ? (gdb -p) ##
+## 如何attach到进程上 ? (gdb -p) ##
 
 `r2 -d <pid>` - attach to process
 
@@ -14,11 +14,11 @@
 
 `r2 -D gdb gdb://localhost:1234` - attach to gdbserver
 
-## How to set args/environment variable/load a specific libraries for the debugging session of radare
+## 如何在radare的debug session中设置参数/环境变量/加载指定的库文件？
 
 Use `rarun2` (`libpath=$PWD:/tmp/lib`, `arg2=hello`, `setenv=FOO=BAR` ...) see `rarun2 -h` / `man rarun2`
 
-## How to script radare2 ?
+## 如何使用脚本 ?
 
 `r2 -i <scriptfile> ...` - run a script **after** loading the file => [[video](http://asciinema.org/a/12020)]
 
@@ -32,11 +32,11 @@ Use `rarun2` (`libpath=$PWD:/tmp/lib`, `arg2=hello`, `setenv=FOO=BAR` ...) see `
 
 To get `#!python` and much more, just build [radare2-bindings](https://github.com/radareorg/radare2-bindings)
 
-## How to list Source code as in gdb list ?
+## 如何像gdb list那样列出源代码 ?
 
 `CL @ sym.main` - though the feature is highly experimental
 
-# shortcuts
+# 快捷键
 
 | Command       | IDA Pro       | radare2        | r2 (visual mode) | GDB | WinDbg |
 | ------------- | ------------- |----------------|------------------|-----|-----|
@@ -118,13 +118,13 @@ To get `#!python` and much more, just build [radare2-bindings](https://github.co
 |options        |option menu    |`e?`            | `e`              |
 |search         |search menu    |`/?`            | Select the zone with the cursor `c` then `/`              | | `s`
 
-## Equivalent of "set-follow-fork-mode" gdb command
+## 与GDB的"set-follow-fork-mode"等价的命令
 This can be done using 2 commands:
 
 1. `dcf` - until a fork happen
 2. then use `dp` to select what process you want to debug.
 
-# Common features
+# 共通的一些功能
 - r2 accepts FLIRT signatures
 - r2 can connect to GDB, LLVM and WinDbg
 - r2 can write/patch in place
