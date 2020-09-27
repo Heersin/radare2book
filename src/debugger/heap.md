@@ -1,6 +1,6 @@
-# Heap
+# 堆（Heap）
 
-radare2's `dm` subcommands can also display a map of the heap which is useful for those who are interested in inspecting the heap and its content. Simply execute `dmh` to show a map of the heap:
+radare2的`dm`子命令同样可以显示heap分布，对于那些想要查看heap及其内部数据的用户来说很有用。只需执行`dmh`命令即可显示heap的分布：
 
 ```
 [0x7fae46236ca6]> dmh
@@ -8,7 +8,7 @@ radare2's `dm` subcommands can also display a map of the heap which is useful fo
   Top chunk @ 0x55a7ecbce660 - [brk_start: 0x55a7ecbce000, brk_end: 0x55a7ecbef000]
 ```
 
-You can also see a graph layout of the heap:
+还可以像下面这样以图的形式查看heap的布局：
 
 ```
 [0x7fae46236ca6]> dmhg
@@ -37,7 +37,7 @@ Heap Layout
 `────────────────────────────────────────────────────'
 ```
 
-Another heap commands can be found under `dmh`, check `dmh?` for the full list.
+其它heap命令都在`dmh`命令下，查看`dmh?`的信息获取完整的命令列表：
 
 ```
 [0x00000000]> dmh?
@@ -60,4 +60,4 @@ Another heap commands can be found under `dmh`, check `dmh?` for the full list.
 | dmh?                Show map heap help
 ```
 
-To print safe-linked lists (glibc >= 2.32) with demangled pointers, the variable `dbg.glibc.demangle` must be true.
+若要打印带有demangled pointers的safe-linked链（glibc >= 2.32)，要将 `dbg.glibc.demangle` 设置为true。

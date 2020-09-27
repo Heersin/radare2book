@@ -1,9 +1,9 @@
 # Windows Messages
 
-On Windows, you can use `dbW` while debugging to set a breakpoint for the message handler of a specific window.
+在Windows上，可以在debug时用`dbW`在指定窗口的message句柄上设置断点。
 
-Get a list of the current process windows with  `dW` :
-
+获取当前
+用dW获取当前窗口进程的列表：
 ```
 [0x7ffe885c1164]> dW
 .----------------------------------------------------.
@@ -17,21 +17,21 @@ Get a list of the current process windows with  `dW` :
 `----------------------------------------------------'
 ```
 
-Set the breakpoint with a message type, together with either the window class name or its handle:
+通过message类型加上窗口类型名/句柄设置断点：
 
 ```
 [0x7ffe885c1164]> dbW WM_KEYDOWN Edit
 Breakpoint set.
 ```
 
-Or
+或
 
 ``` 
 [0x7ffe885c1164]> dbW WM_KEYDOWN 0x002c048a
 Breakpoint set.
 ```
 
-If you aren't sure which window you should put a breakpoint on, use `dWi` to identify it with your mouse:
+如果不确定该在哪个窗口上下断点，用`dWi`启用使用鼠标进行识别：
 
 ```
 [0x7ffe885c1164]> dWi
