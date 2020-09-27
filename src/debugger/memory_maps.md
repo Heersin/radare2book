@@ -1,8 +1,8 @@
-# Memory Maps
+# 内存映射
 
-The ability to understand and manipulate the memory maps of a debugged program is important for many different Reverse Engineering tasks. radare2 offers a rich set of commands to handle memory maps in the binary. This includes listing the memory maps of the currently debugged binary, removing memory maps, handling loaded libraries and more.
+对于诸多不同的逆向工程任务而言，理解和操纵已调试程序的内存映射的能力很重要。Radare2提供了一组丰富的命令来处理二进制文件中的内存映射。包括列出当前调试的二进制文件的内存映射，删除内存映射，处理已加载的库等。
 
-First, let's see the help message for `dm`, the command which is responsible for handling memory maps:
+首先让我们看看`dm`的帮助信息，该命令用于处理内存映射：
 
 ```
 [0x55f2104cf620]> dm?
@@ -30,9 +30,9 @@ Usage: dm   # Memory maps commands
 | dmL address size                 Allocate <size> bytes at <address> and promote to huge page
 ```
 
-In this chapter, we'll go over some of the most useful subcommands of `dm` using simple examples. For the following examples, we'll use a simple `helloworld` program for Linux but it'll be the same for every binary.
+在本章节中，我们会通过一些简单的例子介绍`dm`中最有用的一些子命令。下面我们将用一个简单`helloworld`程序进行演示，不过其中的操作都可以推广到其他二进制文件上。
 
-First things first - open a program in debugging mode:
+首先，以debug模式打开程序：
 
 ```
 $ r2 -d helloworld
@@ -44,9 +44,9 @@ asm.bits 64
 [0x7f133f022fb0]>
 ```
 
-> Note that we passed "helloworld" to radare2 without "./". radare2 will try to find this program in the current directory and then in $PATH, even if no "./" is passed. This is contradictory with UNIX systems, but makes the behaviour consistent for windows users
+> 注意我们使用了一个不带"./"的"helloworld"作为radare2的参数，radare2在未指定"./"的情况下会首先在当前目录中搜索该文件，然后才搜索$PATH中的路径。这个行为与UNIX系统的默认行为相冲突，但是对于windows用户来说该行为与系统是一致的。
 
-Let's use `dm` to print the memory maps of the binary we've just opened:
+让我们用`dm`输出刚打开的程序的内存映射：
 
 ```
 [0x7f133f022fb0]> dm
@@ -61,25 +61,25 @@ Let's use `dm` to print the memory maps of the binary we've just opened:
 0xffffffffff600000 - usr   4K s r-x [vsyscall] [vsyscall] ; map.vsyscall_.r_x
 ```
 
-For those of you who prefer a more visual way, you can use `dm=` to see the memory maps using an ASCII-art bars. This will be handy when you want to see how these maps are located in the memory.
+对于更喜欢以图形展现结果的用户，可以用`dm=`以ASCII风格的条柱图展示内存映射。这个特性在想查看内存映射的分布时也很方便。
 
-If you want to know the memory-map you are currently in, use `dm.`:
+如果想查看当前在内存映射中的何处可以用`dm.`:
 
 ```
 [0x7f133f022fb0]> dm.
 0x00007f947eed9000 # 0x00007f947eefe000 * usr   148K s r-x /usr/lib/ld-2.27.so /usr/lib/ld-2.27.so ; map.usr_lib_ld_2.27.so.r_x
 ```
 
-Using `dmm` we can "List modules (libraries, binaries loaded in memory)", this is quite a handy command to see which modules were loaded.
+使用`dmm`可以“列出modules（已加载到内存中的库，二进制文件）”，这也是一个很方便的命令，可以查看哪些模块被加载了。
 
 ```
 [0x7fa80a19dfb0]> dmm
 0x55ca23a4a000 /tmp/helloworld
 0x7fa80a19d000 /usr/lib/ld-2.27.so
 ```
-> Note that the output of `dm` subcommands, and `dmm` specifically, might be different in various systems and different binaries.
+> 要说明的是`dm`子命令的输出以及`dmm`命令在不同系统上以及不同二进制文件中输出结果可能不同。
 
-We can see that along with our `helloworld` binary itself, another library was loaded which is `ld-2.27.so`. We don't see `libc` yet and this is because radare2 breaks before `libc` is loaded to memory. Let's use `dcu` (**d**ebug **c**ontinue **u**ntil) to execute our program until the entry point of the program, which radare flags as `entry0`.
+可以看到，同`helloworld`程序一起被加载的还有`ld-2.27.so`。我们在里面没有找到`libc`，这是因为radare2在`libc`加载前即中断了运行过程。使用`dcu`命令（**d**ebug **c**ontinue **u**ntil）让程序执行到入口点（radare将入口点标记为`entry0`）。
 
 ```
 [0x7fa80a19dfb0]> dcu entry0
@@ -91,9 +91,9 @@ hit breakpoint at: 55ca23a4a518
 0x7fa80a19d000 /usr/lib/ld-2.27.so
 ```
 
-Now we can see that `libc-2.27.so` was loaded as well, great!
+现在可以看到`libc-2.27.so`被一起加载了，好耶！
 
-Speaking of `libc`, a popular task for binary exploitation is to find the address of a specific symbol in a library. With this information in hand, you can build, for example, an exploit which uses ROP. This can be achieved using the `dmi` command. So if we want, for example, to find the address of [`system()`](http://man7.org/linux/man-pages/man3/system.3.html) in the loaded `libc`, we can simply execute the following command:
+再谈谈`libc`，二进制exploit中的一个常见工作就是找到库中一个特定符号的地址。只要有了这一信息，可以构筑比如说一个基于ROP的攻击。可以用`dmi`命令完成这一任务，比如说我们想获得加载到内存中`libc`的[`system()`](http://man7.org/linux/man-pages/man3/system.3.html)地址，就执行如下命令：
 
 ```
 [0x55ca23a4a520]> dmi libc system
@@ -106,9 +106,9 @@ Speaking of `libc`, a popular task for binary exploitation is to find the addres
 7480 0x001285a0 0x7fa809f095a0 GLBAL  FUNC  100 svcerr_systemerr
 ```
 
-Similar to the `dm.` command, with `dmi.` you can see the closest symbol to the current address.
+类似`dm.`命令，使用`dmi.`可以找到距离当前地址最近的一个符号。
 
-Another useful command is to list the sections of a specific library. In the following example we'll list the sections of `ld-2.27.so`:
+另一个有用的命令用于列出库文件内的节区信息，在下面的例子中我们列出了`ld-2.27.so`的节区：
 
 ```
 [0x55a7ebf09520]> dmS ld-2.27
