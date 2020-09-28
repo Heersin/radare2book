@@ -1,10 +1,10 @@
-# IO plugins
+# IO 插件
 
-All access to files, network, debugger and all input/output in general is wrapped by an IO abstraction layer that allows radare to treat all data as if it were just a file.
+对文件的访问，对网络的访问，debugger以及所有的输入输出都包纳于IO抽象层中。使得radare2能将这些对象作为文件处理。
 
-IO plugins are the ones used to wrap the open, read, write and 'system' on virtual file systems. You can make radare understand anything as a plain file. E.g. a socket connection, a remote radare session, a file, a process, a device, a gdb session.
+IO插件用于在虚拟文件系统封装open，read，write和'system'操作，可以令radare将任何东西视为一个平坦文件对象，例如socket连接，远程radare session，文件，进程，设备，gdb session等。
 
-So, when radare reads a block of bytes, it is the task of an IO plugin to get these bytes from any place and put them into internal buffer. An IO plugin is chosen by a file's URI to be opened. Some examples:
+当radare读入字节块时，IO插件起到的作用是从文件中获取字节并将其放置在内置的Buffer里。Radare会根据文件URI选择不同的IO插件去打开文件，例如：
 
 * Debugging URIs
 ```
@@ -22,7 +22,7 @@ $ r2 malloc://512<br />
 shortcut for
 $ r2 -
 ```
-You can get a list of the radare IO plugins by typing `radare2 -L`:
+使用`radare2 -L`可以列出radare2中的IO插件：
 ```
 $ r2 -L
 rw_  ar       Open ar/lib files [ar|lib]://[file//path] (LGPL3)
