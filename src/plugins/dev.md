@@ -1,6 +1,6 @@
-## Implementing a new architecture
+## 实现新架构
 
-radare2 splits the logic of a CPU into several modules. You should write more than one plugin to get full support for a specific arch. Let's see which are those:
+radare2将CPU中的逻辑划分至不同的模块中，因此需要通过编写多个插件实现对一个新架构的完整支持，下面列出了支持新架构所需要编写的插件：
 
 * r_asm : assembler and disassembler
 * r_anal : code analysis (opcode,type,esil,..)
@@ -8,17 +8,15 @@ radare2 splits the logic of a CPU into several modules. You should write more th
 * r_syscall : system calls
 * r_debug : debugger
 
-The most basic feature you usually want to support from a specific architecture is the disassembler. You first need to read into a human readable form the bytes in there.
+大多数人对于新架构支持最基本的需求就是反汇编，毕竟我们首先需要将字节转换为人类可读的形式。
 
-Bear in mind that plugins can be compiled static or dynamically, this means that the arch will be embedded inside the core libraries or it will distributed as a separated shared library.
+记住，插件可以是静态编译也可以是动态编译，这个选择意味着你是想将其作为r2核心库的一部分，或是将其作为一个独立的共享库实现。`./configure-plugins`脚本接受 --shared和 --static选项，可以通过指定二者之一决定使用何种方式编译。你也可以手动在`plugins.def.cfg`进行配置，然后删除`plugins.cfg`文件，重新运行`./configure-plugins`更新`libr/config.mk`和`libr/config.h`。
 
-To configure which plugins you want to compile use the `./configure-plugins` script which accepts the flags --shared and --static to specify them. You can also add it manually inside the `plugins.def.cfg` and then remove the `plugins.cfg` and run `./configure-plugins` again to update the `libr/config.mk` and `libr/config.h`.
+在[radare2-extras](https://github.com/radareorg/radare2-extras)仓库里应该能发现更多的外部插件。
 
-You may find some examples of external plugins in [radare2-extras](https://github.com/radareorg/radare2-extras) repository.
+## 编写r_asm插件
 
-## Writing the r_asm plugin
-
-The official way to make third-party plugins is to distribute them into a separate repository. This is a sample disasm plugin:
+官方推荐的制作第三方插件的方法是将其发布在一个独立的repo里，下面是一个disasm插件示例：
 
 ```Makefile
 $ cd my-cpu
@@ -127,7 +125,7 @@ struct r_lib_struct_t radare_plugin = {
 #endif
 ```
 
-To build and install this plugin just type this:
+构建并安装该插件：
 
 ```
 $ make
