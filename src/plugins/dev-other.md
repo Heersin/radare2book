@@ -1,10 +1,10 @@
 ## 实现一个debug插件
 
-* 在shlr/gdb/src/core.c里添加debugger的注册配置
-* 在 libr/debug/p/debug_native.c和libr/debug/p/debug_gdb.c里加入注册配置和架构支持
+* 在shlr/gdb/src/core.c里添加debugger的寄存器配置
+* 在 libr/debug/p/debug_native.c和libr/debug/p/debug_gdb.c里加入寄存器配置和架构支持
 * 在`r_debug_gdb_attach(RDebug *dbg, int pid)`添加代码启用配置
 
-如果想为gdb添加新的支持，可以在gdb session内用`maint print registers`命令查看注册配置。
+如果想为gdb添加新的支持，可以在gdb session内用`maint print registers`命令查看寄存器。
 
 ## 更多信息..
 

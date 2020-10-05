@@ -1,15 +1,8 @@
-## Implementing a new analysis plugin
+## 实现一个新的分析插件
 
-After implementing disassembly plugin, you might have noticed that output
-is far from being good - no proper highlighting, no reference lines
-and so on. This is because radare2 requires every architecture plugin
-to provide also analysis information about every opcode. At the moment
-the implementation of disassembly and opcodes analysis is separated between
-two modules - RAsm and RAnal. Thus we need to write an analysis plugin too.
-The principle is very similar - you just need to create a C file and
-corresponding Makefile.
+在实现反汇编插件后，可能会注意到输出的效果并不是很好 - 没有合适的代码高亮，没有引用线等等。这是因为radare2要求每个架构插件提供对每个opcode的分析信息。目前反汇编和opcode分析是被划分为两个模块的 - RAsm和RAnal，因此我们还需要编写一个分析插件。编写分析插件的过程和编写反汇编插件很像 - 只需要创建一个C文件并提供对应的Makefile，
 
-They structure of RAnal plugin looks like
+RAnal插件结构体如下：
 
 ```c
 RAnalPlugin r_anal_plugin_v810 = {
@@ -24,11 +17,9 @@ RAnalPlugin r_anal_plugin_v810 = {
 };
 ```
 
-Like with disassembly plugin there is a key function - `mycpu_op` which scans the opcode and builds
-RAnalOp structure. On the other hand, in this example analysis plugins also performs uplifting to
-ESIL, which is enabled in `.esil = true` statement. Thus, `mycpu_op` obliged to fill the
-corresponding RAnalOp ESIL field for the opcodes. Second important thing for ESIL uplifting and
-emulation - register profile, like in debugger, which is set within `set_reg_profile` function.
+同disassembly一样，需要为分析插件编写一个关键函数 - `mycpu_op`，该函数的功能是扫描opcode并构建RAnalOp结构体。
+此外，本例中的分析插件还兼有提炼ESIL的功能（可以通过`..esil = true`语句启用之）。因此`mycpu_op`还需要完成opcode对应的RAnalOp中ESIL字段的填充工作。
+若要完成ESIL的提炼和模拟，还需要进行寄存器的配置，得在`set_reg_profile`函数内进行设置，就像debugger中做的那样。
 
 **Makefile**
 
