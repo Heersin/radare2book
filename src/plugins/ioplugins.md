@@ -1,6 +1,6 @@
 # IO 插件
 
-对文件的访问，对网络的访问，debugger以及所有的输入输出都包纳于IO抽象层中。使得radare2能将这些对象作为文件处理。
+Radare2将文件，网络，debugger这些对象的访问以及其所有的输入输出都包纳于IO抽象层中，并将这些对象作为文件处理。
 
 IO插件用于在虚拟文件系统封装open，read，write和'system'操作，可以令radare将任何东西视为一个平坦文件对象，例如socket连接，远程radare session，文件，进程，设备，gdb session等。
 
