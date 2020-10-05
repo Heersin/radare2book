@@ -1,10 +1,10 @@
-## Implementing a new format
+## 实现一个文件格式插件
 
-### To enable virtual addressing
+### 启用Virtual Address
 
-In `info` add `et->has_va = 1;` and `ptr->srwx` with the `R_BIN_SCN_MAP;` attribute
+在`info`中添加`et->has_va = 1;`以及添加`ptr->srwx`并设置`R_BIN_SCN_MAP;`属性。
 
-### Create a folder with file format name in libr/bin/format
+### 在libr/bin/format下创建以文件格式命名的目录
 
 **Makefile:**
 
@@ -99,7 +99,7 @@ R_API RLibStruct radare_plugin = {
 
 ```
 
-### Some Examples
+### 示例
 
 * XBE - https://github.com/radareorg/radare2/pull/972
 * COFF - https://github.com/radareorg/radare2/pull/645
