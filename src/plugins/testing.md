@@ -1,12 +1,12 @@
-# Testing the plugin
+# 测试插件
 
-This plugin is used by rasm2 and r2. You can verify that the plugin is properly loaded with this command:
+该插件被用于rasm2和r2中，可以用如下命令确认该插件被正确加载了：
 ```
 $ rasm2 -L | grep mycpu
 _d  mycpu        My CPU disassembler  (LGPL3)
 ```
 
-Let's open an empty file using the 'mycpu' arch and write some random code there.
+打开一个使用'mycpu'架构的新文件，然后往里面随机地写入一些代码：
 
 ```
 $ r2 -
@@ -25,7 +25,7 @@ $ r2 -
            0x00000010    1382         add r8, r2
            0x00000012    7f15         ret
 ```
-Yay! it works.. and the mandatory oneliner too!
+好耶！ 插件工作正常.. 下面这个单行命令也是能正常起作用的！
 
 ```
 r2 -nqamycpu -cwoR -cpd' 10' -
