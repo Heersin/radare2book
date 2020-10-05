@@ -1,13 +1,11 @@
-# Python plugins
+# Python 插件
 
-At first, to be able to write a plugins in Python for radare2 you need to install
-r2lang plugin: `r2pm -i lang-python`.
-Note - in the following examples there are missing functions of the actual decoding
-for the sake of readability!
+在用python写r2插件之前，需要安装一个r2lang的插件 `r2pm -i lang-python` 。
+注意 - 为了可读性，下面的例子中省略了实际的解码函数。
 
-For this you need to do this:
+编写python插件的流程如下：
 1. `import r2lang` and `from r2lang import R` (for constants)
-2. Make a function with 2 subfunctions - `assemble` and `disassemble` and returning plugin structure - for RAsm plugin
+2. 创建一个函数，其包含两个子函数 - `assemble` 和 `disassemble` 并返回一个一个plugin struct - 用于RAsm插件
 ```python
 def mycpu(a):
     def assemble(s):
@@ -21,7 +19,7 @@ def mycpu(a):
         except:
             return [4, "unknown"]
 ```
-3. This structure should contain a pointers to these 2 functions - `assemble` and `disassemble`
+3. 该结构体需要包含指向这两个函数的指针 - `assemble`和`disassemble`
 
 ```python
     return {
@@ -35,8 +33,7 @@ def mycpu(a):
             "disassemble" : disassemble,
     }
 ```
-4. Make a function with 2 subfunctions - `set_reg_profile` and `op` and returning plugin structure - for RAnal plugin
-
+4. 创建一个函数，其包含两个子函数 - `set_reg_profile` 和 `op`， 并返回一个plugin struct - 用于RAnal插件
 ```python
 def mycpu_anal(a):
        def set_reg_profile():
@@ -78,7 +75,7 @@ def mycpu_anal(a):
         return [4, result]
 
 ```
-5. This structure should contain a pointers to these 2 functions - `set_reg_profile` and `op`
+5. 该结构体需要包含指向这两个函数的指针 - `set_reg_profile`和`op`
 
 ```python
     return {
@@ -92,7 +89,7 @@ def mycpu_anal(a):
             "op" : op,
     }
 ```
-6. Then register those using `r2lang.plugin("asm")` and `r2lang.plugin("anal")` respectively
+6. 分别用`r2lang.plugin("asm")` and `r2lang.plugin("anal")`进行注册：
 
 ```python
 print("Registering MYCPU disasm plugin...")
@@ -101,25 +98,24 @@ print("Registering MYCPU analysis plugin...")
 print(r2lang.plugin("anal", mycpu_anal))
 ```
 
-You can combine everything in one file and load it using `-i` option:
+可以把上面这些写在一个文件里，然后用`-i`选项加载就行了：
 ```
 r2 -I mycpu.py some_file.bin
 ```
-Or you can load it from the r2 shell: `#!python mycpu.py`
+或者可以在r2 shell里进行加载： `#!python mycpu.py` 
 
-See also:
+参见:
 
 * [Python](https://github.com/radareorg/radare2-bindings/blob/master/libr/lang/p/test-py-asm.py)
 * [Javascript](https://github.com/radareorg/radare2-bindings/blob/master/libr/lang/p/dukasm.js)
 
-### Implementing new format plugin in Python
+### 用python实现一个文件格式插件
 
-Note - in the following examples there are missing functions of the actual decoding
-for the sake of readability!
+注意 - 为了可读性，下面的例子中省略了实际的解码函数。
 
-For this you need to do this:
+步骤:
 1. `import r2lang`
-2. Make a function with  subfunctions:
+2. 创建一个函数，其包含下面这些子函数:
    - `load`
    - `load_bytes`
    - `destroy`
@@ -132,7 +128,7 @@ For this you need to do this:
    - `binsym`
    - `info`
 
-   and returning plugin structure - for RAsm plugin
+   并返回一个plugin struct - 用于 RAsm plugin：
 ```python
 def le_format(a):
     def load(binf):
@@ -148,11 +144,9 @@ def le_format(a):
         except:
             return [0]
 ```
-and so on. Please be sure of the parameters for each function and format of returns.
-Note, that functions `entries`, `sections`, `imports`, `relocs` returns a list of special
-formed dictionaries - each with a different type.
-Other functions return just a list of numerical values, even if single element one.
-There is a special function, which returns information about the file - `info`:
+诸如此类。 注意检查每个函数的参数和返回值的格式，`entries`，`sections`，`imports`，`relocs`都返回一个包含字典的列表，但不同列表中包含的字典类型是不同的。
+其余函数的返回值只是一个包含数值的列表，甚至可能只包含一个元素。
+下面是一个特殊的函数，其返回文件信息结构 - `info`：
 ```python
     def info(binf):
         return [{
@@ -170,8 +164,7 @@ There is a special function, which returns information about the file - `info`:
                 }]
 ```
 
-3. This structure should contain a pointers to the most important functions like
-`check_bytes`, `load` and `load_bytes`, `entries`, `relocs`, `imports`.
+3. 返回的plugin struct需要包含大部分的核心函数指针，比如`check_bytes`, `load`和`load-bytes`, `entries`, `relocs`, `imports`。
 
 ```python
     return {
@@ -192,7 +185,7 @@ There is a special function, which returns information about the file - `info`:
             "info" : info,
     }
 ```
-4. Then you need to register it as a file format plugin:
+4. 作为为文件格式插件进行注册:
 
 ```python
 print("Registering OS/2 LE/LX plugin...")
