@@ -1,8 +1,6 @@
-# Debugging
+# 对插件进行调试
 
-It is common to have an issues when you write a plugin, especially if you do this for the first
-time. This is why debugging them is very important. The first step for debugging is
-to set an environment variable when running radare2 instance:
+编写插件时很容易出现一些小问题，特别是你之前没有相关经验的话，这时候就很需要通过调试解决问题。调试之前需要设置运行radare2的相关环境参数：
 ```
 R_DEBUG=yes r2 /bin/ls
 Loading /usr/local/lib/radare2/2.2.0-git//bin_xtr_dyldcache.so
