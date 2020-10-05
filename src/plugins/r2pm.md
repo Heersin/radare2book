@@ -1,10 +1,8 @@
-# Creating an r2pm package of the plugin
+# 为插件创建r2pm包
 
-As you remember radare2 has its own [packaging manager](../tools/r2pm/intro.md) and we can easily
-add newly written plugin for everyone to access.
+radare2有自己的[包管理器](../tools/r2pm/intro.md)，可以很容易地向里面添加新写的插件，其他用户可以从该仓库下载。
 
-All packages are located in [radare2-pm](https://github.com/radareorg/radare2-pm) repository, and have
-very simple text format.
+所有的包都放在[radare2-pm](https://github.com/radareorg/radare2-pm)仓库里，包的文本格式都很简单：
 
 ```
 R2PM_BEGIN
@@ -26,6 +24,4 @@ R2PM_UNINSTALL() {
 R2PM_END
 ```
 
-Then add it in the `/db` directory of radare2-pm repository and send a pull request to the mainline.
-
-
+把它加入radare2-pm repo的`/db`目录下，然后向mainline发一个PR就行。
