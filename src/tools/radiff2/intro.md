@@ -1,6 +1,6 @@
 # Radiff2
 
-Radiff2 is a tool designed to compare binary files, similar to how regular `diff` compares text files.
+Radiff2的设计目的是进行二进制文件比较，类似`diff`进行文本文件的比较那样。
 ```
 $ radiff2 -h
 Usage: radiff2 [-abBcCdjrspOxuUvV] [-A[A]] [-g sym] [-m graph_mode][-t %] [file] [file]
