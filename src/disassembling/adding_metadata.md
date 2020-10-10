@@ -1,9 +1,8 @@
 ## Adding Metadata to Disassembly
+二进制逆向工作中一个经典的任务就是为分析结果提供有用而关键的注解。
+Radare提供了多种方式存取该元信息。
 
-The typical work involved in reversing binary files makes powerful annotation capabilities essential.
-Radare offers multiple ways to store and retrieve such metadata.
-
-By following common basic UNIX principles, it is easy to write a small utility in a scripting language which uses `objdump`, `otool` or any other existing utility to obtain information from a binary and to import it into radare. For example, take a look at `idc2r.py` shipped with [radare2ida](https://github.com/radareorg/radare2ida). To use it, invoke it as `idc2r.py file.idc > file.r2`. It reads an IDC file exported from an IDA Pro database and produces an r2 script containing the same comments, names of functions and other data. You can import the resulting 'file.r2' by using the dot `.` command of radare:
+遵循UNIX原则，我们采用脚本语言使用`odjdump`，`otool`以及其他小工具结合起来提取二进制文件内的信息，并将这些信息导入radare2中。例如[radare2ida](https://github.com/radareorg/radare2ida)中的`idc2r.py`，可以用`idc2r.py file.idc > file.r2`调用之，其读取IDA pro导出的IDC文件，然后创建一个包含相同注释、函数名和其它数据的r2脚本把这些数据引入r2中。可以在radare2内用`.`命令执行该r2脚本:
 ```
 [0x00000000]> . file.r2
 ```
