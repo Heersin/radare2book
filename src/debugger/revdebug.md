@@ -1,17 +1,14 @@
-# Reverse Debugging
+# 逆向调试
 
-Radare2 has reverse debugger, that can seek the program counter backward.
-(e.g. reverse-next, reverse-continue in gdb)
-Firstly you need to save program state at the point that you want to start recording.
-The syntax for recording is:
+Radare2拥有逆向调试器，用于将PC寄存器拨回之前的状态。（就像GDB里的reverse-next，reverse-continue）
+首先需要选定为逆向调试起始记录点，代表从该时刻其保存程序状态，语法为：
 
 ```
 [0x004028a0]> dts+
 ```
 
-You can use `dts` commands for recording and managing program states.
-After recording the states, you can seek pc back and forth to any points after saved address.
-So after recording, you can try single step back:
+`dts`命令可以记录程序状态并进行相应管理，状态被记录之后就可以任意切换PC寄存器的值以恢复状态。
+比如说现在完成了状态记录，要逆向调试一步：
 
 ```
 [0x004028a0]> 2dso
@@ -24,10 +21,9 @@ hit breakpoint at: 4028a2
 0x004028a2
 ```
 
-When you run `dsb`, reverse debugger restore previous recorded state and execute program from it
-until desired point.
+`dsb`命令会让debugger回溯到前一个记录的状态，然后再执行至指定的断点处。
 
-Or you can also try continue back:
+也可以试试reverse continue：
 
 ```
 [0x004028a0]> db 0x004028a2
@@ -39,10 +35,9 @@ Or you can also try continue back:
 0x004028a2
 ```
 
-`dcb` seeks program counter until hit the latest breakpoint.
-So once set a breakpoint, you can back to it any time.
+`dcb`命令回拨PC直至最新的一个断点，因此当你设置好一个新的断点时，可以用该命令将程序状态调整至该处。
 
-You can see current recorded program states using `dts`:
+可以通过`dts`查看当前已记录的所有程序状态：
 
 ```
 [0x004028a0]> dts
@@ -50,11 +45,9 @@ session: 0   at:0x004028a0   ""
 session: 1   at:0x004028c2   ""
 ```
 
-NOTE: Program records can be saved at any moments. These are diff style format
-that save only different memory area from previous. It saves memory space rather
-than entire dump.
+注意：程序记录是可以随时保存的。这些记录采用差异化方式备份，仅保存与之前记录不同的内存区域，相比于完整转储节省空间。
 
-And also can add comment:
+还可以为记录增加注释：
 
 ```
 [0x004028c2]> dtsC 0 program start
@@ -64,12 +57,10 @@ session: 0   at:0x004028a0   "program start"
 session: 1   at:0x004028c2   "decryption start"
 ```
 
-You can leave notes for each records to keep in your mind.
-`dsb` and `dcb` commands restore the program state from latest record if there are
-many records.
+可以为每条记录都留下一些注释，以备不时之需。
+如果存在多条记录的话，`dsb`和`dcb`命令只将程序状态恢复至最新的一条记录。
 
-Program records can exported to file and of course import it.
-Export/Import records to/from file:
+这些记录都可以被导入和导出，操作方法如下：
 
 ```
 [0x004028c2]> dtst records_for_test
@@ -79,14 +70,13 @@ session: 0, 0x4028a0 diffs: 0
 session: 1, 0x4028c2 diffs: 0
 ```
 
-Moreover, you can do reverse debugging in ESIL mode.
-In ESIL mode, program state can be managed by `aets` commands.
+在ESIL模式下同样能用逆向调试，只是程序状态的管理是使用`aets`命令完成的。
 
 ```
 [0x00404870]> aets+
 ```
 
-And step back by `aesb`:
+单步回溯使用 `aesb`:
 
 ```
 [0x00404870]> aer rip
@@ -99,7 +89,5 @@ And step back by `aesb`:
 0x00404879
 ```
 
-In addition to the native reverse debugging capabilities in radare2, it's also possible to
-use gdb's remote protocol to reverse debug a target gdbserver that supports it.
-`=!dsb` and `=!dcb` are available as `dsb` and `dcb` replacementments for this purpose,
-see [remote gdb's documentation](remote_gdb.md) for more information.
+除了使用radare2原生逆向调试功能外，同样支持通过gdb远程调试对具有逆向调试功能的gdbserver进行操作。
+`=!dsb`和`=!dcb`即为此场景下`dsb`和`dcb`的替代命令，可以参考[GDB远程调试文档](remote_gdb.md)获取更多信息。
