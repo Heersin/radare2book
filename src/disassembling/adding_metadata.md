@@ -1,4 +1,4 @@
-## Adding Metadata to Disassembly
+## 为反汇编添加元数据
 二进制逆向工作中一个经典的任务就是为分析结果提供有用而关键的注解。
 Radare提供了多种方式存取该元信息。
 
@@ -6,18 +6,17 @@ Radare提供了多种方式存取该元信息。
 ```
 [0x00000000]> . file.r2
 ```
-The `.` command is used to interpret Radare commands from external sources, including files and program output. For example, to omit generation of an intermediate file and import the script directly you can use this combination:
+
+`.`命令用于调用外部的radare命令输入源, 包括文件和程序的输出内容。例如想省略中间文件的生成并直接导入脚本，可以使用如下的命令组合：
 ```
 [0x00000000]> .!idc2r.py < file.idc
 ```
 
-Please keep in mind that importing IDA Pro metadata from IDC dump is deprecated mechanism and might
-not work in the future. The recommended way to do it - use [python-idb](https://github.com/williballenthin/python-idb)-based `ida2r2.py` which
-opens IDB files directly without IDA Pro installed.
+请注意，导入IDA Pro中的IDC dump的元数据是一个已被废弃的机制，在未来的版本中很可能不再生效。更推荐的做法是使用基于`ida2r2.py`的[python-idb](https://github.com/williballenthin/python-idb)直接打开IDB文件，该做法不需要系统上安装IDA pro。
 
-The `C` command is used to manage comments and data conversions. You can define a range of program's bytes to be interpreted as either code, binary data or string. It is also possible to execute external code at every specified flag location in order to fetch some metadata, such as a comment, from an external file or database.
+`C`命令用于管理注释和数据转换的部分，你可以将一个范围内的字节作为代码解释，作为二进制数据解释或者作为字符串进行解释。同样也支持指定的标识位置外执行外部代码，以从外部文件或数据库中获取一些元信息，比如注释之类的。
 
-There are many different metadata manipulation commands, here is the glimpse of all of them:
+radare包含大量不同的元数据操作命令，下面是他们的简要介绍：
 
 ```
 [0x00404cc0]> C?
@@ -49,7 +48,7 @@ There are many different metadata manipulation commands, here is the glimpse of 
 | Cz[@addr]                                      add string (see Cs?)
 ```
 
-Simply to add the comment to a particular line/address you can use `Ca` command:
+在指定的行/地址加入一个注释，只需使用`Ca`命令：
 
 ```
 [0x00000000]> CCa 0x0000002 this guy seems legit
@@ -59,16 +58,16 @@ Simply to add the comment to a particular line/address you can use `Ca` command:
 0x00000002    0000         add [rax], al
 ```
 
-The `C?` family of commands lets you mark a range as one of several kinds of types. Three basic types are: code (disassembly is done using asm.arch), data (an array of data elements) or string. Use the `Cs` comand to define a string, use the `Cd` command for defining an array of data elements, and use the `Cf` command to define more complex data structures like structs.
+`C?`命令族可以用于将范围内的数据标记为几种类型之一，基本的三种类型为：code(通过asm.arch完成反汇编)，data（一个包含数据元素的数组）或string。使用`Cs`命令可以定义一个字符串，使用`Cd`命令可以定义一个数组，使用`Cf`命令则可以定义一些更复杂的数据结构，比如struct。
 
-Annotating data types is most easily done in visual mode, using the "d" key, short for "data type change". First, use the cursor to select a range of bytes (press `c` key to toggle cursor mode and use HJKL keys to expand selection), then press 'd' to get a menu of possible actions/types. For example, to mark the range as a string, use the 's' option from the menu. You can achieve the same result from the shell using the `Cs` command:
+对数据类型的注解通常在可视化模式下更容易完成，使用"d"键即可进行注解，其是"data type change"的缩写。首先用光标选择一个字节范围（按下`c`键进入光标模式，在里面通过HJKL键进行选择），之后按下'd'键可以获取菜单，菜单中包含允许进行的操作或可能的类型。例如想要将一个范围内的字节标记为字符串时，选择该菜单中的`s`选项。当然也可以在r2 shell下使用`Cs`命令达到同样的效果。
 
 ```
 [0x00000000]> f string_foo @ 0x800
 [0x00000000]> Cs 10 @ string_foo
 ```
 
-The `Cf` command is used to define a memory format string (the same syntax used by the `pf` command). Here's an example:
+`Cf`命令用于定义一个内存格式化字符串（与`pf`命令使用的格式相同）。这里有一个例子：
 
 ```
 [0x7fd9f13ae630]> Cf 16 2xi foo bar
@@ -88,17 +87,12 @@ The `Cf` command is used to define a memory format string (the same syntax used 
 0x7fd9f13ae638    4989c4       mov r12, rax
 ```
 
-The `[sz]` argument to `Cf` is used to define how many bytes the struct should take up in the disassembly, and is completely independent from the size of the data structure defined by the format string. This may seem confusing, but has several uses. For example, you may want to see the formatted structure displayed in the disassembly, but still have those locations be visible as offsets and with raw bytes. Sometimes, you find large structures, but only identified a few fields, or only interested in specific fields. Then, you can tell r2 to display only those fields, using the format string and using 'skip' fields, and also have the disassembly continue after the entire structure, by giving it full size using the `sz` argument.
+传递给`Cf`的`[sz]`参数用于定义反汇编中该结构体占据的字节数，该参数与格式化字符串中所定义的字节数是完全独立的。听起来可能有一点迷惑，不过这个设定有几个用途，例如，你可能想在反汇编中看到经过格式化规整后的结构体，同时仍然将结构体中对应位置显示为偏移量和原始的字节。有时，你可能只识别出一个大结构体中的几个成员，又或者只对其中的某个成员感兴趣，那么你可以使用格式化字符串和'skip'跳过，让r2仅仅显示这些成员区域，同时反汇编依旧可以不受阻碍地继续下去，因为其使用`sz`命令所指定的数值作为结构体的大小。
 
-Using `Cf`, it's easy to define complex structures with simple oneliners. See `pf?` for more information.
-Remember that all these `C` commands can also be accessed from the visual mode by pressing the `d` (data conversion) key.
-Note that unlike [`t`](../analysis/types.md) commands `Cf` doesn't change analysis results. It is only
-a visual boon.
+通过使用`Cf`，我们能够使用简单的命令定义复杂的结构体。查看`pf?`的输出信息获取更多帮助。
+记住，所有这些`C`命令都可以在可视化模式下通过`d`（data conversion）键使用。还要注意的是，和[`t`](../analysis/types.md)命令不同，`Cf`并不改变分析结果，它仅仅用于优化展示效果。
 
-Sometimes just adding a single line of comments is not enough, in this case radare2 allows you to
-create a link for a particular text file. You can use it with `CC,` command or by pressing `,` key in
-the visual mode. This will open an `$EDITOR` to create a new file, or if filename does exist, just
-will create a link. It will be shown in the disassembly comments:
+有时候仅仅添加一行文字注释可能无法满足需要，radare2允许创建一个指向文本文件的链接。使用`CC,`命令或者在可视化模式按下`,`键，之后会打开一个`$EDITOR`创建新文件，如果文件名已经存在了，那么将会创建一个指向文件的链接。之后，它在反汇编窗口中会显示这样的注释：
 
 ```
 [0x00003af7 11% 290 /bin/ls]> pd $r @ main+55 # 0x3af7
@@ -108,7 +102,4 @@ will create a link. It will be shown in the disassembly comments:
 │0x00003b0a  call sym.imp.bindtextdomain   ;[2] ; char *bindtextdomain(char *domainname, char *dirname)
 ```
 
-Note `,(locale-help.txt)` appeared in the comments, if we press `,` again in the visual mode, it
-will open the file. Using this mechanism we can create a long descriptions of some particular places
-in disassembly, link datasheets or related articles.
-
+注意，`,(locale-help.txt)`出现在了注释中，如果在可视化模式下再次按下`,`就会打开该文件。通过该机制就可以在反汇编窗口中的注释位置上创建一个长描述，外链到数据表或者相关的文章。
