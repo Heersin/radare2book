@@ -1,7 +1,6 @@
-# Signatures
+# 签名
 
-Radare2 has its own format of the signatures, allowing to both load/apply and
-create them on the fly. They are available under the `z` command namespace:
+radare2有自己的签名格式，可以在创建时即时地进行加载/应用。这些命令存在于`z`命令空间下：
 
 ```
 [0x00000000]> z?
@@ -24,10 +23,9 @@ Usage: z[*j-aof/cs] [args]   # Manage zignatures
 | zs[?]        manage zignspaces
 | zi           show zignatures matching information
 ```
-To load the created signature file you need to load it from SDB file using `zo` command or
-from the compressed SDB file using `zoz` command.
+需要使用`zo`命令从SDB文件中加载签名然后创建签名，如果SDB文件经过压缩，则需要使用`zoz`命令。
 
-To create signature you need to make function first, then you can create it from the function:
+创建签名前首先要创建函数，之后可以通过函数创建它：
 ```
 r2 /bin/ls
 [0x000051c0]> aaa # this creates functions, including 'entry0'
@@ -39,8 +37,7 @@ entry:
   offset: 0x000051c0
 [0x000051c0]>
 ```
-As you can see it made a new signature with a name `entry` from a function `entry0`.
-You can show it in JSON format too, which can be useful for scripting:
+可以看到，它从`entry0`函数中创建了一个名为`entry`的签名。此外你可以以JSON格式显示结果，JSON格式的结果在能够用于脚本之中:
 ```
 [0x000051c0]> zj~{}
 [
@@ -60,11 +57,11 @@ You can show it in JSON format too, which can be useful for scripting:
 ]
 [0x000051c0]>
 ```
-To remove it just run `z-entry`.
+使用`z-entry`可以移除签名。
 
-If you want, instead, to save all created signatures, you need to save it into the SDB file using command `zos myentry`.
+如果想保存所有的签名，可以用`zos myentry`将签名存入SDB文件中。
 
-Then we can apply them. Lets open a file again:
+之后可以加载该文件并应用之，首先重新打开一个文件：
 ```
 r2 /bin/ls
  -- Log On. Hack In. Go Anywhere. Get Everything.
@@ -76,8 +73,7 @@ entry:
   offset: 0x000051c0
 [0x000051c0]>
 ```
-This means that the signatures were successfully loaded from the file `myentry` and now we can
-search matching functions:
+这些消息代表成功得从`myentry`文件里加载签名，而且可以通过搜索找到对应函数：
 ```
 [0x000051c0]> z.
 [+] searching 0x000051c0 - 0x000052c0
@@ -85,9 +81,8 @@ search matching functions:
 hits: 1
 [0x000051c0]>
 ```
-Note that `z.` command just checks the signatures against the current address.
-To search signatures across the all file we need to do a bit different thing.
-There is an important moment though, if we just run it "as is" - it wont find anything:
+注意`z.`命令仅仅对照当前的地址搜索签名，如果想要在全文件中进行签名搜索则需要一些不同的操作。
+底下展示的是一个重要时刻，当我们试图搜索签名时 -- r2却找不到任何东西：
 ```
 [0x000051c0]> z/
 [+] searching 0x0021dfd0 - 0x002203e8
@@ -95,7 +90,7 @@ There is an important moment though, if we just run it "as is" - it wont find an
 hits: 0
 [0x000051c0]>
 ```
-Note the searching address - this is because we need to [adjust the searching](../search_bytes/configurating_the_search.md) range first:
+这是由于搜索地址配置的原因，我们需要先[调整搜索](../search_bytes/configurating_the_search.md)的范围：
 ```
 [0x000051c0]> e search.in=io.section
 [0x000051c0]> z/
@@ -104,9 +99,8 @@ Note the searching address - this is because we need to [adjust the searching](.
 hits: 1
 [0x000051c0]>
 ```
-We are setting the search mode to `io.section` (it was `file` by default) to search in the current
-section (assuming we are currently in the `.text` section of course).
-Now we can check, what radare2 found for us:
+我们将搜索模式设置为`io.section`（默认的是`file`）用于在当前节区进行搜索（假设我们目前所处的位置是`.text`节区）。
+现在来看看radare2为我们找到了什么信息：
 ```
 [0x000051c0]> pd 5
 ;-- entry0:
@@ -118,10 +112,9 @@ Now we can check, what radare2 found for us:
 0x000051c9      4883e4f0       and rsp, 0xfffffffffffffff0
 [0x000051c0]>
 ```
-Here we can see the comment of `entry0`, which is taken from the ELF parsing, but also the
-`sign.bytes.entry_0`, which is exactly the result of matching signature.
+现在我们看到了`entry0`的注释，其是在ELF解析阶段时添加的，同时还有一个`sign.bytes.entry_0`，它正是签名匹配的结果。
 
-Signatures configuration stored in the `zign.` config vars' namespace:
+签名配置在`zign.`配置变量空间中：
 ```
 [0x000051c0]> e? zign.
        zign.autoload: Autoload all zignatures located in ~/.local/share/radare2/zigns
@@ -141,14 +134,10 @@ Signatures configuration stored in the `zign.` config vars' namespace:
 [0x000051c0]>
 ```
 
-## Finding Best Matches `zb`
+## 寻找最佳匹配 `zb`
 
-Often you know the signature should exist somewhere in a binary but `z/` and
-`z.` still fail. This is often due to very minor differences between the
-signature and the function. Maybe the compiler switched two instructions, or
-your signature is not for the correct function version. In these situations the
-`zb` commands can still help point you in the right direction by listing near
-matches.
+常常你知道二进制文件中存在一个签名，但是`z/`和`z.`都无法找到。这通常是因为签名和函数之间的差异非常小导致的，有可能是编译器交换了两条指令，或者你搜索的签名对于该版本的函数并不适用。
+在此情景下，`zb`命令能够帮你指向相似的匹配位置。
 
 ```
 [0x000040a0]> zb?
@@ -157,8 +146,7 @@ Usage: zb[r?] [args]  # search for closest matching signatures
 | zbr zigname [n]  search for n most similar functions to zigname
 ```
 
-The `zb` (zign best) command will show the top 5 closest signatures to a
-function. Each will contain a score between 1.0 and 0.0.
+`zb`（zign best）命令会展示5个与函数最相近的签名，每个签名都会有一个打分，分值从1.0到0.0不等。
 
 ```
 [0x0041e390]> s sym.fclose
@@ -170,15 +158,10 @@ function. Each will contain a score between 1.0 and 0.0.
 0.62532  0.34800 B  0.90264 G   sym.__cxa_finalize
 ```
 
-In the above example, `zb` correctly associated the `sym.fclose` signature to
-the current function. The `z/` and `z.` command would have failed to match here
-since both the `B`yte and `G`raph scores are less then 1.0. A 30% separation
-between the first and second place results is also a good indication of a
-correct match.
+在上面那个例子里，`zb`正确地将`sym.fclose`签名与当前函数相关联，而`z/`和`z.`命令则无法发现，这是因为其`B`yte和`G`raph的分值都小于1.0。
+第一相近结果和第二相近结果之间30%的偏差度也意味着第一个结果是个正确的匹配。
 
-The `zbr` (zign best reverse) accepts a zignature name and attempts to find the
-closet matching functions. Use an analysis command, like `aa` to find functions
-first.
+`zbr`（zign best reverse）接受一个签名作为参数，然后找到最相近的匹配函数。在此之前记得先用`aa`发现函数。
 
 ```
 [0x00401b20]> aa
