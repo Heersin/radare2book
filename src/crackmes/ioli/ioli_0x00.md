@@ -1,7 +1,7 @@
 IOLI 0x00
 =========
 
-This is the first IOLI crackme, and the easiest one.
+第一个IOLI crackme，也是最简单的一个。
 
 ```
 $ ./crackme0x00
@@ -10,49 +10,49 @@ Password: 1234
 Invalid Password!
 ```
 
-The first thing to check is if the password is just plaintext inside the file. In this case, we don't need to do any disassembly, and we can just use rabin2 with the -z flag to search for strings in the binary.
+首先检查一下口令是否就是存在于文件内的字符串。在这个例子中，无需进行任何反汇编操作，只需要使用rabin2 -z搜索二进制文件内的字符串。
 
 ```
 $ rabin2 -z ./crackme0x00
-vaddr=0x08048568 paddr=0x00000568 ordinal=000 sz=25 len=24 section=.rodata type=a string=IOLI Crackme Level 0x00\n
-vaddr=0x08048581 paddr=0x00000581 ordinal=001 sz=11 len=10 section=.rodata type=a string=Password:
-vaddr=0x0804858f paddr=0x0000058f ordinal=002 sz=7 len=6 section=.rodata type=a string=250382
-vaddr=0x08048596 paddr=0x00000596 ordinal=003 sz=19 len=18 section=.rodata type=a string=Invalid Password!\n
-vaddr=0x080485a9 paddr=0x000005a9 ordinal=004 sz=16 len=15 section=.rodata type=a string=Password OK :)\n
+[Strings]
+nth paddr      vaddr      len size section type  string
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0   0x00000568 0x08048568 24  25   .rodata ascii IOLI Crackme Level 0x00\n
+1   0x00000581 0x08048581 10  11   .rodata ascii Password: 
+2   0x0000058f 0x0804858f 6   7    .rodata ascii 250382
+3   0x00000596 0x08048596 18  19   .rodata ascii Invalid Password!\n
+4   0x000005a9 0x080485a9 15  16   .rodata ascii Password OK :)\n
 ```
 
-So we know what the following section is, this section is the header shown when the application is run.
-
+现在我们知道这些都是些什么节区了，这正是程序运行时所显示的标头信息。
 ```
-vaddr=0x08048568 paddr=0x00000568 ordinal=000 sz=25 len=24 section=.rodata type=a string=IOLI Crackme Level 0x00\n
-```
-
-Here we have the prompt for the password.
-
-```
-vaddr=0x08048581 paddr=0x00000581 ordinal=001 sz=11 len=10 section=.rodata type=a string=Password:
+nth paddr      vaddr      len size section type  string
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0   0x00000568 0x08048568 24  25   .rodata ascii IOLI Crackme Level 0x00\n
 ```
 
-This is the error on entering an invalid password.
-
+从这里面可以获得口令的一些线索和提示：
 ```
-vaddr=0x08048596 paddr=0x00000596 ordinal=003 sz=19 len=18 section=.rodata type=a string=Invalid Password!\n
-```
-
-This is the message on the password being accepted.
-
-```
-vaddr=0x080485a9 paddr=0x000005a9 ordinal=004 sz=16 len=15 section=.rodata type=a string=Password OK :)\n
+1   0x00000581 0x08048581 10  11   .rodata ascii Password: 
 ```
 
-What is this? It's a string, but we haven't seen it in running the application yet.
+当输入错误口令时会产生如下错误信息。
+```
+3   0x00000596 0x08048596 18  19   .rodata ascii Invalid Password!\n
+```
+
+这个则是口令正确时产生的提示信息。
+```
+4   0x000005a9 0x080485a9 15  16   .rodata ascii Password OK :)\n
+```
+
+那么，底下这串数字又是什么，它是一个字符串，但运行程序时还并没有见到它。
 
 ```
-vaddr=0x0804858f paddr=0x0000058f ordinal=002 sz=7 len=6 section=.rodata type=a string=250382
+2   0x0000058f 0x0804858f 6   7    .rodata ascii 250382
 ```
 
-Let's give this a shot.
-
+让我们试一下：
 ```
 $ ./crackme0x00
 IOLI Crackme Level 0x00
@@ -60,4 +60,4 @@ Password: 250382
 Password OK :)
 ```
 
-So we now know that 250382 is the password, and have completed this crackme.
+至此我们知道250328就是该口令，完成crackme。
