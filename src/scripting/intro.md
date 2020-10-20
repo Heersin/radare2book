@@ -1,11 +1,8 @@
-## Scripting
+## 脚本化
 
-Radare2 provides a wide set of a features to automate boring work.
-It ranges from the simple sequencing of the commands to the calling
-scripts/another programs via IPC (Inter-Process Communication), called r2pipe.
+Radare2提供提供丰富的手段用于自动化处理一些无聊工作，从最简单的命令序列到通过IPC调用脚本或其他程序，这些称之为r2pipe。
 
-As mentioned a few times before there is an ability to sequence commands
-using `;` semicolon operator.
+如前所述，可以通过`;`符号对命令进行序列化
 ```
 [0x00404800]> pd 1 ; ao 1
            0x00404800      b827e66100     mov eax, 0x61e627      ; "tab"
@@ -22,19 +19,16 @@ stack: null
 family: cpu
 [0x00404800]>
 ```
-It simply runs the second command after finishing the first one, like in a shell.
+同shell一样，其仅是简单地在执行完第一条命令后执行第二条命令。
 
-The second important way to sequence the commands is with a simple pipe `|`
+第二种序列化命令的方式是使用简单的管道符`|`
 ```
 ao|grep address
 ```
-Note, the `|` pipe only can pipe output of r2 commands to external (shell)
-commands, like system programs or builtin shell commands.
-There is a similar way to sequence r2 commands, using the backtick operator `` `command` ``. The quoted part will undergo command substitution and the output will be used as an argument of the command line.
+注意，`|`管道仅能将r2命令的输出导向至外部（shell）命令，比如系统程序或内置的shell命令。
+这里还有相似的序列化r2命令的一种方法，就是使用反引号，`` `command` ``，被其包含的部分会进行命令替换，命令输出将被作为一个命令行参数使用。
 
-For example, we want to see a few bytes of the memory at the address referred to
-by the 'mov eax, addr' instruction. We can do that without jumping to it, using
-a sequence of commands:
+比如，我们想要查看`mov eax, addr`这条指令里addr上的一些字节，无需跳转到该地址，只需要使用下面的命令序列：
 ```
 [0x00404800]> pd 1
               0x00404800      b827e66100     mov eax, 0x61e627      ; "tab"
@@ -58,19 +52,19 @@ family: cpu
 0x0061e627  7461 6200 2e69 6e74 6572                 tab..inter
 [0x00404800]>
 ```
-And of course it's possible to redirect the output of an r2 command into a file, using the `>` and `>>`
-commands
+当然同样可以用`>`和`>>`将r2命令的输出结果重定向至文件里。
+命令如下：
 ```
 [0x00404800]> px 10 @ `ao~ptr[1]` > example.txt
 [0x00404800]> px 10 @ `ao~ptr[1]` >> example.txt
 ```
 
-Radare2 also provides quite a few Unix type file processing commands like head, tail, cat, grep and many more. One such command is [Uniq](https://en.wikipedia.org/wiki/Uniq), which can be used to filter a file to display only non-duplicate content. So to make a new file with only unique strings, you can do:
+Radare2同样提供了一些Unix类型的文件处理命令，比如head、tail、cat、grep等等。其中的一个命令是[Uniq](https://en.wikipedia.org/wiki/Uniq)，用于对文件进行过滤，并输出其中非重复的部分。若需要创建一个仅包含非重复内容的文件，可以这样：
 ```
 [0x00404800]> uniq file > uniq_file
 ```
 
-The [head](https://en.wikipedia.org/wiki/Head_%28Unix%29) command can be used to see the first N number of lines in the file, similarly [tail](https://en.wikipedia.org/wiki/Tail_(Unix)) command allows the last N number of lines to be seen.
+[head](https://en.wikipedia.org/wiki/Head_%28Unix%29)用于查看文件开头N行的内容，相似的[tail](https://en.wikipedia.org/wiki/Tail_(Unix))命令则允许查看最后N行的内容。
 ```
 [0x00404800]> head 3 foodtypes.txt
 1 Protein
@@ -81,7 +75,7 @@ The [head](https://en.wikipedia.org/wiki/Head_%28Unix%29) command can be used to
 4 Milk
 ```
 
-The [join](https://en.wikipedia.org/wiki/Join_%28Unix%29) command could be used to merge two different files with comman first field. 
+[join](https://en.wikipedia.org/wiki/Join_%28Unix%29)可以用于将两个具有相同字段的文件合并。
 ```
 [0x00404800]> cat foodtypes.txt
 1 Protein
@@ -97,8 +91,7 @@ The [join](https://en.wikipedia.org/wiki/Join_%28Unix%29) command could be used 
 3 Fat Butter
 ```
 
-Similarly, sorting the content is also possible with the [sort](https://en.wikipedia.org/wiki/Sort_%28Unix%29) command. A typical 
-example could be:
+类似的，对文件排序可以通过[sort](https://en.wikipedia.org/wiki/Sort_%28Unix%29)命令实现，典型的例子如下：
 ```
 [0x00404800]> sort file
 eleven
@@ -110,7 +103,5 @@ one
 radare
 ```
 
-The `?$?` command describes several helpful variables you can use to do similar actions even more
-easily, like the `$v` "immediate value" variable, or the `$m` opcode memory reference variable.
-
+`?$?`命令描述了几个有用的命令，帮助你更容易地完成类似工作。比如`$v`代表"immediate value"变量，`$m`代表opcode中的内存引用变量。
 
