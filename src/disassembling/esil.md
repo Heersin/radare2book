@@ -1,6 +1,6 @@
 # ESIL
 
-ESIL stands for 'Evaluable Strings Intermediate Language'. It aims to describe a [Forth](https://en.wikipedia.org/wiki/Forth_%28programming_language%29)-like representation for every target CPU opcode semantics. ESIL representations can be evaluated (interpreted) in order to emulate individual instructions. Each command of an ESIL expression is separated by a comma. Its virtual machine can be described as this:
+ESIL代表'可求值字符串形中间语言'，旨在为各种目标CPU opcode提供一个[Forth](https://en.wikipedia.org/wiki/Forth_%28programming_language%29)-like的语义描述。可以对ESIL表示进行求值（运行），用于模拟一些独立的指令。每个ESIL表示都通过逗号进行分隔，大致可用如下的形式描述ESIL虚拟机：
 ```
    while ((word=haveCommand())) {
      if (word.isOperator()) {
@@ -11,21 +11,21 @@ ESIL stands for 'Evaluable Strings Intermediate Language'. It aims to describe a
      nextCommand();
    }
 ```
-As we can see ESIL uses a stack-based interpreter similar to what is commonly used for calculators. You have two categories of inputs: values and operators. A value simply gets pushed on the stack, an operator then pops values (its arguments if you will) off the stack, performs its operation and pushes its results (if any) back on. We can think of ESIL as a post-fix notation of the operations we want to do.
 
-So let's see an example:
+同计算器中类似，ESIL使用一个基于栈的解释器。其接受两类参数：数值和操作符，数值被压栈，操作符则将栈顶值弹出（或者说该操作符的参数），操作完成后将结果（如果有的话）压栈。可以将ESIL当作指令的一种逆波兰表示（post-fix表示）。
+
+让我们看看一个例子：
 ```
 4,esp,-=,ebp,esp,=[4]
 ```
-Can you guess what this is? If we take this post-fix notation and transform it back to in-fix we get
+可以猜猜这条语句在做什么，如果将这个逆波兰表示的语句转换为正常的指令，可以得到：
 ```
 esp -= 4
 4bytes(dword) [esp] = ebp
 ```
-We can see that this corresponds to the x86 instruction `push ebp`! Isn't that cool?
-The aim is to be able to express most of the common operations performed by CPUs, like binary arithmetic operations, memory loads and stores, processing syscalls. This way if we can transform the instructions to ESIL we can see what a program does while it is running even for the most cryptic architectures you definitely don't have a device to debug on for.
+我们可以看到这正是x86指令`push ebp`的另一种形式！是不是很cool？ESIL的目标是能够对CPU的常见操作进行解释，比如二进制算数操作、内存加载和存储、系统调用等。通过这种方法，如果能够将指令转化为ESIL，即使面对一个加密架构且我们没有该架构对应的debug，我们也能在观察到该程序在运行时都做了什么。
 
-## Using ESIL
+## 使用ESIL
 
 r2's visual mode is great to inspect the ESIL evaluations.
 
