@@ -1,24 +1,16 @@
-# Emulation
+# 模拟执行
 
-One of the most important things to remember in reverse engineering is
-a core difference between static analysis and dynamic analysis. As many already
-know, static analysis suffers from the path explosion problem, which is impossible
-to solve even in the most basic way without at least a partial emulation.
+逆向工程中最重要的事情之一就是记住静态分析和动态分析之间的核心不同点。正如大多数人所知的那样，静态分析受困于路径爆炸的问题，在不采用部分模拟的情况下即使连最基本的分析也达不到。
 
-Thus many professional reverse engineering tools use code emulation while
-performing an analysis of binary code, and radare2 is no difference here.
+因此许多专业的逆向工具在对二进制代码进行分析时采用模拟执行的方式，radare2在这点上与其他工具无二。
 
-For partial emulation (or imprecise full emulation) radare2 uses its own
-[ESIL](../disassembling/esil.md) intermediate language and virtual machine.
+radare2采用自有的[ESIL](../disassembling/esil.md)中间语言和虚拟机进行部分模拟（或者不精确的完全模拟方式）。
 
-Radare2 supports this kind of partial emulation for all platforms that
-implement ESIL uplifting (x86/x86_64, ARM, arm64, MIPS, powerpc, sparc, AVR, 8051, Gameboy, ...).
+Radare2为所有实现ESIL提炼的架构平台提供了部分模拟的功能。(x86/x86_64, ARM, arm64, MIPS, powerpc, sparc, AVR, 8051, Gameboy, ...)。
 
-One of the most common usages of such emulation is to calculate
-indirect jumps and conditional jumps.
+这类模拟最常见的用途就是用于间接跳转和条件跳转的计算。
 
-To see the ESIL representation of the program one can use the `ao` command or enable the `asm.esil` configuration
-variable, to check if the program uplifted correctly, and to grasp how ESIL works:
+若要查看程序的ESIL表示，可以使用`ao`命令或者将`asm.esil`配置变量设置为`true`。可以看看下面的程序中ESIL提炼的结果是否正确，并把握到ESIL的效果：
 
 ```
 [0x00001660]> pdf
@@ -58,50 +50,40 @@ variable, to check if the program uplifted correctly, and to grasp how ESIL work
 `     0x00001691  rsp,[8],rip,=,8,rsp,+=
 ```
 
-To manually setup the ESIL imprecise emulation you need to run this command sequence:
+若要进行ESIL非精确模拟，需要使用如下的命令序列：
 
-- `aei` to initialize ESIL VM
-- `aeim` to initialize ESIL VM memory (stack)
-- `aeip` to set the initial ESIL VM IP (instruction pointer)
-- a sequence of `aer` commands to set the initial register values.
+- `aei` 用于初始化ESIL VM
+- `aeim` 初始化 ESIL VM memory (stack)
+- `aeip` 初始化 ESIL VM IP (instruction pointer)
+- 一系列的 `aer` 设定寄存器的初值。
 
-While performing emulation, please remember, that ESIL VM cannot emulate external calls
-or system calls, along with SIMD instructions. Thus the most common scenario is to
-emulate only a small chunk of the code, like encryption/decryption, unpacking or
-calculating something.
+在进行模拟时需要记住的是，ESIL VM不支持模拟外部调用或系统调用，此外也不支持SIMD指令。因此最常见的情况就是使用其对一小部分的代码进行模拟，比如加密/解密，脱壳或计算什么东西之类的。
 
-After we successfully set up the ESIL VM we can interact with it like with a usual debugging mode.
-Commands interface for ESIL VM is almost identical to the debugging one:
+在成功设置ESIL VM之后，可在类似平常的debug mode下与之进行交互。
+ESIL VM的命令行接口与debug mode中几乎是相同的：
 
-- `aes` to step (or `s` key in visual mode)
-- `aesi` to step over the function calls
-- `aesu <address>` to step until some specified address
-- `aesue <ESIL expression>` to step until some specified ESIL expression met
-- `aec` to continue until break (Ctrl-C), this one is rarely used though, due to the omnipresence
-	of external calls
-- `aecu <address>` to continue until some specified address
+- `aes` 步入 (或者visual mode里的`s`)
+- `aesi` 步过函数
+- `aesu <address>` 运行至某地址
+- `aesue <ESIL expression>` 运行至遇见某个汇编指令
+- `aec` 运行至命令行打断 (Ctrl-C), 不过由于系统调用几乎无处不在，这个命令很少被用到
 
-In visual mode, all of the debugging hotkeys will work also in ESIL emulation mode.
+在visual mode模式下所有的debug快捷键也都能在ESIL模拟模式下使用。
 
-Along with usual emulation, there is a possibility to record and replay mode:
+如通常的模拟一样，这里也提供了记录和重播的功能：
 
-- `aets` to list all current ESIL R&R sessions
-- `aets+` to create a new one
-- `aesb` to step back in the current ESIL R&R session
+- `aets` 列出现存的 ESIL R&R sessions
+- `aets+` 创建一个新的session
+- `aesb` 在现在的ESIL R&R session中进行回溯
 
-More about this operation mode you can read in [Reverse Debugging](../debugger/revdebug.md) chapter.
+可以阅读[Reverse Debugging](../debugger/revdebug.md)这一章节了解该操作。
 
-## Emulation in analysis loop
+## 在analysis loop阶段进行模拟
 
-Apart from the manual emulation mode, it can be used automatically in the analysis loop.
-For example, the `aaaa` command performs the ESIL emulation stage along with others.
-To disable or enable its usage you can use `anal.esil` configuration variable.
-There is one more important option, though setting it might be quite dangerous,
-especially in the case of malware - `emu.write` which allows ESIL VM to modify memory.
-Sometimes it is required though, especially in the process of deobfuscating or unpacking code.
+除了手动进行模拟的模式外，其还支持在循环分析阶段继续自动模拟。
+例如`aaaa`命令在ESIL模拟阶段及其它阶段进行ESIL模拟。可以配置`anal.esil`变量禁用或启用该特性。这里还有一个更重要的选项，尽管设置该选项有一定危险性，特别是在进行病毒分析的时候 - `emu.write`使得ESIL VM能够对内存进行修改。有时候可能会需要这个功能，尤其是在去混淆或脱壳的时候。
 
-To show the process of emulation you can set `asm.emu` variable, which will show calculated
-register and memory values in disassembly comments:
+可以设置`asm.emu`变量显示模拟过程，其将会在反汇编的注释区显示计算出的寄存器值和内存值。
 
 ```
 [0x00001660]> e asm.emu=true
@@ -124,19 +106,16 @@ register and memory values in disassembly comments:
 `     0x00001691  ret                     ; rip=0x0 ; rsp=0x10 -> 0x3e0003
 ```
 
-Note here `likely` comments, which indicates that ESIL emulation predicted for particular
-conditional jump to happen.
+注意一下这里的`likely`这个注释，这表示ESIL对该条件跳转进行分支预测后的结果。
 
-Apart from the basic ESIL VM setup, you can change the behavior with other options located
-in `emu.` and `esil.` configuration namespaces.
+除了基本的ESIL VM设置外，还可以使用位于`emu.`和`seil.`配置空间下的其它选项改变模拟行为。
 
-For manipulating ESIL working with memory and stack you can use the following options:
+可以使用如下的选项修改ESIL内存和栈的行为：
 
-- `esil.stack` to enable or disable temporary stack for `asm.emu` mode
-- `esil.stack.addr` to set stack address in ESIL VM (like `aeim` command)
-- `esil.stack.size` to set stack size in ESIL VM (like `aeim` command)
-- `esil.stack.depth` limits the number of PUSH operations into the stack
-- `esil.romem` specifies read-only access to the ESIL memory
-- `esil.fillstack` and `esil.stack.pattern` allows you to use a various pattern for filling ESIL VM
-	stack upon initialization
-- `esil.nonull` when set stops ESIL execution upon NULL pointer read or write.
+- `esil.stack` 在`asm.emu`mode下启用或禁用临时栈
+- `esil.stack.addr` 在ESIL VM设置栈位置（类似`aeim`命令）
+- `esil.stack.size` 设置ESIL VM中的栈大小（类似`aeim`命令）
+- `esil.stack.depth` 限制对栈进行PUSH操作的次数（栈的深度）
+- `esil.romem` 指定ESIL内存为只读
+- `esil.fillstack` 和 `esil.stack.pattern` 允许使用一个pattern，用于ESIL VM栈初始化时进行数据填充
+- `esil.nonull` 如果设置此变量，则当读取/写入NULL指针时停止ESIL的执行。
