@@ -27,29 +27,29 @@ esp -= 4
 
 ## 使用ESIL
 
-r2's visual mode is great to inspect the ESIL evaluations.
+r2的可视化模式对于观察ESIL执行非常有帮助。
 
-There are 2 environment variables that are important for watching what a program does:
+底下是些很重要的环境变量，可用于观察程序行为：
 ```
 [0x00000000]> e emu.str = true
 ```
 
-`asm.emu` tells r2 if you want ESIL information to be displayed. If it is set to true, you will see comments appear to the right of your disassembly that tell you how the contents of registers and memory addresses are changed by the current instruction. For example, if you have an instruction that subtracts a value from a register it tells you what the value was before and what it becomes after. This is super useful so you don't have to sit there yourself and track which value goes where.
+`asm.emu` 告诉r2是否将ESIL的信息展示出来。如果设置为`true`，反汇编的注释区域中将显示经过该指令后寄存器和内存地址会如何变化。例如，假设这里有一条指令减去了寄存器中的值，注释中会告诉你原先的值是多少，最终结果又是多少。这真的特别有用，使得你无需坐在位置上手动追踪数值的变化。
 
-One problem with this is that it is a lot of information to take in at once and sometimes you simply don't need it. r2 has a nice compromise for this. That is what the `emu.str` variable is for (`asm.emustr` on <= 2.2). Instead of this super verbose output with every register value, this only adds really useful information to the output, e.g., strings that are found at addresses a program uses or whether a jump is likely to be taken or not.
+但是它存在的一个问题是一次显示的信息太多了，而我们有时候不需要这么多信息。针对这个问题，r2有一个很好的折中方案，就是使用`emu.str`变量（在<=2.2版本是`asm.emustr`）。不输出每个寄存器的值，取而代之的是一些真正有用的信息。例如，显示程序中引用地址上的字符串，或者判断哪个跳转分支比较可能发生。
 
-The third important variable is `asm.esil`. This switches your disassembly to no longer show you the actual disassembled instructions, but instead now shows you corresponding ESIL expressions that describe what the instruction does.
-So if you want to take a look at how instructions are expressed in ESIL simply set "asm.esil" to true.
+第三个重要的变量就是`asm.esil`，这个开关控制反汇编不再显示真实的反汇编指令，而是显示它们的ESIL表示，描述该指令正进行什么操作。
+因此如果你想要看看指令是如何以ESIL表示的，只需将`asm.esil` 设置为true即可。
 
 ```
 [0x00000000]> e asm.esil = true
 ```
 
-In visual mode you can also toggle this by simply typing `O`.
+在可视化模式下可以用`0`键切换至ESIL表示。
 
-## ESIL Commands
+## ESIL 命令
 
-* "ae" : Evaluate ESIL expression.
+* "ae" : 对ESIL进行求值。
 
 ```
 [0x00000000]> "ae 1,1,+"
@@ -57,20 +57,20 @@ In visual mode you can also toggle this by simply typing `O`.
 [0x00000000]>
 ```
 
-* "aes" : ESIL Step.
+* "aes" : ESIL单步.
 
 ```
 [0x00000000]> aes
 [0x00000000]>10aes
 ```
-* "aeso" : ESIL Step Over.
+* "aeso" : ESIL步过.
 
 ```
 [0x00000000]> aeso
 [0x00000000]>10aeso
 ```
 
-* "aesu" : ESIL Step Until.
+* "aesu" : ESIL单步直到某个地址.
 
 ```
 [0x00001000]> aesu 0x1035
@@ -78,7 +78,7 @@ ADDR BREAK
 [0x00001019]>
 ```
 
-* "ar" : Show/modify ESIL registry.
+* "ar" : 显示/修改ESIL寄存器.
 
 ```
 [0x00001ec7]> ar r_00 = 0x1035
@@ -87,9 +87,9 @@ ADDR BREAK
 [0x00001019]>
 ```
 
-### ESIL Instruction Set
+### ESIL指令集
 
-Here is the complete instruction set used by the ESIL VM:
+这里是ESIL VM使用的完整指令集：
 
 ESIL Opcode | Operands | Name | Operation| example
 --- | --- | --- | --- | ----------------------------------------------
@@ -144,46 +144,45 @@ BREAK | | Break | Stops ESIL emulation | BREAK
 GOTO | n | Goto | Jumps to Nth ESIL word | GOTO 5
 TODO | | To Do | Stops execution<br> (reason: ESIL expression not completed) | TODO
 
-### ESIL Flags
+### ESIL标志
 
-ESIL VM has an internal state flags that are read-only and can be used to export those values to the underlying target CPU flags. It is because the ESIL VM always calculates all flag changes, while target CPUs only update flags under certain conditions or at specific instructions.
+ESIL VM有一个内置的状态标志，其是只读的，可用于将这些标志导入到基础的目标CPU标志位上。这是由于ESIL VM在每次操作后都计算所有标志位的改变，而目标CPU只在特定情况或特定语句下更新标志位。
 
-Internal flags are prefixed with `$` character.
+内置标志位以`$`字符为前缀。
 
 ```
-z      - zero flag, only set if the result of an operation is 0
-b      - borrow, this requires to specify from which bit (example: $b4 - checks if borrow from bit 4)
-c      - carry, same like above (example: $c7 - checks if carry from bit 7)
+z      - zero flag，仅在操作结果为0是置位
+b      - borrow, 需要指定具体的bit位（例子：$b4 - 检查是否向bit 4进行借位）
+c      - carry, 类似上面（例子：$c7 - bit 7是否进位）
 o      - overflow
 p      - parity
 r      - regsize ( asm.bits/8 )
 s      - sign
-ds     - delay slot state
+ds     - delay slot 的状态
 jt     - jump target
 js     - jump target set
-[0-9]* - Used to set flags and registers without having any side effects,
-         i.e. setting esil_cur, esil_old and esil_lastsz.
-         (example: "$0,of,=" to reset the overflow flag)
+[0-9]* - 用于无副作用地设置标志位和寄存器，例如设置esil_cur, esil_old和esil_lastsz
+         (例子： "$0,of,="用于重置overflow标志位)
 ```
 
-## Syntax and Commands
-A target opcode is translated into a comma separated list of ESIL expressions.
+## 语法和命令
+目标opcode转化为以逗号分隔的ESIL表示：
 ```
 xor eax, eax    ->    0,eax,=,1,zf,=
 ```
-Memory access is defined by brackets operation:
+内存访问是通过`[]`操作符定义的：
 ```
 mov eax, [0x80480]   ->   0x80480,[],eax,=
 ```
-Default operand size is determined by size of operation destination.
+默认的操作数大小是根据目的操作数大小决定的：
 ```
 movb $0, 0x80480     ->   0,0x80480,=[1]
 ```
 
-The `?` operator uses the value of its argument to decide whether to evaluate the expression in curly braces.
+`?`操作符将根据其参数的值决定是否执行`{}`中的表达式
 
-1. Is the value zero?      -> Skip it.
-2. Is the value non-zero?  -> Evaluate it.
+1. 如果为0      -> 跳过
+2. 若不为0      -> 执行
 
 ```
 cmp eax, 123  ->   123,eax,==,$z,zf,=
@@ -191,37 +190,37 @@ jz eax        ->   zf,?{,eax,eip,=,}
 ```
 
 
-If you want to run several expressions under a conditional, put them in curly braces:
+如果想在某个条件下执行多个表达式，需将表达式放入`{}`中：
 ```
 zf,?{,eip,esp,=[],eax,eip,=,$r,esp,-=,}
 ```
 
-Whitespaces, newlines and other chars are ignored. So the first thing when processing a ESIL program is to remove spaces:
+空格，换行以及其他字符将被忽略，因为在执行一个ESIL的第一个步骤就是移除空字符。
 ```
 esil = r_str_replace (esil, " ", "", R_TRUE);
 ```
 
-Syscalls need special treatment. They are indicated by '$' at the beginning of an expression. You can pass an optional numeric value to specify a number of syscall. An ESIL emulator must handle syscalls. See (r_esil_syscall).
+系统调用需要特殊处理，其通过表达式开头的`$`进行标识，可以选择传给它一个数值，用于指定系统调用。一个ESIL模拟器必须能够处理系统调用，参阅（r_esil_syscall)
 
-## Arguments Order for Non-associative Operations
+## 非关联运算的参数顺序
 
-As discussed on IRC, the current implementation works like this:
+如IRC上所讨论，目前的ESIL实现是类似下面这样的：
 
 ```
 a,b,-      b - a
 a,b,/=     b /= a
 ```
-This approach is more readable, but it is less stack-friendly.
+这种实现方式可读性更好，但对于栈不够友好。
 
-### Special Instructions
+### 特殊指令
 
-NOPs are represented as empty strings. As it was said previously, syscalls are marked by '$' command. For example, '0x80,$'. It delegates emulation from the ESIL machine to a callback which implements syscalls for a specific OS/kernel.
+NOP以空字符串进行表示，而如前文所述，系统调用则通过`$`命令标记。例如，`0x80, $`。其将ESIL机器中的模拟请求转发给一个回调函数，该回调函数为特定的OS/kernel实现了系统调用。
 
-Traps are implemented with the `TRAP` command. They are used to throw exceptions for invalid instructions, division by zero, memory read error, or any other needed by specific architectures.
+`TRAP`命令实现了陷阱指令，用于为非法指令、除0、内存读取错误或特定架构中所规定的情形抛出异常。
 
-### Quick Analysis
+### 快速分析
 
-Here is a list of some quick checks to retrieve information from an ESIL string. Relevant information will be probably found in the first expression of the list.
+以下是一个快查表，用于从ESIL字符串中检索信息。相关信息可能会在列表的第一个表达式中找到。
 ```
 indexOf('[')    -> have memory references
 indexOf("=[")   -> write in memory
@@ -249,27 +248,27 @@ Common operations:
 
 ### CPU Flags
 
-CPU flags are usually defined as single bit registers in the RReg profile. They and sometimes found under the 'flg' register type.
+CPU标志通常在RReg配置文件中定义为单个的位寄存器，它们有时能在'flg'寄存器类型下找到
 
-### Variables
+### 变量
 
-Properties of the VM variables:
+VM变量相关内容：
 
-1. They have no predefined bit width. This way it should be easy to extend them to 128, 256 and 512 bits later, e.g. for MMX, SSE, AVX, Neon SIMD.
+1. 他们没有预定义的宽度，因此在之后可以很容易地扩展至128,256和512位，例如在MMX，SSE，AVX，Neon SIMD上。
 
-2. There can be unbound number of variables. It is done for SSA-form compatibility.
+2. 变量数目无限制，这是为了SSA-格式的兼容性。
 
-3. Register names have no specific syntax. They are just strings.
+3. 寄存器名字没有特殊语法，只是字符串而已。
 
-4. Numbers can be specified in any base supported by RNum (dec, hex, oct, binary ...).
+4. 数值可以以RNum所支持的任意基数进行表示（dec，hex，oct，binary ...）。
 
-5. Each ESIL backend should have an associated RReg profile to describe the ESIL register specs.
+5. 每个ESIL的后端都需要一个相关联的RReg配置，描述ESIL上寄存器应遵循的规范
 
-### Bit Arrays
+### Bit组
 
 What to do with them? What about bit arithmetics if use variables instead of registers?
 
-### Arithmetics
+### 算术操作
 
 1. ADD ("+")
 2. MUL ("\*")
@@ -278,7 +277,7 @@ What to do with them? What about bit arithmetics if use variables instead of reg
 5. MOD ("%")
 
 
-### Bit Arithmetics
+### 位运算操作
 
 1. AND  "&"
 2. OR   "|"
@@ -289,13 +288,14 @@ What to do with them? What about bit arithmetics if use variables instead of reg
 7. ROR  ">>>"
 8. NEG  "!"
 
-### Floating Point Unit Support
+### 浮点单元的支持
 
-At the moment of this writing, ESIL does not yet support FPU. But you can implement support for unsupported instructions using r2pipe. Eventually we will get proper support for multimedia and floating point.
+在撰写本文时，ESIL尚不支持FPU。但是您可以使用r2pipe实现对不受支持的指令的支持。
+Eventually we will get proper support for multimedia and floating point.
 
-### Handling x86 REP Prefix in ESIL
+### 在ESIL中处理x86的REP前缀
 
-ESIL specifies that the parsing control-flow commands must be uppercase. Bear in mind that some architectures have uppercase register names. The corresponding register profile should take care not to reuse any of the following:
+ESIL指定解析控制流的命令必须为大写。请记住，某些体系结构具有大写的寄存器名称。相应的寄存器配置文件中应注意不要重复使用以下任何内容：
 ```
 3,SKIP   - skip N instructions. used to make relative forward GOTOs
 3,GOTO   - goto instruction 3
@@ -305,22 +305,22 @@ STACK    - dump stack contents to screen
 CLEAR    - clear stack
 ```
 
-#### Usage Example:
+#### 使用例子:
 
 rep cmpsb
 ```
 cx,!,?{,BREAK,},esi,[1],edi,[1],==,?{,BREAK,},esi,++,edi,++,cx,--,0,GOTO
 ```
 
-### Unimplemented/Unhandled Instructions
+### 未实现/未能处理的指令
 
-Those are expressed with the 'TODO' command. They act as a 'BREAK', but displays a warning message describing that an instruction is not implemented and will not be emulated. For example:
+这些用“ TODO”命令表示。充当"BREAK"的作用，但会显示警告消息，说明一条指令未实现且将不会被模拟。例如：
 
 ```
 fmulp ST(1), ST(0)      =>      TODO,fmulp ST(1),ST(0)
 ```
 
-### ESIL Disassembly Example:
+### ESIL 反汇编示例:
 
 ```
 [0x1000010f8]> e asm.esil=true
@@ -355,14 +355,14 @@ fmulp ST(1), ST(0)      =>      TODO,fmulp ST(1),ST(0)
 
 ### Introspection
 
-To ease ESIL parsing we should have a way to express introspection expressions to extract the data that we want. For example, we may want to get the target address of a jump. The parser for ESIL expressions should offer an API to make it possible to extract information by analyzing the expressions easily.
+为减轻ESIL解析的压力，我们需要有一个方法，能执行introspectio表达式以提取我们所需的数据。例如我们想获取jump的目的地址，ESIL表达式的解析器应提供一个API以完成这个工作，使得分析表达式提取信息变得更容易。
 
 ```
 >  ao~esil,opcode
 opcode: jmp 0x10000465a
 esil: 0x10000465a,rip,=
 ```
-We need a way to retrieve the numeric value of 'rip'. This is a very simple example, but there are more complex, like conditional ones. We need expressions to be able to get:
+我们需要有一个方式能获取'rip'的数值，这个例子很简单。但这里还有一个更复杂的例子，类似条件分支。我们需要能从表达式中获取：
 
 - opcode type
 - destination of a jump
@@ -370,20 +370,20 @@ We need a way to retrieve the numeric value of 'rip'. This is a very simple exam
 - all regs modified (write)
 - all regs accessed (read)
 
-### API HOOKS
+### API 钩子
 
-It is important for emulation to be able to setup hooks in the parser, so we can extend it to implement analysis without having to change it again and again. That is, every time an operation is about to be executed, a user hook is called. It can be used for example to determine if `RIP` is going to change, or if the instruction updates the stack.
-Later, we can split that callback into several ones to have an event-based analysis API that may be extended in JavaScript like this:
-
+对于模拟执行来说能在解析器中设置hook是很重要的，如此一来我们可通过扩展该程序实现分析，而不必一次又一次地修改它。也就是说，每次要执行指令操作时，都会调用一个用户挂钩。例如，它可以用于确定'RIP'是否要更改，或者指令是否会更新堆栈。
+之后，我们可以将该回调函数一分为多，以拥有event-based的分析API，比如在javascript中：
 ```
 esil.on('regset', function(){..
 esil.on('syscall', function(){esil.regset('rip'
 ```
 
-For the API, see the functions `hook_flag_read()`, `hook_execute()` and `hook_mem_read()`. A callback should return true or 1 if you want to override the action that it takes. For example, to deny memory reads in a region, or voiding memory writes, effectively making it read-only.
-Return false or 0 if you want to trace ESIL expression parsing.
+若要了解API，参见`hook_flag_read()`, `hook_execute()`和`hook_mem_read()`。
+For the API, see the functions `hook_flag_read()`, `hook_execute()` and `hook_mem_read()`. 若想覆盖操作，则相应的回调函数应该返回true或1。例如，拒绝对某块内存区域的读取，或者避免内存写入，从而使其变为只读。
+若想跟踪ESIL表示的解析过程，则回调函数返回false或0即可。
 
-Other operations require bindings to external functionalities to work. In this case, `r_ref` and `r_io`. This must be defined when initializing the ESIL VM.
+其他需要绑定到外部功能才能起作用的操作，在本例中就是`r_ref`和`r_io`，必须在ESIL VM初始化时定义它们。
 
 * Io Get/Set
   ```
