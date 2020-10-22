@@ -1,14 +1,13 @@
-# Loops
+# 循环
 
-One of the most common task in automation is looping through something,
-there are multiple ways to do this in radare2.
+自动化最常见的一个工作就是循环地处理某些东西，在radare2中有多种途径实现该任务。
 
-We can loop over flags:
+可以在flags上进行loop
 ```
 @@ flagname-regex
 ```
 
-For example, we want to see function information with `afi` command:
+比如，我们想要通过`afi`命令获得函数信息
 ```
 [0x004047d6]> afi
 #
@@ -33,18 +32,17 @@ args: 0
 diff: type: new
 [0x004047d6]>
 ```
-Now let's say, for example, that we'd like see a particular field from this output for all functions found by analysis. We can do that with a loop over all function flags (whose names begin with `fcn.`):
+现在，比如说我们想要查看目前发现的所有函数中某个特定字段（如上面输出里的字段），可以通过在函数flag空间（带`fcn.`前缀的那些函数）上进行loop达到该目的。
 ```
 [0x004047d6]> afi @@ fcn.* ~name
 ```
-This command will extract the `name` field from the `afi` output of every flag with a name
-matching the regexp `fcn.*`.
+该命令将会从`afi`命令的输出中提取`name`字段信息，对每个匹配了正则`fcn.*`的函数flag都会如此。
 
-We can also loop over a list of offsets, using the following syntax:
+同样还可以在包含一系列偏移的列表上进行loop，使用如下形式：
 ```
 @@=1 2 3 ... N
 ```
-For example, say we want to see the opcode information for 2 offsets: the current one, and at current + 2:
+例如，我们想查看2个偏移地址上的opcode信息：当前的，以及当前地址+2这两个位置：
 
 ```
 [0x004047d6]> ao @@=$$ $$+2
@@ -73,11 +71,10 @@ cond: al
 family: cpu
 [0x004047d6]>
 ```
-Note we're using the `$$` variable which evaluates to the current offset. Also note
-that `$$+2` is evaluated before looping, so we can use the simple arithmetic expressions.
+注意，我们正使用`$$`变量，其求值的结果正是当前偏移量。还要注意的是`$$+2`是在loop过程之前求值的，因此我们才可以使用这一简单的算术表达式。
 
-A third way to loop is by having the offsets be loaded from a file. This file should contain
-one offset per line.
+
+进行loop的第三种方法是从文件加载偏移量，该文件每一行都包含一个偏移量。
 ```
 [0x004047d0]> ?v $$ > offsets.txt
 [0x004047d0]> ?v $$+2 >> offsets.txt
@@ -89,7 +86,7 @@ xor ebp, ebp
 mov r9, rdx
 ```
 
-radare2 also offers various `foreach` constructs for looping. One of the most useful is for looping through all the instructions of a function:
+radare2同样提供了多种`foreach`构造器进行loop，最有用的一个就是用于遍历函数中的所有指令。
 ```
 [0x004047d0]> pdf
 ╒ (fcn) entry0 42
@@ -125,14 +122,14 @@ mov rdi, main
 call sym.imp.__libc_start_main
 hlt
 ```
-In this example the command `pi 1` runs over all the instructions in the current function (entry0).
-There are other options too (not complete list, check `@@?` for more information):
- - `@@k sdbquery` - iterate over all offsets returned by that sdbquery
- - `@@t`- iterate over on all threads (see dp)
- - `@@b` - iterate over all basic blocks of current function (see afb)
- - `@@f` - iterate over all functions (see aflq)
+在这个例子中对当前函数（entry0）中的每条指令执行`pi 1`命令。
+这里同样有一些其他的选项（并非完整列表，通过`@@?`了解更多信息）
+ - `@@k sdbquery` - 遍历sdbquery返回的所有偏移量
+ - `@@t`- 在所有线程上进行遍历（参见dp）
+ - `@@b` - 在当前函数的所有基本块上进行遍历（参见afb）
+ - `@@f` - 在所有指令上进行遍历 (参见aflq)
 
-The last kind of looping lets you loop through predefined iterator types:
+最后一种类型的遍历允许对任何预定义的类型进行遍历
 
  - symbols
  - imports
@@ -142,16 +139,15 @@ The last kind of looping lets you loop through predefined iterator types:
  - functions
  - flags
 
-This is done using the `@@@` command. The previous example of listing information about functions can also be done using the `@@@` command:
+这是通过@@@命令做到的，前面那个列出函数信息的例子也可以通过`@@@`命令完成：
 
 ```
 [0x004047d6]> afi @@@ functions ~name
 ```
-This will extract `name` field from `afi` output and will output a huge list of
-function names. We can choose only the second column, to remove the redundant `name:` on every line:
+这个命令将会从`afi`的输出中提取`name`字段，并会输出一长串函数名，我们可以仅选择第二列。
+若要去掉每行中重复的`name`：
 ```
 [0x004047d6]> afi @@@ functions ~name[1]
 ```
 
-**Beware, @@@ is not compatible with JSON commands.**
-
+**请当心, @@@ 与 JSON commands 不兼容**
