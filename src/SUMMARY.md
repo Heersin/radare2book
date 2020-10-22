@@ -54,7 +54,7 @@
    * [调用约定](analysis/calling_conventions.md)
    * [虚函数表](analysis/vtables.md)
    * [系统调用](analysis/syscalls.md)
-   * [Emulation](analysis/emulation.md)
+   * [模拟执行](analysis/emulation.md)
    * [Symbols 信息](analysis/symbols.md)
    * [Signatures](signatures/zignatures.md)
    * [Graph commands](analysis/graphs.md)
