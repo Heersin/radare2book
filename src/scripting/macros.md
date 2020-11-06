@@ -1,13 +1,12 @@
 # Macros
 
-Apart from simple sequencing and looping, radare2 allows to write
-simple macros, using this construction:
+除了序列化命令和循环之外，radare2中允许简单的宏定义，例如：
 ```
 [0x00404800]> (qwe; pd 4; ao)
 ```
 
-This will define a macro called 'qwe' which runs sequentially first 'pd 4' then 'ao'.
-Calling the macro using syntax `.(macro)` is simple:
+这个指令定义了`qwe`宏，该宏代表先后运行`pd 4`和`ao`两个命令。
+调用宏很简单，只需遵照`.(macro)`这样的语法规则。
 
 ```
 [0x00404800]> (qwe; pd 4; ao)
@@ -31,22 +30,21 @@ family: cpu
 [0x00404800]>
 ```
 
-To list available macroses simply call `(*`:
+`(*`可以列出所有宏:
 ```
 [0x00404800]> (*
 (qwe ; pd 4; ao)
 ```
 
-And if want to remove some macro, just add '-' before the name:
+如果想要移除某个宏，需在宏名之前添加`-`号：
 ```
 [0x00404800]> (-qwe)
 Macro 'qwe' removed.
 [0x00404800]>
 ```
 
-Moreover, it's possible to create a macro that takes arguments, which comes in handy in some
-simple scripting situations. To create a macro that takes arguments you simply add them to macro definition.
-
+此外也可以定义带参数的宏，这些宏在一些需要脚本化的场景下用起来会很方便。
+创建带参数的宏很简单，在定义时将宏参数加在后面即可:
 ```
 [0x00404800]
 [0x004047d0]> (foo x y; pd $0; s +$1)
@@ -59,28 +57,25 @@ simple scripting situations. To create a macro that takes arguments you simply a
 0x004047d9	and rsp, 0xfffffffffffffff0
 [0x004047d6]>
 ```
-As you can see, the arguments are named by index, starting from 0: $0, $1, ...
+如例子所示，在宏内是通过index获取参数的，index从0开始计数： $0, $1, ...
 
-# Aliases
+# 别名
 
-radare2 also offers aliases which might help you save time by quickly executing your most used commands. They are under `$?`
+radare2支持别名(alias)，对于执行频率很高的命令，使用别名可以节省时间。别名相关的用法在`$?`输出的结果中可以看到。
 
-The general usage of the feature is: `$alias=cmd`
-
+最常见的用法就是: `$alias=cmd`
 ```
 [0x00404800]> $disas=pdf
 ```
 
-The above command will create an alias `disas` for `pdf`. The following command prints the disassembly of the main function.
-
+上面的命令为`pdf`创建了一个别名`disas`，下面的例子中将会输出main函数的反汇编结果。
 ```
 [0x00404800]> $disas @ main
 ```
 
-Apart from commands, you can also alias a text to be printed, when called.
-
+除了为命令创建别名，还可以为一段文本创建别名，方便输出文本内容。
 ```
-[0x00404800]> $my_alias = $test input
+[0x00404800]> $my_alias=$test input
 [0x00404800]> $my_alias
 test input
 ```
