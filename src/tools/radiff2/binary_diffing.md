@@ -1,8 +1,8 @@
-# Binary Diffing
+# 二进制文件比较
 
-This section is based on the http://radare.today article "[binary diffing](http://radare.today/binary-diffing/)"
+本章节基于 http://radare.today 上的文章"[binary diffing](http://radare.today/binary-diffing/)"
 
-Without any parameters, `radiff2` by default shows what bytes are changed and their corresponding offsets:
+若未指定任何参数，`radiff2`默认会显示不同的字节数据，以及这些字节对应的偏移量。
 ```
 $ radiff2 genuine cracked
 0x000081e0 85c00f94c0 => 9090909090 0x000081e0
@@ -12,23 +12,22 @@ $ rasm2 -d 85c00f94c0
 test eax, eax
 sete al
 ```
-Notice how the two jumps are nop'ed.
+这两个语句都被NOP指令覆盖了。
 
-For bulk processing, you may want to have a higher-level overview of differences. This is why radare2 is able to compute the distance and the percentage of similarity between two files with the `-s` option:
+在需要批量处理的时候，分析者可能希望站在更高层次检查文件之间的差异，因此radare2提供了计算两个文件差异程度的选项`-s`:
 ```
 $ radiff2 -s /bin/true /bin/false
 similarity: 0.97
 distance: 743
 ```
 
-If you want more concrete data, it's also possible to count the differences, with the `-c` option:
+若是想要一个更加具体的量化数据，可以用`-c`计算二者之间的差异数量。
 ```
 $ radiff2 -c genuine cracked
 2
 ```
 
-If you are unsure whether you are dealing with similar binaries, with `-C` flag you can check there are matching functions. It this mode, it will give you three columns for all functions: "First file offset", "Percentage of matching" and "Second file offset".
-
+如果你不确定目前分析的文件之间是否相似，可以使用`-C`进行检查，检查它们之间是否存在匹配的函数。在该模式下会输出3列信息:"第一个文件中的偏移量"，"匹配程度","第二个文件的偏移量"。
 ```
 $ radiff2 -C /bin/false /bin/true
   entry0  0x4013e8 |   MATCH  (0.904762) | 0x4013e2  entry0
@@ -39,8 +38,7 @@ $ radiff2 -C /bin/false /bin/true
   fcn.000045e0   24 0x45e0 | UNMATCH  (0.916667) | 0x45f0    24 fcn.000045f0
   ...
 ```
-Moreover, we can ask radiff2 to perform analysis first - adding `-A` option will run `aaa` on the binaries.
-And we can specify binaries architecture for this analysis too using
+此外，还可加上`-A`在radiff2比较之前调用r2对二进制文件进行`aaa`分析，且能像下面这样指定架构:
 ```
 $ radiff2 -AC -a x86 /bin/true /bin/false | grep UNMATCH
 [x] Analyze all flags starting with sym. and entry0 (aa)
@@ -60,17 +58,17 @@ $ radiff2 -AC -a x86 /bin/true /bin/false | grep UNMATCH
                           fcn.00003a50  120 0x3a50 | UNMATCH  (0.125000) | 0x3a60   120 fcn.00003a60
 ```
 
-And now a cool feature : radare2 supports graph-diffing, à la [DarunGrim](http://www.darungrim.org/), with the `-g` option. You can either give it a symbol name, of specify two offsets, if the function you want to diff is named differently in compared files. For example, `radiff2 -g main /bin/true /bin/false | xdot -` will show differences in `main()` function of Unix `true` and `false` programs. You can compare it to `radiff2 -g main /bin/false /bin/true` (Notice the order of the arguments) to get the two versions.
-This is the result:
+现在r2还添加了一个新特性：使用`-g`选项将差异图形化，如[DarunGrim](http://www.darungrim.org/)。可以在此选项后加上一个要分析的symbol name，或者，当同样的函数在两个文件中使用了不同的名字，也可以指定两个偏移量进行比较。
+例如，`radiff2 -g main /bin/true /bin/false | xdot -`将会显示Unix中`true`和`false`两个程序中`main()`函数的不同之处。可以试着与`radiff2 -g main /bin/false /bin/true`（注意观察二者的参数顺序）的结果进行比较，会得到两个版本。
+下面的图片就是该结果
 
-![/bin/true vs /bin/false](../pics/true_false.png)
+![/bin/true vs /bin/false](../../pics/true_false.png)
 
+黄色的部分代表有一些偏移量上二者不匹配，灰色部分则代表完美匹配，红色代表二者之间存在较大差异。如果你仔细观察，会发现左边的图片中最后是`mov edi, 0x1; call sym.imp.exit`，而右边则是`xor edi, edi; call sym.imp.exit`。
 
-Parts in yellow indicate that some offsets do not match. The grey piece means a perfect match. The red one highlights a strong difference. If you look closely, you will see that the left part of the picture has `mov edi, 0x1; call sym.imp.exit`, while the right one has `xor edi, edi; call sym.imp.exit`.
+二进制级别的比较在逆向中是非常重要的一部分，可以用于分析[安全补丁](https://en.wikipedia.org/wiki/Patch_Tuesday)，被感染的二进制文件，固件变更等等...
 
-Binary diffing is an important feature for reverse engineering. It can be used to analyze [security updates](https://en.wikipedia.org/wiki/Patch_Tuesday), infected binaries, firmware changes and more...
+我们此处仅仅展示了部分的radiff代码差异分析的功能，而radare2还支持更多种类的比较：字节级、差异相似度，以及更多待加入的比较类型。
 
-We have only shown the code analysis diffing functionality, but radare2 supports additional types of diffing between two binaries: at byte level, deltified similarities, and more to come.
-
-We have plans to implement more kinds of bindiffing algorithms into r2, and why not, add support for ASCII art graph diffing and better integration with the rest of the toolkit.
+我们计划在r2里实现更多的二进制比较算法，添加ASCII字符画风格的比较，并与其它工具能更好地整合在一起。
 
