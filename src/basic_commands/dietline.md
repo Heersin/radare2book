@@ -1,47 +1,40 @@
 # Dietline
 
-Radare2 comes with the lean [readline](https://en.wikipedia.org/wiki/GNU_Readline)-like input capability through the lean library to handle the command edition and history navigation. It allows users to perform cursor movements, search the
-history, and implements autocompletion. Moreover, due to the radare2 portability, dietline provides
-the uniform experience among all supported platforms. It is used in all radare2 subshells - main
-prompt, SDB shell, visual prompt, and offsets prompt. It also implements the most common features
-and keybindings compatible with the GNU Readline.
+Radare2具有如[readline](https://en.wikipedia.org/wiki/GNU_Readline)处理输入的能力，通过Lean库处理命令编辑和历史导航的功能，允许用户移动光标、进行历史搜索，并实现了自动补全功能。
+归功于radare2的可移植性，在radare2支持的所有平台上Dietline的体验都是统一的，在radare2的所有子shell - 主界面，SDB shell，可视化界面以及偏移量界面都使用了Dietline，其也实现了常见的特性以及按键行为，与GNU Readline相兼容。
 
-Dietline supports two major configuration modes : Emacs-mode and Vi-mode. 
+Dietline支持两类配置模式： Emacs-mode和Vi-mode
 
-It also supports the famous `Ctrl-R` reverse history search. Using `TAB` key it allows to scroll through the
-autocompletion options.
+其还支持著名的`Ctrl-R`-历史字符串逆向搜索功能。使用`TAB`键可以显示出自动补全建议。
 
-# Autocompletion
+# 自动补全
 
-In the every shell and radare2 command autocompletion is supported. There are multiple modes of it -
-files, flags, and SDB keys/namespaces. To provide the easy way to select possible completion options
-the scrollable popup widget is available. It can be enabled with `scr.prompt.popup`, just set it to
-the `1`.
+radare2里的每个shell都支持自动不全，其支持多种模式 - files，flags，以及SDB keys/namespaces。为了能够方便地选择补全选项，可以将`scr.prompt.popup`设置为`true`，启用下拉式补全窗口。
 
 # Emacs (default) mode
 
-By default dietline mode is compatible with readline Emacs-like mode key bindings. Thus active are:
+默认的dietline模式与readline的Emacs-like模式兼容，因此对应的行为为：
 
-## Moving 
-- `Ctrl-a` - move to the beginning of the line
-- `Ctrl-e` - move to the end of the line
-- `Ctrl-b` - move one character backward
-- `Ctrl-f` - move one character forward
+## 移动
+- `Ctrl-a` - 移动至行开头
+- `Ctrl-e` - 移动至行结尾 
+- `Ctrl-b` - 向左移动一个字符
+- `Ctrl-f` - 向右移动一个字符
 
-## Deleting
-- `Ctrl-w` - delete the previous word
-- `Ctrl-u` - delete the whole line
-- `Ctrl-h` - delete a character to the left
-- `Ctrl-d` - delete a character to the right
-- `Alt-d` - cuts the character after the cursor
+## 删除
+- `Ctrl-w` - 删除前一个词
+- `Ctrl-u` - 删除整行
+- `Ctrl-h` - 删除左边的字符
+- `Ctrl-d` - 删除右边的字符
+- `Alt-d` -  删除光标右边的一个词
 
-## Killing and Yanking 
-- `Ctrl-k` - kill the text from point to the end of the line.
-- `Ctrl-x` - kill backward from the cursor to the beginning of the current line.
-- `Ctrl-t` - kill from point to the end of the current word, or if between words, to the end of the next word. Word boundaries are the same as forward-word.
-- `Ctrl-w` - kill the word behind point, using white space as a word boundary. The killed text is saved on the kill-ring.
-- `Ctrl-y` - yank the top of the kill ring into the buffer at point.
-- `Ctrl-]` - rotate the kill-ring, and yank the new top. You can only do this if the prior command is yank or yank-pop.
+## Killing and Yanking
+- `Ctrl-k` - kill至行尾
+- `Ctrl-x` - 反向kill至行的开头
+- `Ctrl-t` - kill至词尾, 若在二词之间则kill至下一个词结束。词边界的界定与下面相同
+- `Ctrl-w` - 反向kill至词头，词以空格作为界定。kill的内容都存在kill-ring中
+- `Ctrl-y` - 将kill ring的顶部（最近的一个内容）粘贴到此处
+- `Ctrl-]` - 将kill ring旋转，然后将新的kill ring的顶部内容粘贴于此。仅可在前一条命令为yank或yank-pop才可进行此操作。
 
 ## History
 - `Ctrl-r` - the reverse search in the command history
