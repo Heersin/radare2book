@@ -1,7 +1,6 @@
 # R2pipe
 
-The r2pipe api was initially designed for NodeJS in order to support reusing the web's r2.js API from the commandline. The r2pipe module permits interacting with r2 instances in different methods:
-
+r2pipe api最早是为NodeJS设计的，方便在命令行里重用r2.js的web API。r2pipe这个模块提供了与r2进行交互的不同方法： 
 
 * spawn pipes (r2 -0)
 * http queries (cloud friendly)
@@ -25,7 +24,7 @@ dlang     x     -     -    -    -    -   x
 perl      x     -     -    -    -    -   -
 ```
 
-Examples
+例子
 ========
 
 Python
@@ -47,13 +46,13 @@ print(r2.cmdj("aflj"))  # evaluates JSONs and returns an object
 NodeJS
 ------
 
-Use this command to install the r2pipe bindings
+先使用该命令安装r2pipe依赖
 
 ```
 $ npm install r2pipe
 ```
 
-Here's a sample hello world
+下面是一个hello world例子
 
 ```node
 const r2pipe = require('r2pipe');
@@ -70,7 +69,7 @@ r2pipe.open('/bin/ls', (err, res) => {
 });
 ```
 
-Checkout the GIT repository for more examples and details.
+查阅GIT仓库了解更多的例子和信息
 
 https://github.com/radareorg/radare2-r2pipe/blob/master/nodejs/r2pipe/README.md
 
