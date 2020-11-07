@@ -353,9 +353,9 @@ fmulp ST(1), ST(0)      =>      TODO,fmulp ST(1),ST(0)
 0x100001147    48394a38     rdx,56,+,[8],rcx,==,cz,?=
 ```
 
-### Introspection
+### 自省(introspection)
 
-为减轻ESIL解析的压力，我们需要有一个方法，能执行introspectio表达式以提取我们所需的数据。例如我们想获取jump的目的地址，ESIL表达式的解析器应提供一个API以完成这个工作，使得分析表达式提取信息变得更容易。
+为减轻ESIL解析的压力，我们需要有一个方法，能执行自省表达式以提取我们所需的数据。例如我们想获取jump的目的地址，ESIL表达式的解析器应提供一个API以完成这个工作，使得分析表达式提取信息变得更容易。
 
 ```
 >  ao~esil,opcode
@@ -370,7 +370,7 @@ esil: 0x10000465a,rip,=
 - all regs modified (write)
 - all regs accessed (read)
 
-### API 钩子
+### API 钩子(API hooker)
 
 对于模拟执行来说能在解析器中设置hook是很重要的，如此一来我们可通过扩展该程序实现分析，而不必一次又一次地修改它。也就是说，每次要执行指令操作时，都会调用一个用户挂钩。例如，它可以用于确定'RIP'是否要更改，或者指令是否会更新堆栈。
 之后，我们可以将该回调函数一分为多，以拥有event-based的分析API，比如在javascript中：

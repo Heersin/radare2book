@@ -1,12 +1,12 @@
 # SDB
 
-SDB stands for String DataBase. It's a simple key-value database that only operates with strings created by pancake. It is used in many parts of r2 to have a disk and in-memory database which is small and fast to manage using it as a hashtable on steroids.
+SDB的含义是String DataBase，它是一个由pancake开发的仅用于操作字符串的键值对数据库。因其小巧而高效，可作为steroids中的哈系表，r2中的许多地方都用其作为磁盘数据库或内存数据库。
 
-SDB is a simple string key/value database based on djb’s cdb disk storage and supports JSON and arrays introspection.
+SDB是一个简单的字符串键值数据库，基于djb的cdb磁盘存储开发。其还支持JSON和数组对象的自省。
 
-There’s also the sdbtypes: a vala library that implements several data structures on top of an sdb or a memcache instance.
+sdbtypes则是一个vala库，在sdb或memcache实例之上实现了多种数据结构。
 
-SDB supports:
+SDB 支持：
     
 - namespaces (multiple sdb paths)
 - atomic database sync (never corrupted)
@@ -17,16 +17,15 @@ SDB supports:
 - json parser/getter
 
 
-## Usage example
-Let's create a database!
-
+## 用法示例
+我们先创建一个数据库！
 ```
 $ sdb d hello=world
 $ sdb d hello
 world
 ```
 
-Using arrays:
+使用数组
 ```
 $ sdb - '[]list=1,2' '[0]list' '[0]list=foo' '[]list' '[+1]list=bar'
 1
@@ -37,7 +36,7 @@ bar
 2
 ```
 
-Let's play with json:
+试试json
 ```
 $ sdb d g='{"foo":1,"bar":{"cow":3}}'
 $ sdb d g?bar.cow
@@ -46,7 +45,7 @@ $ sdb - user='{"id":123}' user?id=99 user?id
 99
 ```
 
-Using the command line without any disk database:
+不使用磁盘数据库的情况下使用命令行:
 ```
 $ sdb - foo=bar foo a=3 +a -a
 bar
@@ -63,16 +62,16 @@ a=3
 -a
 3
 ```
-Remove the database
+移除数据库
 ```
 $ rm -f d
 
 ```
 
-## So what ?
-So, you can now do this inside your radare2 sessions!
+## 还有呢？
+现在可以在radare2 session中完成这些了！
 
-Let's take a simple binary, and check what is already _sdbized_.
+我们以一个小文件作为例子讲解，看看有哪些东西已经被sdb化(_sdbized_)了
 ```
 $ cat test.c
 int main(){
@@ -96,7 +95,8 @@ fd.6
 [0x08048320]> k bin/fd.6/*
 archs=0:0:x86:32
 ```
-The file corresponding to the sixth file descriptor is a x86_32 binary. 
+
+对应于第六个文件描述符的文件是x86_32二进制文件。
 
 ```
 [0x08048320]> k anal/meta/*
@@ -105,44 +105,43 @@ meta.s.0x80484d0=12,SGVsbG8gd29ybGQ=
 [0x08048320]> ?b64- SGVsbG8gd29ybGQ=
 Hello world
 ```
-Strings are stored encoded in base64.
+string是经过Base64编码后保存的。
 
 ---
 
-## More Examples
+## 更多的例子
 
 
-List namespaces
+列出所有命名空间
 ```
 k **
 ```
-List sub-namespaces
+列出所有子命名空间
 ```
 k anal/**
 ```
-List keys
+列出所有key
 ```
 k *
 k anal/*
 ```
-Set a key
+设置key
 ```
 k foo=bar
 ```
-Get the value of a key
+获取key对应的值
 ```
 k foo
 ```
-
-List all syscalls
+列出所有syscall
 ```
 k syscall/*~^0x
 ```
-List all comments
+列出所有注释
 ```
 k anal/meta/*~.C.
 ```
-Show a comment at given offset:
+显示给定偏移位置上的注释
 ```
 k %anal/meta/[1]meta.C.0x100005000
 ```

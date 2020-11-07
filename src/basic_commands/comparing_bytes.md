@@ -1,14 +1,14 @@
 ## Comparing Bytes
 
-For most generic reverse engineering tasks like finding the differences between two binary files, which bytes has changed, find differences in the graphs of the code analysis results, and other diffing operations you can just use radiff2:
+对于大多数逆向工作而言，若要找到两个二进制文件的不同之处（比如哪些字节有变化），或是图形化地显示二者之间的差别，可以使用radiff2完成这些工作:
 
 ```
 $ radiff2 -h
 ```
 
-Inside r2, the functionalities exposed by radiff2 are available with the `c` command.
+而在r2中，radiff2所提供的这些功能放在`c`命令下。
 
-`c` (short for "compare") allows you to compare arrays of bytes from different sources. The command accepts input in a number of formats and then compares it against values found at current seek position.
+`c` ("compare"的缩写)类命令可以对不同源文件中的字节进行比较。该命令可接受多种格式的输入，然后与当前位置上的数据进行比较。
 
 ```
 [0x00404888]> c?
@@ -38,8 +38,7 @@ Usage: c[?dfx] [argument]   # Compare
 | cl|cls|clear             Clear screen, (clear0 to goto 0, 0 only)
 ```
 
-To compare memory contents at current seek position against a given string of values, use `cx`:
-
+使用`cx`命令可以将当前位置上的内存数据与给定一串数据进行比较：
 ```
 [0x08048000]> p8 4
 7f 45 4c 46
@@ -50,21 +49,19 @@ Compare 3/4 equal bytes
 [0x08048000]>
 ```
 
-Another subcommand of the `c` command is `cc` which stands for "compare code".
-To compare a byte sequence with a sequence in memory:
+`c`中的一个子命令`cc`（代表"compare code"）可将字节序列与内存中的序列进行比较：
 
 ```
 [0x4A13B8C0]> cc 0x39e8e089 @ 0x4A13B8C0
 ```
 
-To compare contents of two functions specified by their names:
+若要比较两个函数则指定他们的名字:
 
 ```
 [0x08049A80]> cc sym.main2 @ sym.main
 ```
 
-`c8` compares a quadword from the current seek (in the example below, 0x00000000) against a math expression:
-
+`c8` 会将当前地址（底下的例子中是0x0）上的四个字与给定的表达式的计算结果相比较:
 ```
 [0x00000000]> c8 4
 
@@ -74,7 +71,7 @@ Compare 1/8 equal bytes (0%)
 0x00000002 (byte=03)   4c 'L'  ->  00 ' '
 ```
 
-The number parameter can, of course, be math expressions which use flag names and anything allowed in an expression:
+数字参数可以是合法的表达式（允许在其中使用flag名字等）
 
 ```
 [0x00000000]> cx 7f469046
@@ -84,7 +81,7 @@ Compare 2/4 equal bytes
 0x00000002 (byte=03)   4c 'L'  ->  90 ' '
 ```
 
-You can use the compare command to find differences between a current block and a file previously dumped to a disk:
+可以用下面的命令将当前块与之前dump下来的文件相比较:
 
 ```
 r2 /bin/true
