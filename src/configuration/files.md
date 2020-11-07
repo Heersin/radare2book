@@ -1,9 +1,6 @@
-## Files
+## radare2相关文件
 
-Use `r2 -H` to list all the environment variables that matter to know where it will
-be looking for files. Those paths depend on the way (and operating system) you have
-built r2 for.
-
+`r2 -H`命令可以列出所有重要的环境变量，并了解r2在哪些路径下搜索需要的文件。这些路径具体是取决于构建r2的操作系统以及构建时采用的方法和配置。
 ```
 R2_PREFIX=/usr
 MAGICPATH=/usr/share/radare2/2.8.0-git/magic
@@ -19,23 +16,22 @@ USER_PLUGINS=/home/user/.local/share/radare2/plugins
 USER_ZIGNS=/home/user/.local/share/radare2/zigns
 ```
 
-## RC Files
+## RC配置文件
 
-RC files are r2 scripts that are loaded at startup time. Those files must be in 3 different places:
+RC文件是在启动时加载的r2脚本，该文件至少须放在下面三个位置之一:
 
 ### System
 
-radare2 will first try to load /usr/share/radare2/radare2rc
+radare2首先会尝试加载/usr/share/radare2/radare2rc
 
-### Your Home
+### Home目录
 
-Each user in the system can have its own r2 scripts to run on startup to select the color scheme, and other custom options by having r2 commands in there.
+系统上的每个用户都可以拥有自己的r2启动脚本，用于配置色彩主题及其他自定义的选项
 
 * ~/.radare2rc
 * ~/.config/radare2/radare2rc
 * ~/.config/radare2/radare2rc.d/
 
-### Target file
+### 目标文件的目录
 
-If you want to run a script everytime you open a file, just create a file with the same name of the file
-but appending `.r2` to it.
+如果想在每次打开文件时都运行某个脚本，那么就在对应位置创建一个同名文件，并在文件名后添加一个`.r2`后缀。

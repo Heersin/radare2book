@@ -1,8 +1,8 @@
 ## Zoom
 
-The zoom is a print mode that allows you to get a global view of the whole file or a memory map on a single screen. In this mode, each byte represents `file_size/block_size` bytes of the file. Use the `pz` command, or just use `Z` in the visual mode to toggle the zoom mode.
+zoom是radare2中的一种显示模式，该模式下可以在一屏之内对整个文件或者内存映射有一个全局的视野。该模式下的每个字节都代表文件中的`file_size/block_size`个字节，使用`pz`命令或者在可视化模式下使用`Z`切换到zoom模式(存疑)
 
-The cursor can be used to scroll faster through the zoom out view. Pressing `z` again will zoom-in at the cursor position.
+zoom out的状态下光标滚动的速度会更快，按下`z`键则会在当前光标的位置进入zoom in状态。
 
 ```
 [0x004048c5]> pz?
@@ -64,7 +64,7 @@ Let's see some examples:
 0x00000050  2b30 4741 422f 382a 1e22 0f17 0f10 3913
 ```
 
-You can limit zooming to a range of bytes instead of the whole bytespace. Change `zoom.from` and `zoom.to` eval variables:
+可以通过改变`zoom.from`和`zoom.to`这两个变量改变zoom的范围:
 
 ```
 [0x00003a04]> e? zoom.
