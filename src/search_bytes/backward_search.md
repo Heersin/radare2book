@@ -1,6 +1,6 @@
-## Searching Backwards
+## 回溯搜索
 
-Sometimes you want to find a keyword backwards. This is, before the current offset, to do this you can seek back and search forward by adding some search.from/to restrictions, or use the `/b` command.
+有时候可能想后向搜寻某个关键词，这是在当前偏移量之前执行的操作。我们可以通过修改`search.from/to`，回溯到某个位置然后进行前向搜索实现这个功能，或者使用`/b`命令直接进行后向搜索。
 
 ```
 [0x100001200]> / nop
@@ -13,7 +13,7 @@ Sometimes you want to find a keyword backwards. This is, before the current offs
 [0x100004f50]>
 ```
 
-Note that `/b` is doing the same as `/`, but backward, so what if we want to use `/x` backward? We can use `/bx`, and the same goes for other search subcommands:
+注意`/b`的行为其实和`/`是一样的，仅仅是方向相反。因此如果想要进行`/x`的回溯搜索，可以使用`/bx`做到。这点对于其他的搜索子命令也是一样的。
 
 ```
 [0x100001200]> /x 90

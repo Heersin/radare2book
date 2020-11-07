@@ -1,7 +1,7 @@
-## Search Automation
+## 自动化搜索
 
-The `cmd.hit` configuration variable is used to define a radare2 command to be executed when a matching entry is found by the search engine. If you want to run several commands, separate them with `;`. Alternatively, you can arrange them in a separate script, and then invoke it as a whole with `. script-file-name` command.
-For example:
+`cmd.hit`变量用于定义当radare2的搜索引擎找到匹配时执行的命令，执行多条命令需用`;`将命令分割。此外还可以将这些命令写在一个独立的脚本里，然后通过`. script-file-name`这个命令调用。
+举个例子:
 ```
 [0x00404888]> e cmd.hit = p8 8
 [0x00404888]> / lib
