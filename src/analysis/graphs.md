@@ -1,11 +1,10 @@
-# Graph commands
+# 图形化相关命令
 
-When analyzing data it is usually handy to have different ways to represent it in order to get new perspectives to allow the analyst to understand how different parts of the program interact.
+分析时如果能以不同的形式展示数据的话会非常方便，能帮助分析者从新的角度了解程序中的各部分是如何交互的。
 
-Representing basic block edges, function calls, string references as graphs show a very clear view of this information.
+图形化能够清晰地展现代码块的边界，函数调用以及字符串的引用位置。
 
-Radare2 supports various types of graph available through commands starting with `ag`:
-
+Radare2支持多种类型的可视化界面，`ag`开头的命令负责这些工作：
 ```
 [0x00005000]> ag?
 |Usage: ag<graphtype><format> [addr]
@@ -37,12 +36,11 @@ Output formats:
 | w [path]                Write to path or display graph image (see graph.gv.format and graph.web)
 ```
 
-The structure of the commands is as follows: `ag <graph type> <output format>`.
+这类命令的格式是:`ag <graph type> <output format>`
 
-For example, `agid` displays the imports graph in dot format, while `aggj`
-outputs the custom graph in JSON format.
+例如，`agid`将会以dot格式显示程序中的导入函数，而`aggj`则是以json格式显示的。
 
-Here's a short description for every output format available:
+下面是对每种输出格式的简介。
 
 ### Ascii Art ** (e.g. `agf`)
 
