@@ -1,32 +1,30 @@
-## Disassembler
+## 反汇编
 
-Disassembling is the inverse action of assembling. Rasm2 takes hexpair as an input (but can also take a file in binary form) and show the human readable form.
+反汇编是汇编的逆操作，Rasm2读取十六进制字节串作为输入（当然也可以将文件作为二进制数据输入）然后显示人类可读的汇编助记符。
 
-To do this we can use the `-d` option of rasm2 like this:
+可以像下面这样使用rasm2的`-d`选项完成该功能：
 
 ```
 $ rasm2 -a x86 -b 32 -d '90'
 nop
 ```
 
-Rasm2 also have the `-D` flag to show the disassembly like `-d` does, but includes offset and bytes.
+Rasm2还有一个`-D`选项可以做到与`-d`相同的效果，不过`-D`的输出中还包含了偏移量以及原始的字节。
 
-In radare2 there are many commands to perform a disassembly from a specific place in memory.
-
-You might be interested in trying if you want different outputs for later parsing with your scripts, or just grep to find what you are looking for:
+在radare2中还有很多命令可以将内存中指定位置上的数据进行反汇编的命令。你可能想尝试一下这些命令，确认下是否需要不同的输出以供以后使用脚本进行解析，或者只是grep来查找所需内容：
 
 ### pd N
 
-Disassemble N instructions
+反汇编N条指令
 
 ### pD N
 
-Disassemble N bytes
+反汇编N个字节
 
 ### pda
 
-Disassemble all instructions (seeking 1 byte, or the minimum alignment instruction size), which can be useful for ROP
+反汇编所有机器码（seek单字节，或者最小的指令对齐大小），ROP时很有用。
 
 ## pi, pI
 
-Same as `pd` and `pD`, but using a simpler output.
+同`pd`和`pD`，但输出更简洁。

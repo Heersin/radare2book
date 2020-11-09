@@ -1,8 +1,8 @@
-## Disassembler Configuration
+## 汇编器/反汇编器配置
 
-The assembler and disassembler have many small switches to tweak the output.
+汇编器和反汇编器中有许多小配置项用于变动输出的信息。
 
-Those configurations are available through the `e` command. Here there are the most common ones:
+这些配置变量可以用`e`命令修改，底下是最常用的一些变量：
 
 * asm.bytes - show/hide bytes
 * asm.offset - show/hide offset
@@ -10,4 +10,4 @@ Those configurations are available through the `e` command. Here there are the m
 * asm.ucase - show disasm in uppercase
 * ...
 
-Use the `e??asm.` for more details.
+使用`e??asm.`可以了解更多细节。
