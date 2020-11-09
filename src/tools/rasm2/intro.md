@@ -1,6 +1,6 @@
 # Rasm2
 
-`rasm2` is an inline assembler/disassembler. Initially, `rasm` tool was designed to be used for binary patching. Its main function is to get bytes corresponding to given machine instruction opcode.
+`rasm2`是一个内置的汇编/反汇编器。`rasm`最初的设计目的是为二进制打补丁，主要的功能是获取指令对应的字节码。
 
 ```
 $ rasm2 -h
@@ -41,7 +41,7 @@ Environment:
 
 ```
 
-Plugins for supported target architectures can be listed with the `-L` option. Knowing a plugin name, you can use it by specifying its name to the `-a` option
+支持的目标架构及其对应插件可以通过`-L`选项列出，可以用`-a`选项指定插件名字使用对应的编译器/反编译器。
 
 ```
 $ rasm2 -L
@@ -106,7 +106,7 @@ _dAe  32         xtensa      GPL3    XTensa CPU
 adA_  8          z80         GPL     Zilog Z80
 ```
 
-> Note that "ad" in the first column means both assembler and disassembler are offered by a corresponding  plugin. "_d" indicates disassembler, "a_" means only assembler is available.
+> 注意第一列里的"ad"代表对应的插件同时支持汇编和反汇编。"_d"代表仅支持反汇编，"a_"代表仅支持汇编。
 
 
 
