@@ -16,7 +16,7 @@
    * [Contributing to radare2](first_steps/contributing.md)
 * [配置](configuration/intro.md)
    * [Colors](configuration/colors.md)
-   * [Configuration Variables](configuration/evars.md)
+   * [配置项](configuration/evars.md)
    * [radare2相关文件](configuration/files.md)
 * [基本命令](basic_commands/intro.md)
    * [定位](basic_commands/seeking.md)
