@@ -1,29 +1,29 @@
-## Configuration Variables
+## 配置变量
 
-Below is a list of the most frequently used configuration variables. You can get a complete list by issuing `e` command without arguments. For example, to see all variables defined in the "cfg" namespace, issue `e cfg.` (mind the ending dot). You can get help on any eval configuration variable by using `e? cfg.`
+下面列出了最常用的一些配置变量，可以用`e`命令（不加参数）列出所有变量。例如，若要查看定义于"cfg"命名空间下的所有变量，就使用`e cfg.`命令（注意结尾有个点），还可以使用`e? cfg.`列出这些命令的帮助信息。
 
-The `e??` command to get help on all the evaluable configuration variables of radare2. As long as the output of this command is pretty large you can combine it with the internal grep `~` to filter for what you are looking for:
+`e??`命令则能获取radare2中所有配置项的帮助信息，由于输出信息非常之多，最好使用`～`命令过滤出你所需要的部分:
 
 ![e??~color](../img/configuration/e--color.png)
 
-The Visual mode has an eval browser that is accessible through the `Vbe` command.
+可视化模式下可以使用`Vbe`命令进入变量菜单进行浏览。
 
 ### asm.arch
 
-Defines the target CPU architecture used for disassembling (`pd`, `pD` commands) and code analysis (`a` command). You can find the list of possible values by looking at the result of `e asm.arch=?` or `rasm2 -L`.
-It is quite simple to add new architectures for disassembling and analyzing code. There is an interface for that. For x86, it is used to attach a number of third-party disassembler engines, including GNU binutils, Udis86 and a few handmade ones.
+定义了目标的CPU架构，该信息会使用在反汇编(`pd`, `pD`命令)及代码分析(`a`命令)阶段。`e asm.arch=?`或`rasm2 -L`命令会显示该配置项可选的架构。
+添加新架构支持非常容易，r2提供了相应的接口。以x86为例，其利用了多种第三方反汇编引擎，包括GNU binutils， Udis86以及自己编写的一些工具。
 
 ### asm.bits
 
-Determines width in bits of registers for the current architecture. Supported values: 8, 16, 32, 64. Note that not all target architectures support all combinations for asm.bits.
+该配置项决定了当前架构寄存器的位宽，可选的值包含：8, 16, 32, 64。不过要注意的是，不是所有的架构都支持这些asm.bits位数。
 
 ### asm.syntax
 
-Changes syntax flavor for disassembler between Intel and AT&T. At the moment, this setting affects Udis86 disassembler for Intel 32/Intel 64 targets only. Supported values are `intel` and `att`.
+该配置项用于选择反汇编语句的语法风格（Intel或AT&T）。目前该配置项仅能影响Udis86反汇编引擎对Intel 32/Intel 64目标的分析，可选的值包含`intel`和`att`。
 
 ### asm.pseudo
 
-A boolean value to set the psuedo syntax in the disassembly. "False" indicates a native one, defined by the current architecture, "true" activates a pseudocode strings format. For example, it'll transform :
+该配置项为一个bool变量，用于设置汇编伪代码的语法风格，"False"表示使用原生风格，由当前架构定义，"true"则启用伪代码风格。例如，其会将：
 
 ```
 │           0x080483ff      e832000000     call 0x8048436
@@ -32,7 +32,7 @@ A boolean value to set the psuedo syntax in the disassembly. "False" indicates a
 │           0x0804840c      83f800         cmp eax, 0
 │           0x0804840f      7405           je 0x8048416
 ```
-to
+转化为
 
 ```
 │           0x080483ff      e832000000     0x8048436 ()
@@ -41,46 +41,45 @@ to
 │           0x0804840c      83f800         var = eax - 0
 │           0x0804840f      7405           if (!var) goto 0x8048416
 ```
-It can be useful while disassembling obscure architectures.
+在对一些不清楚不熟悉的架构进行反汇编时，这个配置很有用。
 
 ### asm.os
 
-Selects a target operating system of currently loaded binary. Usually, OS is automatically detected by `rabin -rI`. Yet, `asm.os` can be used to switch to a different syscall table employed by another OS.
+设置当前加载的二进制文件的目标系统。通常情况下OS会通过`rabin -rI`自动检测，但使用`asm.OS`可用于切换到另一个OS所用的syscall表。
 
 ### asm.flags
 
-If defined to "true", disassembler view will have flags column.
+如果设置为"true"，反汇编视图中会显示flags列。
 
 ### asm.lines.call
 
-If set to "true", draw lines at the left of the disassemble output (`pd`, `pD` commands) to graphically represent control flow changes (jumps and calls) that are targeted inside current block. Also, see `asm.linesout`.
+如果设置为"true"，在反汇编(`pd`, `pD`命令)输出结果的左侧会有跳线，可以直观地显示当前代码块内控制流的变化（jump和call)。同样的还可以看看`asm.lines.out`配置项。
 
-### asm.linesout
+### asm.lines.out
 
-When defined as "true", the disassembly view will also draw control flow lines that go outside of the block.
+若设置为"true"，还会绘制那些超出当前代码块的控制流线。
 
-### asm.linestyle
+### asm.linestyle(存疑)
 
-A boolean value which changes the direction of control flow analysis. If set to "false", it is done from top to bottom of a block; otherwise, it goes from bottom to top. The "false" setting seems to be a better choice for improved readability and is the default one.
+该配置项为一个bool变量，控制控制流的分析方向。若设置为"false"，其会自顶向下地分析代码块，否则自底向上进行分析。默认设置为"false"，对于改善代码可读性来说这是一个更好的选择。
 
 ### asm.offset
 
-Boolean value which controls the visibility of offsets for individual disassembled instructions.
+Bool变量，控制是否显示汇编语句的offset。
 
 ### asm.trace
 
-A boolean value that controls displaying of tracing information (sequence number and counter) at the left of each opcode. It is used to assist with programs trace analysis.
+该配置项为Bool变量，控制是否在opcode的左边显示追踪信息（Sequence和counter信息），该配置项的设计目的在于辅助程序的追踪分析。
 
 ### asm.bytes
 
-A boolean value used to show or hide displaying of raw bytes of instructions.
+用于控制是否显示指令的原始字节，为一个bool变量。
 
 ### asm.sub.reg
 
-A boolean value used to replace register names with arguments or their associated role alias.
+该配置项为一个bool变量，用于控制是否以将寄存器的名字替换为参数名或其在指令中扮演的角色。
 
-For example, if you have something like this:
-
+例如现在有这么一段代码:
 ```
 │           0x080483ea      83c404         add esp, 4
 │           0x080483ed      68989a0408     push 0x8049a98
@@ -88,7 +87,7 @@ For example, if you have something like this:
 │           0x080483fc      83c408         add esp, 8
 │           0x08048404      31c0           xor eax, eax
 ```
-This variable changes it to:
+设置该变量后将变成:
 ```
 │           0x080483ea      83c404         add SP, 4
 │           0x080483ed      68989a0408     push 0x8049a98
@@ -99,20 +98,18 @@ This variable changes it to:
 
 ### asm.sub.jmp
 
-A boolean value used to substitute jump, call and branch targets in disassembly.
-
-For example, when turned on, it'd display `jal 0x80001a40` as `jal fcn.80001a40` in the disassembly.
+控制是否在反汇编输出中替换jump、call分支的对象。例如，启用该选项时，`jal 0x80001a40`将显示为`jal fcn.80001a40`。
 
 ### asm.sub.rel
 
-A boolean value which substitutes pc relative expressions in disassembly. When turned on, it shows the references as string references.
+该配置项为一个bool变量，控制是否在反汇编输出中替换相对于pc的地址。若启用此选项，引用的地址将显示为引用字符串。
 
-For example:
+例如：
 
 ```
 0x5563844a0181      488d3d7c0e00.  lea rdi, [rip + 0xe7c]    ; str.argv__2d_:__s
 ```
-When turned on, this variable lets you display the above instruction as:
+启用该变量时，上面的语句将会被显示为如下样式：
 
 ```
 0x5563844a0181      488d3d7c0e00.  lea rdi, str.argv__2d_:__s    ; 0x5563844a1004 ; "argv[%2d]: %s\n"
@@ -120,56 +117,57 @@ When turned on, this variable lets you display the above instruction as:
 
 ### asm.sub.section
 
-Boolean which shows offsets in disassembly prefixed with the name of the section or map.
+该配置决定是否在地址前加上该地址所属的节区。
 
-That means, from something like:
+也就是说，对于下面这个语句：
 
 ```
 0x000067ea      488d0def0c01.  lea rcx, [0x000174e0]
 ```
-to the one below, when toggled on.
+
+启用该配置后会被转换为：
 ```
 0x000067ea      488d0def0c01.  lea rcx, [fmap.LOAD1.0x000174e0]
 ```
 
 ### asm.sub.varonly
 
-Boolean which substitutes the variable expression with the local variable name.
-
-For example: `var_14h` as `rbp - var_14h`, in the disassembly.
+该配置项是一个bool变量，控制是否将本地变量的表达式替换为一个本地变量名。
+例如：`rbp - var_14h`会被替换为`var_14h`
 
 ### cfg.bigendian
 
-Change endianness. "true" means big-endian, "false" is for little-endian.
-"file.id" and "file.flag" both to be true.
+改变大小端，"true"代表大端，"false"代表小端。
 
 ### cfg.newtab
 
-If this variable is enabled, help messages will be displayed along with command names in tab completion for commands.
+若启用该配置，自动补全时将会显示完整命令的名字及其帮助信息。
 
 ### scr.color
 
-This variable specifies the mode for colorized screen output: "false" (or 0) means no colors, "true" (or 1) means 16-colors mode, 2 means 256-colors mode, 3 means 16 million-colors mode. If your favorite theme looks weird, try to bump this up.
+该变量可以指定屏幕输出的色彩模式："false"(或0)代表无色，"true"(或1)代表16色模式，2代表256色模式，3代表真彩色模式。如果发现你钟爱的色彩主题看起来怪怪的，就试试提高该变量的值吧。
 
 ### scr.seek
 
-This variable accepts a full-featured expression or a pointer/flag (eg. eip). If set, radare will set seek position to its value on startup.
+该变量接受一个表达式或一个指针/flag（比如 eip)。设置该变量后radare2在启动时会跳转到该地址。 
 
 ### scr.scrollbar
-If you have set up any [flagzones](http://book.rada.re/basic_commands/flags.html#flag-zones) (`fz?`), this variable will let you display the scrollbar with the flagzones, in Visual mode. Set it to `1` to display the scrollbar at the right end, `2` for the top and `3` to display it at the bottom.
+
+如果你曾设置过[标志空间(flagzones)](http://book.rada.re/basic_commands/flags.html#flag-zones) (`fz?`)，则设置该变量可以在可视化模式下显示带flagzone的滚动条。
+设置为`1`时滚动条放在右端，为`2`时滚动条在顶部，而`3`时滚动条在底部。
 
 ### scr.utf8
 
-A boolen variable to show UTF-8 characters instead of ANSI.
+该配置项为一个bool值，控制在输出中是否使用UTF-8替换原本的ANSI字符。
 
 ### cfg.fortunes
 
-Enables or disables "fortune" messages displayed at each radare start.
+启用或禁用每次radare2启动时的"签语(fortune message)"。
 
 ### cfg.fortunes.type
 
-Fortunes are classified by type. This variable determines which types are allowed for displaying when `cfg.fortunes` is `true`, so they can be fine-tuned on what's appropriate for the intended audience. Current types are `tips`, `fun`, `nsfw`, `creepy`.
+这些签语分为不同类型，当`cfg.fortune`为`true`时该配置项将决定哪些类型的签语可以在radare2启动时显示，因此可以通过配置项针对不同的受众对签语进行微调。目前的签语类型包括`tips`，`fun`，`nsfw`，`creepy`。
 
 ### stack.size
 
-This variable lets you set the size of stack in bytes.
+该变量控制debug时栈的大小，以字节为单位。
