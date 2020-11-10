@@ -1,19 +1,19 @@
-# Visual Disassembly
+# 反汇编界面
 
-## Navigation
+## 导航
 
-Move within the Disassembly using arrow keys or `hjkl`. Use `g` to seek directly to a flag or an offset, type it when requested by the prompt: `[offset]>`.
-Follow a jump or a call using the `number` of your keyboard `[0-9]` and the number on the right in disassembly to follow a call or a jump. In this example typing `1` on the keyboard would follow the call to `sym.imp.__libc_start_main` and therefore, seek at the offset of this symbol.
+在反汇编界面中可以用方向键或`hjkl`进行移动，`g`可以用于跳转到flag所在位置或者某个偏移位置上，当出现`[offset]>`提示符时就可进行输入了。
+在本例中按下`1`将会跟随`sym.imp.__libc_start_main`，也就是跳转到该符号所在的偏移量上。
 
 ```
 0x00404894      e857dcffff     call sym.imp.__libc_start_main ;[1]
 ```
 
-Seek back to the previous location using `u`, `U` will allow you to redo the seek.
+可以用`u`返回到上一个位置，`U`则可以用于重现刚刚的跳转操作。
 
 ## `d` as define
 
-`d` can be used to change the type of data of the current block, several basic types/structures are available as well as more advanced one using `pf` template:
+`d`可以用于改变当前块的数据类型，支持多种基本的类型和结构，若需要更复杂的数据结构可以使用`pf`模板。
 
 ```
 d → ...
@@ -28,7 +28,7 @@ d → d
 ...
 ```
 
-To improve code readability you can change how radare2 presents numerical values in disassembly, by default most of disassembly display numerical value as hexadecimal. Sometimes you would like to view it as a decimal, binary or even custom defined constant. To change value format you can use `d` following by `i` then choose what base to work in, this is the equivalent to `ahi`:
+可以改变radare2在反汇编中显示的数据类型以获得更佳的可读性，默认情况下大部分的数值都是以16进制表示的。有时你可能需要以十进制、二进制显示，或者将其作为一个自定义的常量显示。可以使用`d`键，然后按下`i`键选择进制，这个操作与`ahi`是等效的:
 
 ```
 d → i → ...
@@ -39,57 +39,56 @@ d → i →  2
 0x004048f7      48c1e83f       shr rax, '?'
 ```
 
-### Usage of the Cursor for Inserting/Patching...
+### 使用光标进行插入/修补...
 
-Remember that, to be able to actually edit files loaded in radare2, you have to start it with the `-w` option. Otherwise a file is opened in read-only mode.
+要记住，若想编辑加载的文件需要以`-w`选项启动radare2，否则该文件处于只读模式下。
 
-Pressing lowercase `c` toggles the cursor mode. When this mode is active, the currently selected byte (or byte range) is highlighted.
+按下小写的`c`键可以切换到光标模式，在该模式下选中的字节(或者说字节范围)会以高亮显示。
 
 ![Cursor at 0x00404896](cursor.png)
 
-The cursor is used to select a range of bytes or simply to point to a byte. You can use the cursor to create a named flag at specifc location. To do so, seek to the required position, then press `f` and enter a name for a flag.
-If the file was opened in write mode using the `-w` flag or the `o+` command, you can also use the cursor to overwrite a selected range with new values. To do so, select a range of bytes (with HJKL and SHIFT key pressed), then press `i` and enter the hexpair values for the new data. The data will be repeated as needed to fill the range selected. For example:
+光标通常用于选择一个范围内的字节，或者仅仅是标记某个字节。可以跳转到目标地址上，按下`f`键然后输入flag名字在该位置上创建一个flag。
+如果以写模式(`-w`选项或者`o+`命令)打开文件，还可以覆写光标选中的字节。首先选中一个范围内的字节（按住SHIFT然后使用HJKL移动），然后按下`i`键，输入十六进制值，则会用该值覆盖选中的范围，举个例子：
 ```
 <select 10 bytes in visual mode using SHIFT+HJKL>
 <press 'i' and then enter '12 34'>
 ```
-The 10 bytes you have selected will be changed to "12 34 12 34 12 ...".
+则选中的十个字节会变为"12 34 12 34 12 ...".
 
 
-The Visual Assembler is a feature that provides a live-preview while you type in new instructions to patch
-into the disassembly. To use it, seek or place the cursor at the wanted location and hit the 'A' key. To provide multiple instructions, separate them with semicolons, `;`.
+可视化汇编器能在输入新指令进行patch时可以提供一个实时的预览。若要开启该功能则跳转到想要patch的地方，或者将光标移到该处，然后按下`A`，多条指令需要用`;`将各条指令分割开。
 
-## XREF
+## 交叉引用（XREF）
 
-When radare2 has discovered a XREF during the analysis, it will show you the information in the Visual Disassembly using `XREF` tag:
+radare2在分析时发现的XREF都会显示在反汇编界面里，并有一个`XREF`标签：
 
 ```
 ; DATA XREF from 0x00402e0e (unk)
 str.David_MacKenzie:
 ```
 
-To see where this string is called, press `x`, if you want to jump to the location where the data is used then press the corresponding number [0-9] on your keyboard. (This functionality is similar to `axt`)
+按下`x`可以找到字符串的引用位置。若想跳转到数据的引用处则在键盘上按下数据对应的数字[0-9]。(该功能类似`axt`)
 
-`X` corresponds to the reverse operation aka `axf`.
+`X`代表逆操作，即`axf`。
 
-## Function Argument display
+## 显示参数
 
-To enable this view use this config var `e dbg.funcarg = true`
+可以将配置变量设置为true启用该功能 `e dbg.funcarg = true`
 
 ![funcarg](funcarg.png)
 
-## Add a comment
+## 添加注释
 
-To add a comment press `;`.
+按下`;`可以添加注释。
 
-## Type other commands
+## 调用其它命令
 
-Quickly type commands using `:`.
+想快速调用其它命令可以按`:`.
 
-## Search
+## 搜索
 
-`/`: allows highlighting of strings in the current display.
-`:cmd` allows you to use one of the "/?" commands that perform more specialized searches.
+`/`: 在当前输出中高亮搜索的字符串
+`:cmd` 通过这个可以使用"/?"下的命令进行更精确的搜索。
 
 ## The HUDS
 

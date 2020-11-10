@@ -1,31 +1,29 @@
-# Visual Mode
+# 可视化模式
 
-The visual mode is a more user-friendly interface alternative to radare2's command-line prompt. It allows easy navigation, has a cursor mode for selecting bytes, and offers numerous key bindings to simplify debugger use.
-To enter visual mode, use `V` command. To exit from it back to command line, press `q`.
+可视化模式是radare2中一个对用户比较友好的命令行界面。其具有基本的导航功能，可以用光标选择字节，并提供了一系列的快捷键简化调试时的操作。
+使用`V`命令可进入该模式，在该模式中按下`q`可退回到原本的命令行界面中。
 
-## Navigation
+## 导航
 
-Navigation can be done using HJKL or arrow keys and PgUp/PgDown keys. It also understands usual Home/End keys.
-Like in Vim the movements can be repeated by preceding the navigation key with the number, for
-example `5j` will move down for 5 lines, or `2l` will move 2 characters right.
+支持使用HJKL键或方向键与PageUp/PageDown进行导航，也支持通常的Home/End键。如vim一样，可以在前面加上数字将动作重复多次，比如说`5j`将会下移5行，`2l`则会右移2个字符宽度。
 
 ![Visual Mode](visualmode.png)
 
-## print modes aka panels
+## 切换输出模式
 
-The Visual mode uses "print modes" which are basically different panel that you can rotate. By default those are:
+可以在可视化模式中循环地切换"输出模式"，默认的循环顺序为:
 
 ↻ **Hexdump panel** -> **Disassembly panel** → **Debugger panel** → **Hexadecimal words dump panel** → **Hex-less hexdump panel** → **Op analysis color map panel** → **Annotated hexdump panel** ↺.
 
-Notice that the top of the panel contains the command which is used, for example for the disassembly panel:
+另外值得一提的是，界面顶部包含了当前所使用的输出命令，例如反汇编界面中显示的是：
 
 ```
 [0x00404890 16% 120 /bin/ls]> pd $r @ entry0
 ```
 
-## Getting Help
+## 获取帮助
 
-To see help on all key bindings defined for visual mode, press `?`:
+按下`?`可以查看可视化模式中定义的快捷键的帮助信息:
 ```
 Visual mode help:
  ?        show this help
