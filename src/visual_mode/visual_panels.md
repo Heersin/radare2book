@@ -1,22 +1,22 @@
-# Visual Panels
+# 可视化面板
 
-## Concept
+## 概念
 
-Visual Panels is characterized by the following core functionalities:
+可视化面板具有如下核心功能：
 
-1. Split Screen
-2. Display multiple screens such as Symbols, Registers, Stack, as well as custom panels
-3. Menu will cover all those commonly used commands for you so that you don't have to memorize any of them
+1. 分屏
+2. 多屏显示，诸如符号、寄存器、栈以及自定义的面板
+3. 包含常用命令的菜单，无需记忆大量命令
 
-CUI met some useful GUI as the menu, that is Visual Panels.
+结合了GUI中有用的部分作为菜单，这就是可视化面板。
 
-Panels can be accessed by using `v` or by using `!` from the visual mode.
+可以使用`v`命令或者在可视化模式里按`!`进入该面板
 
-## Overview
+## 总览
 
 ![Panels Overview](panels_overview.png)
 
-## Commands
+## 命令
 ```
 |Visual Ascii Art Panels:
 | |      split the current panel vertically
@@ -68,22 +68,20 @@ Panels can be accessed by using `v` or by using `!` from the visual mode.
 | z      swap current panel with the first one
 ```
 
-## Basic Usage
+## 基本用法
 
-Use `tab` to move around the panels until you get to the targeted panel. Then, use `hjkl`, just like in vim, to scroll the panel you are currently on.
-Use `S` and `s` to step over/in, and all the panels should be updated dynamically while you are debugging.
-Either in the Registers or Stack panels, you can edit the values by inserting hex. This will be explained later.
-While hitting `tab` can help you moving between panels, it is highly recommended to use `m` to open the menu.
-As usual, you can use `hjkl` to move around the menu and will find tons of useful stuff there.
-You can also press `"` to quickly browse through the different options View offers and change the contents of the selected panel.
+可以用`tab`在各面板之间切换，直到切换到目标面板为止。接着如vim中一样使用`hjkl`可在面板中移动。
+`S`和`s`键分别能执行步过和步入，在调试时所有面板（包括寄存器和栈面板）都会动态地更新。之后的部分里还会解释如何插入十六进制字节值修改变量。
+尽管键入`tab`可以在面板之间切换，我们还是强烈推荐你使用`m`键打开菜单，里面包含了很多有用的东西，在菜单中像其他地方一样用`hjkl`移动就行了。
+还可以用`"`键快速浏览radare2提供的多个视图，以及修改选定面板里的内容。
 
-## Split Screen
+## 分屏
 
-`|` is for the vertical and `-` is for the horizontal split. You can delete any panel by pressing `X`.
+`|` 用于竖分屏，`-` 用于横分屏. 可以按下`X`键删除面板.
 
-Split panels can be resized from Window Mode, which is accessed with `w`.
+在窗口模式（`w`键进入）下可以调整面板的大小。
 
-## Window Mode Commands
+## 窗口模式命令
 ```
 |Panels Window mode help:
 | ?      show this help
@@ -96,15 +94,11 @@ Split panels can be resized from Window Mode, which is accessed with `w`.
 | q      quit Window mode
 ```
 
-## Edit Values
+## 编辑值
 
-Either in the Register or Stack panel, you can edit the values. Use `c` to activate cursor mode and you can move the cursor by pressing `hjkl`, as usual. Then, hit `i`, just like the insert mode of vim, to insert a value.
+在寄存器面板或栈面板里可以对其中的值进行修改。使用`c`可激活光标，同样使用`hjkl`进行移动。之后，按下`i`插入一个值（类似vim切换至插入模式那样）
 
-## Tabs
-Visual Panels also offer tabs to quickly access multiple forms of information easily. Press `t` to enter Tab Mode. All the tabs numbers will be visible in the top right corner.
+## Tab
+可视化面板还提供了标签，方便用户快速访问多种类型的信息。按下`t`可以进入标签模式，所有的标签编号都列在右上角。默认情况下仅有一个标签页，可以在标签模式里按下`t`创建新的标签页，或者在该模式下按下`T`创建一个全新的面板。
 
-By default you will have one tab and you can press `t` to create a new tab with the same panels and `T` to create a new panel from scratch.
-
-For traversing through the tabs, you can type in the tab number while in Tab Mode.
-
-And pressing `-` deletes the tab you are in.
+在标签模式下输入标签编号可以切换到对应标签，而在该模式下输入`-`则会删除当前标签页。
