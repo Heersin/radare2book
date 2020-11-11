@@ -1,15 +1,14 @@
-# Visual Assembler
+# 汇编界面
 
-You can use Visual Mode to assemble code using `A`.
-For example let's replace the `push` by a `jmp`:
+在可视化模式下使用`A`可进行汇编。
+举个例子，将`push`替换为`jmp`：
 
 ![Before](../pics/before.png)
 
-Notice the preview of the disassembly and arrows:
+注意反汇编预览视图和那个箭头：
 
 ![After](../pics/after.png)
 
-You need to open the file in writing mode (`r2 -w` or `oo+`) in order to patch the file.
-You can also use the cache mode: `e io.cache = true` and `wc?`.
+若真要进行patch需要以写模式打开文件（`r2 -w`或`oo+`），还可以使用cache模式：`e io.cache = true`以及`wc?`。
 
-Remember that patching files in debug mode only patch the memory not the file.
+要记住debug模式里的patch操作只在内存中完成，并未patch到文件中。
