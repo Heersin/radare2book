@@ -90,46 +90,42 @@ str.David_MacKenzie:
 `/`: 在当前输出中高亮搜索的字符串
 `:cmd` 通过这个可以使用"/?"下的命令进行更精确的搜索。
 
-## The HUDS
+## 控制面板
 
-### The "UserFriendly HUD"
+### "用户友好型"面板
 
-The "UserFriendly HUD" can be accessed using the `??` key-combination. This HUD acts as an interactive Cheat Sheet that one can use to more easily find and execute commands. This HUD is particularly useful for new-comers. For experienced users, the other HUDS which are more activity-specific may be more useful.
+可以通过`??`快捷键进入用户友好型面板中（特别是对于新手来说），该面板相当于一个备忘录，方便你查找命令并运行。对于老手来说，其它专用的面板可能更好用一些。
 
-### The "flag/comment/functions/.. HUD"
+### "flag/注释/函数/.. 面板"
 
-This HUD can be displayed using the `_` key, it shows a list of all the flags defined and lets you jump to them. Using the keyboard you can quickly filter the list down to a flag that contains a specific pattern.
+可以用`_`键显示该面板，该面板中会列出定义的所有flag，并允许你直接跳转到对应位置。可以通过键盘输入快速过滤出匹配的flag。
 
-Hud input mode can be closed using ^C. It will also exit when backspace is pressed when the user input string is empty.
+使用`^C`可以关闭输入模式，不输入任何字符串就按下`backspace`时将会退出面板。
 
-## Tweaking the Disassembly
+## 配置反汇编视图的样式
 
-The disassembly's look-and-feel is controlled using the "asm.* configuration keys, which can be
-changed using the `e` command. All configuration keys can also be edited through the Visual Configuration Editor.
+反汇编的显示风格和样式取决于"asm.*"变量，可以用`e`命令对这些变量进行修改，也可以通过可视化模式中的变量编辑器对这些变量进行修改。
 
-## Visual Configuration Editor
+## 可视化变量编辑器
 
-This HUD can be accessed using the `e` key in visual mode. The editor allows you to easily examine and change radare2's configuration. For example, if you want to change something about the disassembly display, select `asm` from the list, navigate to the item you wish to modify it, then select it by hitting `Enter`.
-If the item is a boolean variable, it will toggle, otherwise you will be prompted to provide a new value.
-
+该面板可以通过在可视化模式下按`e`键进入，在编辑器里可以很容易地查看并修改radare2变量。例如我们想修改反汇编的输出结果，首先在列表里选择`asm`，然后浏览并选择想修改的变量，按下`Enter`键对该变量进行修改。如果该变量是个bool值，那么其将会显示一个下拉条，其他的则会提示输入一个新值。
 
 ![First Select asm](select_asm.png)
 
-
-Example switch to pseudo disassembly:
+切换到伪汇编输出：
 
 ![Pseudo disassembly disabled](pseudo_disable.png)
 
 
 ![Pseudo disassembly enabled](pseudo_enable.png)
 
-Following are some example of eval variable related to disassembly.
+底下是一些与反汇编相关的变量。
 
-## Examples
+## 例子
 
-#### asm.arch: Change Architecture && asm.bits: Word size in bits at assembler
+#### asm.arch: 设置架构 && asm.bits: 设置汇编器中字的大小
 
-You can view the list of all arch using `e asm.arch=?`
+可以用`e asm.arch=?`列出所有架构。
 
 ```
 e asm.arch = dalvik
@@ -149,10 +145,10 @@ e asm.bits = 16
 0000:4876      48             dec ax
 0000:4877      89e2           mov dx, sp
 ```
-This latest operation can also be done using `&` in Visual mode.
+这个设置位数的命令还可以通过可视化模式中的`&`完成。
 
 
-#### asm.pseudo: Enable pseudo syntax
+#### asm.pseudo: 启用伪代码格式
 
 ```
 e asm.pseudo = true
@@ -163,7 +159,7 @@ e asm.pseudo = true
 0x00404879      4883e4f0       rsp &= 0xfffffffffffffff0
 ```
 
-#### asm.syntax: Select assembly syntax (intel, att, masm...)
+#### asm.syntax: 选择汇编语言的语法 (intel, att, masm...)
 
 ```
 e asm.syntax = att
@@ -174,7 +170,7 @@ e asm.syntax = att
 0x00404879      4883e4f0       and $0xfffffffffffffff0, %rsp
 ```
 
-#### asm.describe: Show opcode description
+#### asm.describe: S显示操作码的描述
 
 ```
 e asm.describe = true
