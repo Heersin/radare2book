@@ -1,18 +1,18 @@
 ## Rax2
 
-The `rax2` utility comes with the radare framework and aims to be a minimalistic expression evaluator for the shell. It is useful for making base conversions between floating point values, hexadecimal representations, hexpair strings to ascii, octal to integer. It supports endianness and can be used as a shell if no arguments are given.
+`rax2`是radare框架中的一个小工具，其设计目的是为shell提供一个小型的表达式计算器。其可用于浮点数、十六进制字节的进制转换，十六进制转ascii，八进制转整数等。若未传入任何参数还可作为一个计算器shell使用。
 
-This is the help message of rax2, this tool can be used in the command-line or interactively (reading the values from stdin), so it can be used as a multi-base calculator.
+底下是rax2的帮助信息，该工具可以用于命令行中，也可以从标准输入流（stdin）中读取数值交互式地使用，总之可以将其视为一个多进制计算器。
 
-Inside r2, the functionality of rax2 is available under the ? command. For example:
+在r2中，rax2的功能归在`?`命令下，例如：
 
 ```
 [0x00000000]> ? 3+4
 ```
 
-As you can see, the numeric expressions can contain mathematical expressions like addition, substraction, .. as well as group operations with parenthesis.
+正如所见，数值表达式可以包含诸如加法、减法这样的数学表达式，此外也支持括号进行分组操作。
 
-The syntax in which the numbers are represented define the base, for example:
+不同的表达式语法定义了数字的基数，例如：
 
 * 3 : decimal, base 10
 * 0xface : hexadecimal, base 16
@@ -20,7 +20,7 @@ The syntax in which the numbers are represented define the base, for example:
 * 2M : units, 2 megabytes
 * ...
 
-This is the help message of rax2 -h, which will show you a bunch more syntaxes
+下面就是`rax2 -h`输出的帮助信息，里面包含了更多的语法规则。
 
 ```
 $ rax2 -h
@@ -71,7 +71,7 @@ Usage: rax2 [options] [expr ...]
   -v      version              ;  rax2 -v
 ```
 
-Some examples:
+一些例子
 ```
 $ rax2 3+0x80
 0x83
