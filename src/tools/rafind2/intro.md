@@ -1,6 +1,6 @@
 # rafind2
 
-Rafind2 is the command line fronted of the `r_search` library. Which allows you to search for strings, sequences of bytes with binary masks, etc
+Rafind2是`r_search`库的一个前端命令行工具，支持搜索字符串、字节序列、掩码等。
 
 ```
 $ rafind2 -h
@@ -27,7 +27,7 @@ Usage: rafind2 [-mXnzZhqv] [-a align] [-b sz] [-f/t from/to] [-[e|s|S] str] [-x 
  -Z         show string found on each search hit
 ```
 
-That's how to use it, first we'll search for "lib" inside the `/bin/ls` binary.
+首先我们试试在`/bin/ls`中搜索"lib"
 ```
 $ rafind2 -s lib /bin/ls
 0x5f9
@@ -36,15 +36,16 @@ $ rafind2 -s lib /bin/ls
 ...
 $
 ```
-Note that the output is pretty minimal, and shows the offsets where the string `lib` is found. We can then use this output to feed other tools.
 
-Counting results:
+注意到输出的值都很小，它们是"lib"字符串的偏移地址，我们可以将这些信息用于其它工具中。
+
+计算结果数:
 
 ```
 $ rafind2 -s lib /bin/ls | wc -l
 ```
 
-Displaying results with context:
+显示搜索结果及其上下文内容:
 
 ```
 $ export F=/bin/ls
@@ -62,14 +63,14 @@ $ for a in `rafind2 -s lib $F` ; do \
 0x000006ef  6c69 6200 0000 0000 .. lib......&......
 ```
 
-rafind2 can also be used as a replacement of `file` to identify the mimetype of a file using the internal magic database of radare2.
+rafind2还可作为`file`的替代品，利用radare2内置的魔数数据库识别文件的类型。
 
 ```
 $ rafind2 -i /bin/ls
 0x00000000 1 Mach-O
 ```
 
-Also works as a `strings` replacement, similar to what you do with rabin2 -z, but without caring about parsing headers and obeying binary sections.
+此外也可作为`strings`的替代品，类似于`rabin2 -z`的功能，不过其并不会解析文件头，也不会遵循文件中的节区划分。
 
 ```
 $ rafind2 -z /bin/ls| grep http
