@@ -1,25 +1,21 @@
 # Rarun2
 
-Rarun2 is a tool allowing to setup a specified execution environment - redefine stdin/stdout, pipes,
-change the environment variables and other settings useful to craft the boundary conditions you need to run
-a binary for debugging.
+Rarun2是用于设置一个特定执行环境的工具，例如重新定义stdin/stdout，管道，修改环境变量，以及其他有助于为调试创造边界条件的种种设定。
 
 ```
 $ rarun2 -h
 Usage: rarun2 -v|-t|script.rr2 [directive ..]
 ```
 
-It takes the text file in key=value format to specify the execution environment.
-Rarun2 can be used as both separate tool or as a part of radare2.
-To load the rarun2 profile in radare2 you need to use either `-r` to load
-the profile from file or `-R` to specify the directive from string.
+其接受`key=value`这样格式的文本文件以设置执行环境。
+Rarun2可以用作一个独立的工具，也可作为radare2的一部分使用。可以用radare2的`-r`选项加载rarun2的配置文件，或者使用`-R`直接依据字符串文本进行设置。
 
-The format of the profile is very simple. Note the most important keys - `program` and `arg*`
+配置文件的格式很简单，记住最重要的两个键 - `program`和`arg*`
 
-One of the most common usage cases - redirect the output of debugged program in radare2.
-For this you need to use `stdio`, `stdout`, `stdin`, `input`, and a couple similar keys.
+最常见的使用场景 - 将radare2中所要调试的程序进行输出重定向。
+这需要用到`stdio`，`stdout`，`stdin`，`input`以及其他类似的键。
 
-Here is the basic profile example:
+一个基础的配置文件:
 
 ```
 program=/bin/ls
