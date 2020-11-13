@@ -1,14 +1,10 @@
 # ragg2
 
-ragg2 stands for `radare2 egg`, this is the basic block to construct relocatable
-snippets of code to be used for injection in target processes when doing exploiting.
+ragg2的含义是`radare2 egg`，这个工具能创建可重定位的代码片段，可在漏洞利用中用于注入目标进程。
 
-ragg2 compiles programs written in a simple high-level language into tiny binaries
-for x86, x86-64, and ARM.
+ragg2能将高级语言编写的程序编译为不同平台（x86, x86-64, ARM）的微二进制文件。
 
-By default it will compile it's own `ragg2` language, but you can also compile C
-code using GCC or Clang shellcodes depending on the file extension. Lets create
-C file called `a.c`:
+默认情况其支持编译的是自有的`ragg2`语言，但也可以根据文件的扩展名使用GCC或Clang编译C文件。我们可以创建一个名为`a.c`的文件:
 ```c
 int main() {
 	write(1, "Hello World\n", 13);
@@ -39,7 +35,7 @@ $ rasm2 -a x86 -b 32 -D e900000000488d3516000000bf01000000b80400000248c7c20d0000
 0x0000002c   3                   640a00  or al, byte fs:[eax]
 ```
 
-## Compiling ragg2 example
+## 编译ragg2文件的一个例子
 
 ```
 $ cat hello.r
@@ -73,7 +69,7 @@ $ rasm2 -a x86 -b 64 -D 48c7c00200000050488b3c2448c7c0010000000f054883c408c3
 0x00000019   1                       c3  ret
 ```
 
-## Tiny binaries
+## 微二进制文件
 
-You can create them using the `-F` flag in ragg2, or the `-C` in rabin2.
+可以用ragg2的`-F`创建微文件，或者用rabin2的`-C`。
 
