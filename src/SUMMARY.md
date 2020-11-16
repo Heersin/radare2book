@@ -96,7 +96,7 @@
    * [Ragg2](tools/ragg2/ragg2.md)
       * [Language](tools/ragg2/lang.md)
    * [Rahash2](tools/rahash2/intro.md)
-      * [Rahash Tool](tools/rahash2/rahash_tool.md)
+      * [Rahash 工具](tools/rahash2/rahash_tool.md)
 * [插件](plugins/intro.md)
    * [IO 插件](plugins/ioplugins.md)
    * [Asm 插件](plugins/dev-asm.md)
