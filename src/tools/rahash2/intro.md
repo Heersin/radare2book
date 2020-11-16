@@ -1,42 +1,37 @@
 # rahash2
 
-The rahash2 tool can be used to compute checksums of files, disk devices or strings. By block or entirely using many different hash algorithms.
+rahash2可以用来计算文件、磁盘设备或字符串的校验和，支持多种不同的哈希算法进行块哈希或全哈希。
 
-This tool is also capable of doing some encoding/decoding operations like base64 and xor encryption.
+这个工具也可用来完成一些诸如base64,异或等编解码的操作。
 
-This is an example usage:
-
+这里有一个用例：
 ```
 $ rahash2 -a md5 -s "hello world"
 ```
 
-Note that rahash2 also permits to read from stdin in a stream, so you don't need 4GB of ram to compute the hash of a 4GB file.
+这里提一下rahash2支持从stdin中流式地读取数据，因此计算一个4GB文件的哈希值并不需要4GB的内存空间。
 
-## Hashing by blocks
+## 块哈希
 
-When doing forensics, it is useful to compute partial checksums. The reason for that is because you may want to split a huge file into small portions that are easier to identify by contents or regions in the disk.
+进行取证工作时，常需要计算部分校验和，这么做的原因是你可能想将大文件拆分文件多个小文件，以便于通过文件内容或所在磁盘位置对这些文件进行区分。这样，我们便能通过相同哈希值找到包含相同内容的块，比如说用来检查某个块内的数据是否全为0。
 
-This will spot the same hash for blocks containing the same contents. For example, if is filled with zeros.
-
-It can also be used to find which blocks have changed between more than one sample dump.
-
-This can be useful when analyzing ram dumps from a virtual machine for example. Use this command for this:
+这个功能也可用于检查在两次dump之间是否有哪个块被修改了。在分析虚拟机中dump下来的内存时这个功能就很有用，其对应的命令示例如下：
 
 ```
 $ rahash2 -B 1M -b -a sha256 /bin/ls
 ```
 
-## Hashing with rabin2
+## 配合rabin2进行哈希
 
-The rabin2 tool parses the binary headers of the files, but it also have the ability to use the rhash plugins to compute checksum of sections in the binary.
+rabin2工具不仅可以解析二进制文件头，还可借助rhash插件计算二进制文件中区段对应的校验和。
 
 ```
 $ rabin2 -K md5 -S /bin/ls
 ```
 
-## Obtaining hashes within radare2 session
+## 在radare2 session中获取哈希值
 
-To calculate a checksum of current block when running radare2, use the `ph` command. Pass an algorithm name to it as a parameter. An example session:
+用`ph`命令可以在radare2中计算当前块的校验和，需将要使用哈希算法作为参数传递给该命令。例子：
 
 ```
 $ radare2 /bin/ls
@@ -45,7 +40,7 @@ $ radare2 /bin/ls
 d2994c75adaa58392f953a448de5fba7
 ```
 
-You can use all hashing algorithms supported by `rahash2`:
+可以使用`rahash2`支持的所有哈希算法：
 
 ```
 [0x00000000]> ph?
@@ -89,7 +84,7 @@ crc64xz
 crc64iso
 ```
 
-The `ph` command accepts an optional numeric argument to specify length of byte range to be hashed, instead of default block size. For example:
+`ph`命令还可接受一个可选的数字参数，用于指定要哈希的字节范围长度，代替原本的默认块大小，例如：
 
 ```
 [0x08049A80]> ph md5 32
