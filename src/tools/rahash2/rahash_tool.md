@@ -1,6 +1,6 @@
-## Examples
+## 例子
 
-The rahash2 tool can be used to calculate checksums and has functions of byte streams, files, text strings.
+rahash2工具可以用于计算校验和，支持哈希的对象包括字节流、文件和文本字符串
 
 ```
 $ rahash2 -h
@@ -27,16 +27,16 @@ Usage: rahash2 [-rBhLkv] [-b S] [-a A] [-c H] [-E A] [-s S] [-f O] [-t O] [file]
  -v          show version information
 ```
 
-To obtain an MD5 hash value of a text string, use the `-s` option:
+使用`-s`选项可以获取字符串的哈希值，使用MD5算法的一个用例：
 
 ```
 $ rahash2 -q -a md5 -s 'hello world'
 5eb63bbbe01eeed093cb22bb8f5acdc3
 ```
 
-It is possible to calculate hash values for contents of files. But do not attempt to do it for very large files because rahash2 buffers the whole input in memory before computing the hash.
+支持对计算文件内容对应的哈希值，不过不要尝试在大文件上进行这个计算，因为rahash2会在计算前将所有输入数据缓存在内存里。
 
-To apply all algorithms known to rahash2, use `all` as an algorithm name:
+若想分别使用所有的rahash2中所有的哈希算法，那么算法参数要设置为`all`：
 
 ```
 $ rahash2 -a all /bin/ls
